@@ -1,0 +1,9 @@
+{
+  "className": "ItemData",
+  "key": "Id",
+  "fields": {
+    "Id": "int",
+    "Name": "string",
+    "Price": "int"
+  }
+}

@@ -1,0 +1,21 @@
+﻿using System;
+
+namespace {{ namespace }}
+{
+    public interface I{{ class_name }}
+    {
+        {{~ for method in methods ~}}
+        {{ method.return_type }} {{ method.name }}({{ method.params_decl }});
+        {{~ end ~}}
+    }
+
+    public class {{ class_name }} : I{{ class_name }}
+    {
+        {{~ for method in methods ~}}
+        public {{ method.return_type }} {{ method.name }}({{ method.params_decl }})
+        {
+            return {{ method.formula }};
+        }
+        {{~ end ~}}
+    }
+}

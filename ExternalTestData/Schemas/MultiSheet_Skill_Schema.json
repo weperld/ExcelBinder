@@ -1,0 +1,9 @@
+{
+  "className": "SkillData",
+  "key": "Id",
+  "fields": {
+    "Id": "int",
+    "Name": "string",
+    "Power": "double"
+  }
+}

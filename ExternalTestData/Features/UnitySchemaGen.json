@@ -1,0 +1,13 @@
+{
+  "id": "external_schema_gen",
+  "name": "External Schema Generator",
+  "category": "SchemaGen",
+  "description": "Generate initial JSON schema files from External Excel headers.",
+  "excelPath": "D:\\CS Project\\ExcelBinder\\ExternalTestData\\Excel",
+  "schemaPath": "D:\\CS Project\\ExcelBinder\\ExternalTestData\\Schemas",
+  "scriptsPath": "D:\\CS Project\\ExcelBinder\\ExternalTestData\\Schemas",
+  "outputOptions": {
+    "supportsBinary": false,
+    "supportsJson": false
+  }
+}

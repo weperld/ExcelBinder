@@ -1,0 +1,38 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+
+namespace {{ namespace }}
+{
+    [Serializable]
+    public sealed partial class {{ class_name }} : StaticDataBase
+    {
+        {{~ for field in fields ~}}
+        {{~ if field.is_list ~}}
+        public IReadOnlyList<{{ field.type }}> {{ field.name }} { get; private set; }
+        {{~ else ~}}
+        public {{ field.type }} {{ field.name }} { get; private set; }
+        {{~ end ~}}
+        {{~ end ~}}
+
+        public override void Deserialize(BinaryReader reader)
+        {
+            {{~ for field in fields ~}}
+            {{~ if field.is_list ~}}
+            int {{ field.lower_name }}Count = reader.ReadInt32();
+            var temp{{ field.name }} = new {{ field.type }}[{{ field.lower_name }}Count];
+            for(int i = 0; i < {{ field.lower_name }}Count; i++) temp{{ field.name }}[i] = {{ field.read_method }};
+            {{ field.name }} = temp{{ field.name }};
+            {{~ else ~}}
+            {{ field.name }} = {{ field.read_method }};
+            {{~ end ~}}
+            {{~ end ~}}
+        }
+    }
+
+    [Serializable]
+    public sealed partial class {{ class_name }}Table : DataTableBase<{{ key_type }}, {{ class_name }}>
+    {
+        protected override {{ key_type }} GetKey({{ class_name }} data) => data.{{ key }};
+    }
+}

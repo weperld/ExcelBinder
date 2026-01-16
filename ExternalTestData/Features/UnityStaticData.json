@@ -1,0 +1,24 @@
+﻿{
+  "id": "external_unity_static",
+  "name": "External Unity Static Data",
+  "category": "StaticData",
+  "description": "External Test for Unity Static Data",
+  "excelPath": "D:\\CS Project\\ExcelBinder\\ExternalTestData\\Excel",
+  "schemaPath": "D:\\CS Project\\ExcelBinder\\ExternalTestData\\Schemas",
+  "exportPath": "D:\\CS Project\\ExcelBinder\\ExternalTestData\\Output",
+  "scriptsPath": "D:\\CS Project\\ExcelBinder\\ExternalTestData\\Scripts",
+  "defaultNamespace": "ExternalGameData",
+  "typeMappings": {
+    "int": "int",
+    "string": "string",
+    "float": "float"
+  },
+  "templates": {
+    "dataClass": "D:\\CS Project\\ExcelBinder\\ExternalTestData\\Templates\\UnityData.liquid"
+  },
+  "outputOptions": {
+    "extension": ".bytes",
+    "supportsBinary": true,
+    "supportsJson": true
+  }
+}

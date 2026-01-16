@@ -1,0 +1,18 @@
+﻿{
+  "id": "unity_logic",
+  "name": "Unity Logic Extraction",
+  "category": "Logic",
+  "description": "Extract logic formulas from Excel and generate C# logic classes.",
+  "excelPath": "D:\\CS Project\\ExcelBinder\\ExternalTestData\\Excel",
+  "schemaPath": "D:\\CS Project\\ExcelBinder\\ExternalTestData\\Schemas",
+  "exportPath": "D:\\CS Project\\ExcelBinder\\ExternalTestData\\Output",
+  "scriptsPath": "D:\\CS Project\\ExcelBinder\\ExternalTestData\\Scripts",
+  "defaultNamespace": "MyGame.Logic",
+  "templates": {
+    "dataClass": "D:\\CS Project\\ExcelBinder\\ExternalTestData\\Templates\\Logic.liquid"
+  },
+  "outputOptions": {
+    "supportsBinary": false,
+    "supportsJson": false
+  }
+}
