@@ -1,0 +1,89 @@
+﻿<UserControl x:Class="ExcelBinder.Views.SchemaEditorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="700" d:DesignWidth="1000" Background="White">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Margin="0,0,0,20">
+            <TextBlock Text="Interactive Schema Editor" FontSize="24" FontWeight="Bold" Margin="0,0,0,5"/>
+        </StackPanel>
+
+        <TabControl Grid.Row="1" ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}" TabStripPlacement="Left">
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding SheetName}" Padding="10,5"/>
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+            <TabControl.ContentTemplate>
+                <DataTemplate>
+                    <Grid Margin="15,0,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Text="{Binding DisplayName}" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,15" Foreground="#007ACC"/>
+
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,15">
+                            <TextBlock Text="Select Key Column:" VerticalAlignment="Center" Margin="0,0,10,0" FontWeight="SemiBold"/>
+                            <ComboBox ItemsSource="{Binding Headers}" SelectedItem="{Binding SelectedKey}" Width="200"/>
+                        </StackPanel>
+
+                        <GroupBox Grid.Row="2" Header="Configure Header Types and References">
+                            <DockPanel>
+                                <!-- Header Labels -->
+                                <Grid DockPanel.Dock="Top" Margin="0,5,18,5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="200"/>
+                                        <ColumnDefinition Width="150"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="Header" FontWeight="Bold" HorizontalAlignment="Center"/>
+                                    <TextBlock Grid.Column="1" Text="Type" FontWeight="Bold" HorizontalAlignment="Center"/>
+                                    <TextBlock Grid.Column="2" Text="Reference" FontWeight="Bold" HorizontalAlignment="Center"/>
+                                </Grid>
+                                <Separator DockPanel.Dock="Top" Margin="0,0,0,5"/>
+
+                                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                    <ItemsControl ItemsSource="{Binding Fields}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid Margin="0,5">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="200"/>
+                                                        <ColumnDefinition Width="150"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Text="{Binding HeaderName}" VerticalAlignment="Center" FontWeight="SemiBold" Margin="5,0"/>
+                                                    <ComboBox Grid.Column="1" ItemsSource="{Binding DataContext.AvailableTypes, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
+                                                              SelectedItem="{Binding SelectedType}" Margin="5,0"/>
+                                                    <TextBox Grid.Column="2" Text="{Binding ReferenceType, UpdateSourceTrigger=PropertyChanged}" Margin="5,0" 
+                                                             Tag="Reference Type (Optional)"/>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                            </DockPanel>
+                        </GroupBox>
+                    </Grid>
+                </DataTemplate>
+            </TabControl.ContentTemplate>
+        </TabControl>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+            <Button Content="Complete" Command="{Binding CompleteCommand}" Width="120" Height="35" Margin="0,0,10,0" 
+                    Background="#28A745" Foreground="White" FontWeight="Bold" BorderThickness="0"/>
+            <Button Content="Cancel" Command="{Binding CancelCommand}" Width="100" Height="35"/>
+        </StackPanel>
+    </Grid>
+</UserControl>
