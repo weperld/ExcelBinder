@@ -32,6 +32,72 @@ ExcelBinder는 앱 자체에 고정된 로직을 담지 않습니다. 모든 동
 2. **기능 선택**: 대시보드에 나타난 기능 카드를 클릭합니다.
 3. **실행**: 대상 엑셀 파일을 선택하고 `Export` 혹은 `Generate Code`를 실행합니다.
 
+## 📖 사용 설명서 (Usage Guide)
+
+### 1. 기능 정의 (FDF) 및 프로젝트 설정
+ExcelBinder를 사용하기 위해서는 프로젝트의 규칙을 담은 **FDF(Feature Definition File)**가 필요합니다.
+- **등록**: `Settings` 윈도우에서 `Bind External Feature`를 클릭하여 기존 `.json` 설정을 불러옵니다.
+- **생성**: `Create New Feature`를 통해 입출력 경로, 템플릿 경로, 타입 매핑 등을 직접 설정할 수 있습니다.
+
+### 2. 인터랙티브 스키마 에디터
+데이터 추출 전, 엑셀의 헤더와 코드의 필드를 매칭하는 단계입니다.
+- **자동 인지**: 동일한 이름의 컬럼이 여러 개 있을 경우 (예: `Skill`, `Skill`, `Skill`), 에디터는 이를 자동으로 `List<T>` 타입으로 그룹화합니다.
+- **참조(Reference) 설정**: 필드 타입에 `ref:TargetSheet` 형식을 지정하면, 코드 생성 시 해당 시트의 데이터를 자동으로 찾아주는 참조 프로퍼티가 생성됩니다.
+
+### 3. 데이터 추출 (Export) 및 코드 생성 (CodeGen)
+- **작업 선택**: 대시보드에서 카드를 클릭하여 진입한 뒤, 왼쪽의 파일 목록에서 작업할 엑셀을 선택합니다.
+- **Export**: FDF 설정에 따라 바이너리(`.bytes`) 또는 `.json` 파일로 데이터를 추출합니다.
+- **Generate Code**: `.liquid` 템플릿을 기반으로 C# 모델 클래스를 생성합니다.
+
+---
+
+## 💡 활용 예시 (Example)
+
+### 1. 원본 엑셀 (Item.xlsx)
+| Id (int) | Name (string) | Price (int) | Skill (int) | Skill (int) |
+| :--- | :--- | :--- | :--- | :--- |
+| 101 | 드래곤 슬레이어 | 5000 | 10 | 20 |
+
+### 2. 스키마 정의 (Item_Schema.json)
+```json
+{
+  "className": "ItemData",
+  "key": "Id",
+  "fields": {
+    "Id": "int",
+    "Name": "string",
+    "Price": "int",
+    "Skill": "List<int:ref:Skill>"
+  }
+}
+```
+
+### 3. 생성된 C# 코드 (ItemData.cs)
+```csharp
+public sealed partial class ItemData : StaticDataBase
+{
+    public int Id { get; private set; }
+    public string Name { get; private set; }
+    public IReadOnlyList<int> Skill { get; private set; }
+
+    // 참조 프로퍼티 자동 생성
+    public IEnumerable<SkillData> Skill_Ref {
+        get {
+            foreach (var x in Skill) yield return StaticDataManager.Instance.Skill[x];
+        }
+    }
+}
+```
+
+---
+
+## 🤖 CLI 활용 (Automation)
+CI/CD 환경이나 배치 파일에서 다음과 같이 활용할 수 있습니다.
+```powershell
+# 특정 기능(FDF ID)의 모든 파일에 대해 데이터 추출 및 코드 생성 실행
+./ExcelBinder.exe --feature my_project_data --all --export --codegen --both
+```
+
 ## 📚 상세 문서
 - [💻 설치 및 환경 설정 (ExcelBinder/SETUP.md)](./ExcelBinder/SETUP.md)
 - [📝 기능 정의 및 템플릿 가이드 (ExcelBinder/README_EXT.md)](./ExcelBinder/README_EXT.md)
