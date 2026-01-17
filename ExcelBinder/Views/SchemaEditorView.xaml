@@ -63,7 +63,7 @@
                                                         <ColumnDefinition Width="150"/>
                                                         <ColumnDefinition Width="*"/>
                                                     </Grid.ColumnDefinitions>
-                                                    <TextBlock Text="{Binding HeaderName}" VerticalAlignment="Center" FontWeight="SemiBold" Margin="5,0"/>
+                                                    <TextBlock Text="{Binding DisplayName}" VerticalAlignment="Center" FontWeight="SemiBold" Margin="5,0"/>
                                                     <ComboBox Grid.Column="1" ItemsSource="{Binding DataContext.AvailableTypes, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
                                                               SelectedItem="{Binding SelectedType}" Margin="5,0"/>
                                                     <TextBox Grid.Column="2" Text="{Binding ReferenceType, UpdateSourceTrigger=PropertyChanged}" Margin="5,0" 

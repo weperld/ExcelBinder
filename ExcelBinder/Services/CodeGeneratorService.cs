@@ -48,6 +48,7 @@ namespace ExcelBinder.Services
                     IsList = info.IsList,
                     IsReference = info.IsReference,
                     RefType = info.RefType,
+                    RefClassName = info.RefType != null ? info.RefType + "Data" : null,
                     ReadMethod = GetReadMethod(info.BaseType),
                     LowerName = f.Key.ToLower()
                 };

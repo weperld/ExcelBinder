@@ -99,23 +99,73 @@ namespace ExcelBinder.ViewModels
             _fileName = Path.GetFileNameWithoutExtension(excelPath);
             _outputPath = outputPath;
 
+            // Load existing schema if available
+            SchemaDefinition? existingSchema = null;
+            string finalFileName = $"{_fileName}_{_sheetName}_Schema.json";
+            string savePath = Path.Combine(_outputPath, finalFileName);
+            if (File.Exists(savePath))
+            {
+                try
+                {
+                    string json = File.ReadAllText(savePath);
+                    existingSchema = JsonConvert.DeserializeObject<SchemaDefinition>(json);
+                }
+                catch
+                {
+                    // Ignore errors, fallback to default
+                }
+            }
+
             var excelService = new ExcelService();
             var data = excelService.ReadExcel(excelPath, sheetName).FirstOrDefault();
             
             if (data != null)
             {
-                foreach (var header in data)
+                var groupedHeaders = data
+                    .Where(h => !string.IsNullOrWhiteSpace(h))
+                    .GroupBy(h => h)
+                    .Select(g => new { Name = g.Key, Count = g.Count() });
+
+                foreach (var group in groupedHeaders)
                 {
-                    if (string.IsNullOrWhiteSpace(header)) continue;
-                    Headers.Add(header);
+                    Headers.Add(group.Name);
+
+                    string selectedType = "int";
+                    string referenceType = "";
+
+                    if (existingSchema != null && existingSchema.Fields.TryGetValue(group.Name, out var typeStr))
+                    {
+                        // Parse type string: List<type:ref:target> or type:ref:target
+                        if (typeStr.StartsWith("List<") && typeStr.EndsWith(">"))
+                        {
+                            typeStr = typeStr.Substring(5, typeStr.Length - 6);
+                        }
+
+                        var parts = typeStr.Split(':');
+                        selectedType = parts[0];
+                        if (parts.Length >= 3 && parts[1] == "ref")
+                        {
+                            referenceType = parts[2];
+                        }
+                    }
+
                     Fields.Add(new SchemaFieldViewModel 
                     { 
-                        HeaderName = header, 
-                        SelectedType = "int",
-                        ReferenceType = "" 
+                        HeaderName = group.Name, 
+                        Count = group.Count,
+                        SelectedType = selectedType,
+                        ReferenceType = referenceType 
                     });
                 }
-                _selectedKey = Headers.FirstOrDefault() ?? "Id";
+
+                if (existingSchema != null && Headers.Contains(existingSchema.Key))
+                {
+                    _selectedKey = existingSchema.Key;
+                }
+                else
+                {
+                    _selectedKey = Headers.FirstOrDefault() ?? "Id";
+                }
             }
         }
 
@@ -135,6 +185,12 @@ namespace ExcelBinder.ViewModels
                 {
                     typeStr = $"{typeStr}:ref:{field.ReferenceType}";
                 }
+
+                if (field.Count > 1)
+                {
+                    typeStr = $"List<{typeStr}>";
+                }
+
                 schema.Fields[field.HeaderName] = typeStr;
             }
 
@@ -150,6 +206,9 @@ namespace ExcelBinder.ViewModels
     public class SchemaFieldViewModel : ViewModelBase
     {
         public string HeaderName { get; set; } = string.Empty;
+        public int Count { get; set; } = 1;
+        public string DisplayName => Count > 1 ? $"{HeaderName}({Count})" : HeaderName;
+
         private string _selectedType = "int";
         private string _referenceType = string.Empty;
 
