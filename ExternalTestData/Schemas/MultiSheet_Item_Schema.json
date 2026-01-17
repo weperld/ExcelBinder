@@ -4,6 +4,7 @@
   "fields": {
     "Id": "int",
     "Name": "string",
-    "Price": "int"
+    "Price": "int",
+    "Skill": "List<int:ref:Skill>"
   }
 }

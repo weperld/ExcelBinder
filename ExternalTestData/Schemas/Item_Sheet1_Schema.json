@@ -3,8 +3,8 @@
   "key": "Id",
   "fields": {
     "Id": "int",
-    "Name": "int",
-    "Desc": "int",
-    "Price": "int"
+    "Name": "string",
+    "Desc": "string",
+    "Price": "double"
   }
 }
