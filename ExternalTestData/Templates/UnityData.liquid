@@ -13,6 +13,22 @@ namespace {{ namespace }}
         {{~ else ~}}
         public {{ field.type }} {{ field.name }} { get; private set; }
         {{~ end ~}}
+        {{~ if field.is_reference ~}}
+        {{~ if field.is_list ~}}
+        public IEnumerable<{{ field.ref_class_name }}> {{ field.name }}_Ref
+        {
+            get
+            {
+                foreach (var x in {{ field.name }})
+                {
+                    yield return StaticDataManager.Instance.{{ field.ref_type }}[x];
+                }
+            }
+        }
+        {{~ else ~}}
+        public {{ field.ref_class_name }} {{ field.name }}_Ref => StaticDataManager.Instance.{{ field.ref_type }}[{{ field.name }}];
+        {{~ end ~}}
+        {{~ end ~}}
         {{~ end ~}}
 
         public override void Deserialize(BinaryReader reader)
