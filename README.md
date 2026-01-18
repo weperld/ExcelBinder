@@ -25,8 +25,8 @@ ExcelBinder는 앱 자체에 고정된 로직을 담지 않습니다. 모든 동
 - **🏗️ Feature Builder**: 복잡한 JSON 설정을 UI에서 시각적으로 편집.
 - **🔄 유연한 타입 매핑**: 엑셀 타입을 프로젝트 전용 타입(예: `int` → `System.Int32`)으로 자유롭게 매핑.
 - **🚫 데이터 필터링 규칙**: `#` 접두사를 사용하여 불필요한 컬럼이나 행을 추출 대상에서 제외.
-- **🤖 AI Assistant**: OpenAI/Claude를 연동하여 Scriban 템플릿을 대화형으로 생성.
-- **🤖 외부 AI 활용 (Prompt Template)**: API 키 없이도 외부 AI(ChatGPT 등)를 통해 최적의 템플릿을 생성할 수 있는 프롬프트 가이드 제공.
+- **🤖 AI Assistant (Built-in)**: OpenAI/Claude를 연동하여 Scriban 템플릿을 대화형으로 생성.
+- **💡 외부 AI 활용 (Prompt Template)**: API 키 없이도 외부 AI(ChatGPT 등)를 통해 최적의 템플릿을 생성할 수 있는 프롬프트 가이드 제공. ([가이드 바로가기](#-외부-ai-도구-활용-prompt-template))
 - **🤖 CLI 지원**: CI/CD 환경 자동화를 위한 커맨드 라인 인터페이스 제공.
 
 ## 🚀 빠른 시작
@@ -51,20 +51,21 @@ ExcelBinder를 사용하기 위해서는 프로젝트의 규칙을 담은 **FDF(
 - **Export**: FDF 설정에 따라 바이너리(`.bytes`) 또는 `.json` 파일로 데이터를 추출합니다.
 - **Generate Code**: `.liquid` 템플릿을 기반으로 C# 모델 클래스를 생성합니다.
 
-### 4. 🤖 외부 AI 도구 활용 (Prompt Template)
-AI Assistant용 API 키가 없더라도, ChatGPT나 Claude와 같은 외부 AI 도구를 활용하여 최적의 템플릿을 얻을 수 있습니다. 아래 템플릿을 복사하여 사용하세요.
+## 🤖 외부 AI 도구 활용 (Prompt Template)
+> [!IMPORTANT]
+> **API 키가 없으신가요?** 걱정하지 마세요! ChatGPT, Claude, Gemini와 같은 외부 AI 도구에 아래 프롬프트를 복사하여 붙여넣으면 ExcelBinder에 최적화된 템플릿을 즉시 생성할 수 있습니다.
 
-#### 📝 범용 프롬프트 템플릿
-> 아래 내용을 복사하여 AI에게 전달하세요. `[ ]`로 표시된 부분에 본인의 스키마와 요구사항을 넣으면 됩니다.
+### 📝 범용 프롬프트 템플릿
+> 아래 박스의 내용을 복사하여 AI에게 전달하세요. `[ ]`로 표시된 부분에 본인의 스키마와 요구사항을 넣으면 됩니다.
 
 ```text
 너는 Scriban(.liquid) 템플릿 엔진 전문가이자 숙련된 소프트웨어 엔지니어다.
 내가 제공하는 [대상 스키마] JSON을 분석하여, 엑셀 데이터를 코드로 변환하기 위한 Scriban 템플릿(.liquid)을 작성하라.
 
 ### 사용 가능한 공통 변수:
-- {{ namespace }}: 출력 파일의 네임스페이스
-- {{ class_name }}: 클래스 이름
-- {{ fields }}: 필드 리스트 (각 필드는 name, type, is_list, is_reference, read_method 속성을 가짐)
+- **`{{ namespace }}`**: 출력 파일의 네임스페이스
+- **`{{ class_name }}`**: 클래스 이름
+- **`{{ fields }}`**: 필드 리스트 (각 필드는 `name`, `type`, `is_list`, `is_reference`, `read_method` 속성을 가짐)
 
 [대상 스키마 JSON]
 (여기에 앱에서 생성한 스키마 JSON 내용을 붙여넣으세요)
