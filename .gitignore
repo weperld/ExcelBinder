@@ -44,3 +44,4 @@ ExternalTestData/Scripts/
 ExternalTestData/*.txt
 *.log
 settings.json
+*.zip

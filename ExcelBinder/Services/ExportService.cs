@@ -17,13 +17,32 @@ namespace ExcelBinder.Services
             var header = dataList[0];
             var rows = dataList.Skip(1);
 
+            // Identify the first valid column (not starting with '#')
+            int firstValidColIdx = -1;
+            for (int i = 0; i < header.Length; i++)
+            {
+                if (!string.IsNullOrWhiteSpace(header[i]) && !header[i].TrimStart().StartsWith("#"))
+                {
+                    firstValidColIdx = i;
+                    break;
+                }
+            }
+
+            // Filter rows where the first valid column's value starts with '#'
+            var validRows = rows.Select((row, idx) => new { row, originalRowIndex = idx + 2 })
+                .Where(item =>
+                {
+                    if (firstValidColIdx == -1 || firstValidColIdx >= item.row.Length) return true;
+                    var cellValue = item.row[firstValidColIdx];
+                    return string.IsNullOrEmpty(cellValue) || !cellValue.TrimStart().StartsWith("#");
+                }).ToList();
+
             using var stream = new FileStream(outputPath, FileMode.Create);
             using var writer = new BinaryWriter(stream);
 
-            writer.Write(rows.Count());
+            writer.Write(validRows.Count);
 
-            int rowIndex = 2; // Excel row starts from 1, header is 1, so data starts from 2
-            foreach (var row in rows)
+            foreach (var item in validRows)
             {
                 foreach (var field in schema.Fields)
                 {
@@ -31,14 +50,13 @@ namespace ExcelBinder.Services
                     {
                         var fieldName = field.Key;
                         var fieldType = field.Value;
-                        WriteField(writer, fieldType, row, header, fieldName, feature);
+                        WriteField(writer, fieldType, item.row, header, fieldName, feature);
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception($"[Row {rowIndex}] Column '{field.Key}' error: {ex.Message}");
+                        throw new Exception($"[Row {item.originalRowIndex}] Column '{field.Key}' error: {ex.Message}");
                     }
                 }
-                rowIndex++;
             }
         }
 
@@ -143,25 +161,43 @@ namespace ExcelBinder.Services
             var header = dataList[0];
             var rows = dataList.Skip(1);
 
+            // Identify the first valid column (not starting with '#')
+            int firstValidColIdx = -1;
+            for (int i = 0; i < header.Length; i++)
+            {
+                if (!string.IsNullOrWhiteSpace(header[i]) && !header[i].TrimStart().StartsWith("#"))
+                {
+                    firstValidColIdx = i;
+                    break;
+                }
+            }
+
+            // Filter rows where the first valid column's value starts with '#'
+            var validRows = rows.Select((row, idx) => new { row, originalRowIndex = idx + 2 })
+                .Where(item =>
+                {
+                    if (firstValidColIdx == -1 || firstValidColIdx >= item.row.Length) return true;
+                    var cellValue = item.row[firstValidColIdx];
+                    return string.IsNullOrEmpty(cellValue) || !cellValue.TrimStart().StartsWith("#");
+                }).ToList();
+
             var result = new List<Dictionary<string, object>>();
 
-            int rowIndex = 2;
-            foreach (var row in rows)
+            foreach (var item in validRows)
             {
                 var rowDict = new Dictionary<string, object>();
                 foreach (var field in schema.Fields)
                 {
                     try
                     {
-                        rowDict[field.Key] = ParseField(field.Value, row, header, field.Key, feature);
+                        rowDict[field.Key] = ParseField(field.Value, item.row, header, field.Key, feature);
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception($"[Row {rowIndex}] Column '{field.Key}' error: {ex.Message}");
+                        throw new Exception($"[Row {item.originalRowIndex}] Column '{field.Key}' error: {ex.Message}");
                     }
                 }
                 result.Add(rowDict);
-                rowIndex++;
             }
 
             File.WriteAllText(outputPath, JsonConvert.SerializeObject(result, Formatting.Indented));

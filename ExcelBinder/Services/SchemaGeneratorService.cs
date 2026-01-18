@@ -16,16 +16,20 @@ namespace ExcelBinder.Services
             if (data.Count < 1) return;
 
             var header = data[0];
+            var firstValidColumn = header.FirstOrDefault(c => !string.IsNullOrWhiteSpace(c) && !c.TrimStart().StartsWith("#"));
+
             var schema = new SchemaDefinition
             {
                 ClassName = sheetName + "Data",
-                Key = header.Length > 0 ? header[0] : "Id",
+                Key = firstValidColumn ?? "Id",
                 Fields = new Dictionary<string, string>()
             };
 
             foreach (var colName in header)
             {
                 if (string.IsNullOrWhiteSpace(colName)) continue;
+                if (colName.TrimStart().StartsWith("#")) continue;
+
                 if (!schema.Fields.ContainsKey(colName))
                 {
                     schema.Fields[colName] = "int"; // Default to int, user can change later
