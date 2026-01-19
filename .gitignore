@@ -39,6 +39,7 @@ Desktop.ini
 .vscode/
 
 # ExcelBinder Specific
+Release_*/
 ExternalTestData/Output/
 ExternalTestData/Scripts/
 ExternalTestData/*.txt
