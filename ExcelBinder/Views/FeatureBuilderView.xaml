@@ -9,157 +9,203 @@
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
     </UserControl.Resources>
-    <Grid Margin="20">
+    <Grid Margin="30">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Feature Builder" FontSize="24" FontWeight="Bold" Margin="0,0,0,20"/>
+        <TextBlock Text="Feature Builder" FontSize="28" FontWeight="Bold" Margin="0,5,0,25" Padding="0,5,0,0" Foreground="{StaticResource PrimaryBrush}"/>
 
-        <ScrollViewer Grid.Row="1">
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0,0,-10,0" Padding="0,10,10,0">
             <StackPanel>
                 <!-- Basic Info -->
-                <GroupBox Header="General Info" Margin="0,0,0,10" Padding="10">
-                    <StackPanel>
-                        <DockPanel LastChildFill="True" Margin="0,2">
-                            <TextBlock Text="Feature ID:" Width="150" VerticalAlignment="Center" Margin="5"/>
-                            <TextBox Text="{Binding Feature.Id}" Margin="5"/>
-                        </DockPanel>
+                <GroupBox Header="General Information">
+                    <StackPanel Margin="5">
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" MinWidth="130"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto" MinWidth="80"/>
+                                <ColumnDefinition Width="150"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <TextBlock Text="Feature ID:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,10,0"/>
+                            <TextBox Grid.Column="1" Text="{Binding Feature.Id}" Margin="0,0,20,0"/>
 
-                        <DockPanel LastChildFill="True" Margin="0,2">
-                            <TextBlock Text="Name:" Width="150" VerticalAlignment="Center" Margin="5"/>
-                            <TextBox Text="{Binding Feature.Name}" Margin="5"/>
-                        </DockPanel>
-
-                        <DockPanel LastChildFill="True" Margin="0,2">
-                            <TextBlock Text="Category:" Width="150" VerticalAlignment="Center" Margin="5"/>
-                            <ComboBox SelectedValue="{Binding Category}" SelectedValuePath="Content" Margin="5">
+                            <TextBlock Grid.Column="2" Text="Category:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,10,0"/>
+                            <ComboBox Grid.Column="3" SelectedValue="{Binding Category}" SelectedValuePath="Content">
                                 <ComboBoxItem Content="StaticData"/>
                                 <ComboBoxItem Content="Logic"/>
                                 <ComboBoxItem Content="SchemaGen"/>
                             </ComboBox>
-                        </DockPanel>
+                        </Grid>
 
-                        <DockPanel LastChildFill="True" Margin="0,2">
-                            <TextBlock Text="Description:" Width="150" VerticalAlignment="Center" Margin="5"/>
-                            <TextBox Text="{Binding Feature.Description}" Margin="5"/>
-                        </DockPanel>
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" MinWidth="130"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Display Name:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,10,0"/>
+                            <TextBox Grid.Column="1" Text="{Binding Feature.Name}"/>
+                        </Grid>
 
-                        <DockPanel LastChildFill="True" Margin="0,2">
-                            <TextBlock Text="Default Namespace:" Width="150" VerticalAlignment="Center" Margin="5"/>
-                            <TextBox Text="{Binding Feature.DefaultNamespace}" Margin="5"/>
-                        </DockPanel>
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" MinWidth="130"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Description:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,10,0"/>
+                            <TextBox Grid.Column="1" Text="{Binding Feature.Description}"/>
+                        </Grid>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" MinWidth="130"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Default Namespace:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,10,0"/>
+                            <TextBox Grid.Column="1" Text="{Binding Feature.DefaultNamespace}"/>
+                        </Grid>
                     </StackPanel>
                 </GroupBox>
 
                 <!-- Paths -->
-                <GroupBox Header="Paths" Margin="0,0,0,10" Padding="10">
-                    <StackPanel>
-                        <DockPanel LastChildFill="True" Margin="0,2">
-                            <TextBlock Text="Excel Path:" Width="150" VerticalAlignment="Center" Margin="5"/>
-                            <Button Content="Browse" DockPanel.Dock="Right" Command="{Binding BrowseExcelPathCommand}" Width="70" Margin="5"/>
-                            <TextBox Text="{Binding Feature.ExcelPath, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
-                        </DockPanel>
+                <GroupBox Header="File Paths Configuration">
+                    <StackPanel Margin="5">
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" MinWidth="130"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Excel Directory:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,10,0"/>
+                            <TextBox Grid.Column="1" Text="{Binding Feature.ExcelPath, UpdateSourceTrigger=PropertyChanged}"/>
+                            <Button Grid.Column="2" Content="Browse" Command="{Binding BrowseExcelPathCommand}" Width="80" Margin="10,0,0,0"/>
+                        </Grid>
 
-                        <DockPanel LastChildFill="True" Margin="0,2" Visibility="{Binding IsSchemaPathVisible, Converter={StaticResource BoolToVis}}">
-                            <TextBlock Text="Schema Path:" Width="150" VerticalAlignment="Center" Margin="5"/>
-                            <Button Content="Browse" DockPanel.Dock="Right" Command="{Binding BrowseSchemaPathCommand}" Width="70" Margin="5"/>
-                            <TextBox Text="{Binding Feature.SchemaPath, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
-                        </DockPanel>
+                        <Grid Margin="0,0,0,10" Visibility="{Binding IsSchemaPathVisible, Converter={StaticResource BoolToVis}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" MinWidth="130"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Schema Directory:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,10,0"/>
+                            <TextBox Grid.Column="1" Text="{Binding Feature.SchemaPath, UpdateSourceTrigger=PropertyChanged}"/>
+                            <Button Grid.Column="2" Content="Browse" Command="{Binding BrowseSchemaPathCommand}" Width="80" Margin="10,0,0,0"/>
+                        </Grid>
 
-                        <DockPanel LastChildFill="True" Margin="0,2" Visibility="{Binding IsExportPathVisible, Converter={StaticResource BoolToVis}}">
-                            <TextBlock Text="Export Path:" Width="150" VerticalAlignment="Center" Margin="5"/>
-                            <Button Content="Browse" DockPanel.Dock="Right" Command="{Binding BrowseExportPathCommand}" Width="70" Margin="5"/>
-                            <TextBox Text="{Binding Feature.ExportPath, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
-                        </DockPanel>
+                        <Grid Margin="0,0,0,10" Visibility="{Binding IsExportPathVisible, Converter={StaticResource BoolToVis}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" MinWidth="130"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Export Directory:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,10,0"/>
+                            <TextBox Grid.Column="1" Text="{Binding Feature.ExportPath, UpdateSourceTrigger=PropertyChanged}"/>
+                            <Button Grid.Column="2" Content="Browse" Command="{Binding BrowseExportPathCommand}" Width="80" Margin="10,0,0,0"/>
+                        </Grid>
 
-                        <DockPanel LastChildFill="True" Margin="0,2" Visibility="{Binding IsScriptsPathVisible, Converter={StaticResource BoolToVis}}">
-                            <TextBlock Text="Scripts Path:" Width="150" VerticalAlignment="Center" Margin="5"/>
-                            <Button Content="Browse" DockPanel.Dock="Right" Command="{Binding BrowseScriptsPathCommand}" Width="70" Margin="5"/>
-                            <TextBox Text="{Binding Feature.ScriptsPath, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
-                        </DockPanel>
+                        <Grid Visibility="{Binding IsScriptsPathVisible, Converter={StaticResource BoolToVis}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" MinWidth="130"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Scripts Directory:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,10,0"/>
+                            <TextBox Grid.Column="1" Text="{Binding Feature.ScriptsPath, UpdateSourceTrigger=PropertyChanged}"/>
+                            <Button Grid.Column="2" Content="Browse" Command="{Binding BrowseScriptsPathCommand}" Width="80" Margin="10,0,0,0"/>
+                        </Grid>
                     </StackPanel>
                 </GroupBox>
 
                 <!-- Types -->
-                <GroupBox Header="Type Mappings" Margin="0,0,0,10" Padding="10" Visibility="{Binding IsTypeMappingsVisible, Converter={StaticResource BoolToVis}}">
-                    <StackPanel>
-                        <!-- Headers -->
-                        <Grid Margin="0,0,0,5">
+                <GroupBox Header="Type Mappings" Visibility="{Binding IsTypeMappingsVisible, Converter={StaticResource BoolToVis}}">
+                    <StackPanel Margin="5">
+                        <Grid Margin="0,0,0,10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="100"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="Schema Type" FontWeight="Bold" HorizontalAlignment="Center"/>
-                            <TextBlock Grid.Column="1" Text="C# Type" FontWeight="Bold" HorizontalAlignment="Center"/>
-                            <TextBlock Grid.Column="2" Width="60"/> <!-- Space for Remove button -->
+                            <TextBlock Text="Excel Type" FontWeight="Bold" Foreground="{StaticResource MutedTextBrush}" HorizontalAlignment="Center"/>
+                            <TextBlock Grid.Column="1" Text="Mapped C# Type" FontWeight="Bold" Foreground="{StaticResource MutedTextBrush}" HorizontalAlignment="Center"/>
                         </Grid>
-                        <Separator Margin="0,0,0,5"/>
-
-                        <ItemsControl ItemsSource="{Binding TypeMappings}">
+                        
+                        <ItemsControl ItemsSource="{Binding TypeMappings}" Margin="0,0,0,15">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Grid Margin="0,2">
+                                    <Grid Margin="0,0,0,5">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
                                         <ComboBox ItemsSource="{Binding DataContext.AvailableTypes, RelativeSource={RelativeSource AncestorType=UserControl}}" 
-                                                  SelectedItem="{Binding Key, UpdateSourceTrigger=PropertyChanged}" Margin="2"/>
-                                        <TextBox Grid.Column="1" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" Margin="2" Tag="C# Type"/>
-                                        <Button Grid.Column="2" Content="Remove" Command="{Binding DataContext.RemoveMappingCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}" Margin="2"/>
+                                                  SelectedItem="{Binding Key, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,5,0"/>
+                                        <TextBox Grid.Column="1" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" Margin="5,0"/>
+                                        <Button Grid.Column="2" Content="Remove" Command="{Binding DataContext.RemoveMappingCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                                                CommandParameter="{Binding}" Width="80" Margin="5,0,0,0" Foreground="{StaticResource DangerBrush}"/>
                                     </Grid>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
-                        <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                            <Button Content="Add Mapping" Command="{Binding AddMappingCommand}" Width="100" Margin="5,0,5,0"/>
-                            <Button Content="Add All Default Types" Command="{Binding AddDefaultMappingsCommand}" Width="150"/>
+                        
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="+ Add New Mapping" Command="{Binding AddMappingCommand}" Width="150" Height="32" Margin="0,0,10,0"/>
+                            <Button Content="Populate Default Types" Command="{Binding AddDefaultMappingsCommand}" Width="180" Height="32"/>
                         </StackPanel>
                     </StackPanel>
                 </GroupBox>
 
                 <!-- Templates -->
-                <GroupBox Header="Templates" Margin="0,0,0,10" Padding="10" Visibility="{Binding IsTemplatesVisible, Converter={StaticResource BoolToVis}}">
-                    <StackPanel>
-                        <DockPanel LastChildFill="True" Margin="0,2">
-                            <TextBlock Text="Data Template:" Width="150" VerticalAlignment="Center" Margin="5"/>
-                            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
-                                <Button Content="AI Assistant" Command="{Binding OpenAIAssistantCommand}" Width="100" Margin="5" Background="#8E44AD" Foreground="White" FontWeight="Bold"/>
-                                <Button Content="Browse" Command="{Binding BrowseDataTemplateCommand}" Width="70" Margin="5"/>
+                <GroupBox Header="Templates Configuration" Visibility="{Binding IsTemplatesVisible, Converter={StaticResource BoolToVis}}">
+                    <StackPanel Margin="5">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" MinWidth="130"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Data Template (.liquid):" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,10,0"/>
+                            <TextBox Grid.Column="1" Text="{Binding Feature.Templates.DataClass, UpdateSourceTrigger=PropertyChanged}"/>
+                            <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="10,0,0,0">
+                                <Button Content="AI Assistant" Command="{Binding OpenAIAssistantCommand}" Width="100" Height="32" Margin="0,0,10,0" Background="#6F42C1" Foreground="White" BorderThickness="0"/>
+                                <Button Content="Browse" Command="{Binding BrowseDataTemplateCommand}" Width="80" Height="32"/>
                             </StackPanel>
-                            <TextBox Text="{Binding Feature.Templates.DataClass, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
-                        </DockPanel>
+                        </Grid>
                     </StackPanel>
                 </GroupBox>
 
                 <!-- Output Options -->
-                <GroupBox Header="Output Options" Margin="0,0,0,10" Padding="10" Visibility="{Binding IsOutputOptionsVisible, Converter={StaticResource BoolToVis}}">
-                    <StackPanel>
-                        <DockPanel LastChildFill="True" Margin="0,2">
-                            <TextBlock Text="File Extension:" Width="150" VerticalAlignment="Center" Margin="5"/>
-                            <TextBox Text="{Binding Feature.OutputOptions.Extension}" Margin="5"/>
-                        </DockPanel>
+                <GroupBox Header="Output Options" Visibility="{Binding IsOutputOptionsVisible, Converter={StaticResource BoolToVis}}">
+                    <StackPanel Margin="5">
+                        <Grid Margin="0,0,0,15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="150"/>
+                                <ColumnDefinition Width="200"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="File Extension:" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                            <TextBox Grid.Column="1" Text="{Binding Feature.OutputOptions.Extension}"/>
+                        </Grid>
 
-                        <DockPanel LastChildFill="True" Margin="0,2">
-                            <TextBlock Width="150" Margin="5"/>
-                            <StackPanel>
-                                <CheckBox Content="Supports Binary" IsChecked="{Binding Feature.OutputOptions.SupportsBinary}" Margin="5"/>
-                                <CheckBox Content="Supports JSON" IsChecked="{Binding Feature.OutputOptions.SupportsJson}" Margin="5"/>
-                            </StackPanel>
-                        </DockPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Supported Formats:" Width="150" FontWeight="SemiBold"/>
+                            <CheckBox Content="Binary (.bytes)" IsChecked="{Binding Feature.OutputOptions.SupportsBinary}" Margin="0,0,20,0"/>
+                            <CheckBox Content="JSON (.json)" IsChecked="{Binding Feature.OutputOptions.SupportsJson}"/>
+                        </StackPanel>
                     </StackPanel>
                 </GroupBox>
             </StackPanel>
         </ScrollViewer>
 
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
-            <Button Content="Save Feature" Command="{Binding SaveCommand}" Width="120" Height="35" Margin="5" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Background="#007ACC" Foreground="White" FontWeight="Bold"/>
-            <Button Content="Cancel" Command="{Binding CancelCommand}" Width="100" Height="35" Margin="5"/>
-        </StackPanel>
+        <Border Grid.Row="2" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,1,0,0" Padding="0,20,0,0" Margin="0,10,0,0">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Cancel" Command="{Binding CancelCommand}" Width="100" Height="36" Margin="0,0,12,0"/>
+                <Button Content="Save Feature Definition" Style="{StaticResource PrimaryButton}" 
+                        Command="{Binding SaveCommand}" Width="200" Height="36"/>
+            </StackPanel>
+        </Border>
     </Grid>
 </UserControl>

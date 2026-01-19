@@ -5,41 +5,79 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Margin="20">
+    <Grid Margin="30">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Available Features" FontSize="24" FontWeight="Bold" Margin="0,0,0,20"/>
+        <StackPanel Margin="0,5,0,30">
+            <TextBlock Text="Excel Binder" FontSize="32" FontWeight="Bold" Padding="0,5,0,0" Foreground="{StaticResource PrimaryBrush}"/>
+            <TextBlock Text="Manage your data extraction and code generation features" FontSize="14" Foreground="{StaticResource MutedTextBrush}"/>
+        </StackPanel>
 
-        <ListBox Grid.Row="1" ItemsSource="{Binding Features}" BorderThickness="0">
+        <ListBox Grid.Row="1" ItemsSource="{Binding Features}" BorderThickness="0" Background="Transparent" 
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel IsItemsHost="True"/>
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListBoxItem">
+                                <ContentPresenter/>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListBox.ItemContainerStyle>
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Border BorderBrush="#DDD" BorderThickness="1" CornerRadius="8" Width="200" Height="180" Margin="10" Padding="15" Background="White">
-                        <StackPanel>
-                            <TextBlock Text="{Binding Name}" FontSize="18" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,0,0,5"/>
-                            <TextBlock Text="{Binding Description}" FontSize="12" Foreground="#666" TextWrapping="Wrap" Height="50"/>
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
-                                <Button Content="Edit" Command="{Binding DataContext.EditFeatureCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}" Margin="0,0,5,0" Width="50"/>
-                                <Button Content="Select" Command="{Binding DataContext.SelectFeatureCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}" Width="70" Background="#007ACC" Foreground="White" BorderThickness="0"/>
+                    <Border Style="{StaticResource CardStyle}" Width="280" Height="200" Margin="0,0,20,20">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            
+                            <DockPanel>
+                                <Border Background="{StaticResource LightBackgroundBrush}" CornerRadius="4" Padding="6,2" DockPanel.Dock="Right">
+                                    <TextBlock Text="{Binding Category}" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TagTextBrush}"/>
+                                </Border>
+                                <TextBlock Text="{Binding Name}" FontSize="18" FontWeight="Bold" TextTrimming="CharacterEllipsis"/>
+                            </DockPanel>
+
+                            <TextBlock Grid.Row="1" Text="{Binding Description}" FontSize="13" Foreground="{StaticResource MutedTextBrush}" 
+                                       TextWrapping="Wrap" Margin="0,10,0,0" LineHeight="18"/>
+
+                            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+                                <Button Content="Edit" Command="{Binding DataContext.EditFeatureCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                                        CommandParameter="{Binding}" Margin="0,0,10,0" Width="60" Height="32"/>
+                                <Button Content="Open" Style="{StaticResource PrimaryButton}" 
+                                        Command="{Binding DataContext.SelectFeatureCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                                        CommandParameter="{Binding}" Width="80" Height="32"/>
                             </StackPanel>
-                        </StackPanel>
+                        </Grid>
                     </Border>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
-            <Button Content="Create New Feature" Command="{Binding CreateFeatureCommand}" Width="150" Height="30" Margin="0,0,10,0" Background="#28A745" Foreground="White" FontWeight="Bold" BorderThickness="0"/>
-            <Button Content="Settings" Command="{Binding NavigateToSettingsCommand}" Width="100" Height="30" Margin="0,0,10,0"/>
-            <Button Content="Refresh Features" Command="{Binding RefreshFeaturesCommand}" Width="120" Height="30"/>
-        </StackPanel>
+        <Border Grid.Row="2" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,1,0,0" Padding="0,20,0,0">
+            <Grid>
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="Settings" Command="{Binding NavigateToSettingsCommand}" Width="100" Height="36" Margin="0,0,10,0"/>
+                    <Button Content="Refresh" Command="{Binding RefreshFeaturesCommand}" Width="100" Height="36"/>
+                </StackPanel>
+                <Button Content="+ Create New Feature" Style="{StaticResource SecondaryButton}" 
+                        Command="{Binding CreateFeatureCommand}" Width="180" Height="36" HorizontalAlignment="Right"/>
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>

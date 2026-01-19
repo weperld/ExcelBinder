@@ -8,7 +8,7 @@
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </UserControl.Resources>
-    <Grid Margin="15">
+    <Grid Margin="30">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -16,135 +16,168 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" Margin="0,0,0,15">
-            <Button Content="← Back to Dashboard" Command="{Binding NavigateToDashboardCommand}" HorizontalAlignment="Left" Width="150" Height="25"/>
-            <TextBlock Text="{Binding SelectedFeature.Name}" FontSize="24" FontWeight="Bold" Margin="0,10,0,0"/>
-            <TextBlock Text="{Binding SelectedFeature.Description}" FontSize="14" Foreground="#666"/>
-        </StackPanel>
+        <DockPanel Grid.Row="0" Margin="0,5,0,25">
+            <Button Content="← Back" Command="{Binding NavigateToDashboardCommand}" Width="80" Height="32" VerticalAlignment="Top"/>
+            <StackPanel Margin="20,0,0,0">
+                <Border Background="{StaticResource LightBackgroundBrush}" CornerRadius="4" Padding="6,2" HorizontalAlignment="Left" Margin="0,0,0,5">
+                    <TextBlock Text="{Binding SelectedFeature.Category}" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TagTextBrush}"/>
+                </Border>
+                <TextBlock Text="{Binding SelectedFeature.Name}" FontSize="28" FontWeight="Bold" Foreground="{StaticResource PrimaryBrush}"/>
+                <TextBlock Text="{Binding SelectedFeature.Description}" FontSize="14" Foreground="{StaticResource MutedTextBrush}" Margin="0,5,0,0"/>
+            </StackPanel>
+        </DockPanel>
 
-        <GroupBox Grid.Row="1" Header="Paths Info" Margin="0,0,0,10">
+        <GroupBox Grid.Row="1" Header="Feature Configuration">
             <Grid Margin="5">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 
-                <TextBlock Text="Excel:" FontWeight="SemiBold" Width="60"/>
-                <TextBlock Grid.Column="1" Text="{Binding SelectedFeature.ExcelPath}" TextTrimming="CharacterEllipsis"/>
+                <TextBlock Text="Excel:" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,5,10,5"/>
+                <TextBlock Grid.Column="1" Text="{Binding SelectedFeature.ExcelPath}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0,5,20,5" Foreground="{StaticResource MutedTextBrush}"/>
                 
-                <TextBlock Grid.Row="1" Text="Schema:" FontWeight="SemiBold" Width="60" Visibility="{Binding IsSchemaPathVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding SelectedFeature.SchemaPath}" TextTrimming="CharacterEllipsis" Visibility="{Binding IsSchemaPathVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                <TextBlock Grid.Row="0" Grid.Column="2" Text="Schema:" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,5,10,5" Visibility="{Binding IsSchemaPathVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                <TextBlock Grid.Row="0" Grid.Column="3" Text="{Binding SelectedFeature.SchemaPath}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0,5,0,5" Foreground="{StaticResource MutedTextBrush}" Visibility="{Binding IsSchemaPathVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
-                <TextBlock Grid.Row="2" Text="Export:" FontWeight="SemiBold" Width="60" Visibility="{Binding IsExportPathVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding SelectedFeature.ExportPath}" TextTrimming="CharacterEllipsis" Visibility="{Binding IsExportPathVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Export:" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,5,10,5" Visibility="{Binding IsExportPathVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding SelectedFeature.ExportPath}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0,5,20,5" Foreground="{StaticResource MutedTextBrush}" Visibility="{Binding IsExportPathVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
-                <TextBlock Grid.Row="3" Text="Scripts:" FontWeight="SemiBold" Width="60" Visibility="{Binding IsScriptsPathVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding SelectedFeature.ScriptsPath}" TextTrimming="CharacterEllipsis" Visibility="{Binding IsScriptsPathVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                <TextBlock Grid.Row="1" Grid.Column="2" Text="Scripts:" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,5,10,5" Visibility="{Binding IsScriptsPathVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                <TextBlock Grid.Row="1" Grid.Column="3" Text="{Binding SelectedFeature.ScriptsPath}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0,5,0,5" Foreground="{StaticResource MutedTextBrush}" Visibility="{Binding IsScriptsPathVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
             </Grid>
         </GroupBox>
 
-        <GroupBox Grid.Row="2" Header="Select Files to Process">
+        <GroupBox Grid.Row="2" Header="Source Files and Sheets">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <ListBox ItemsSource="{Binding ExcelFiles}" Margin="0,0,0,5">
+                
+                <ListBox ItemsSource="{Binding ExcelFiles}" Margin="0,0,0,10" Background="{StaticResource LightBackgroundBrush}" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Padding" Value="0"/>
+                            <Setter Property="Margin" Value="0,0,0,5"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListBoxItem">
+                                        <ContentPresenter/>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel>
-                                <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
-                                    <Button Content="All" Command="{Binding SelectAllCommand}" Width="35" Height="20" Margin="0,0,2,0" FontSize="10"/>
-                                    <Button Content="None" Command="{Binding DeselectAllCommand}" Width="40" Height="20" Margin="0,0,5,0" FontSize="10"/>
-                                    <TextBlock Text="{Binding FileName}" FontWeight="Bold" VerticalAlignment="Center"/>
+                            <Border Background="White" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="4" Margin="0,0,0,10" Padding="15">
+                                <StackPanel>
+                                    <DockPanel Margin="0,0,0,10">
+                                        <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,15,0">
+                                            <Button Content="All" Command="{Binding SelectAllCommand}" Width="45" Height="24" Margin="0,0,5,0" FontSize="11"/>
+                                            <Button Content="None" Command="{Binding DeselectAllCommand}" Width="55" Height="24" FontSize="11"/>
+                                        </StackPanel>
+                                        <TextBlock Text="{Binding FileName}" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                    </DockPanel>
+                                    
+                                    <ItemsControl ItemsSource="{Binding Sheets}" Margin="25,0,0,0">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1" Padding="0,8">
+                                                    <DockPanel LastChildFill="True">
+                                                        <CheckBox IsChecked="{Binding IsSelected}" IsEnabled="{Binding CanBeSelected}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                                        
+                                                        <Border Width="12" Height="12" CornerRadius="6" Margin="0,0,10,0" VerticalAlignment="Center" ToolTip="Schema Status">
+                                                            <Border.Style>
+                                                                <Style TargetType="Border">
+                                                                    <Setter Property="Background" Value="{StaticResource SecondaryBrush}"/>
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding IsSchemaFound}" Value="False">
+                                                                            <Setter Property="Background" Value="{StaticResource DangerBrush}"/>
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </Border.Style>
+                                                        </Border>
+                                                        
+                                                        <TextBlock Text="{Binding SheetName}" Width="150" FontWeight="Medium" VerticalAlignment="Center"/>
+                                                        <TextBlock Text="{Binding SchemaPath}" FontSize="11" Foreground="{StaticResource MutedTextBrush}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+                                                    </DockPanel>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
                                 </StackPanel>
-                                <ItemsControl ItemsSource="{Binding Sheets}" Margin="25,5,0,10">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <DockPanel LastChildFill="True" Margin="0,1">
-                                                <CheckBox IsChecked="{Binding IsSelected}" IsEnabled="{Binding CanBeSelected}" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                                                <Ellipse Width="8" Height="8" Margin="0,0,5,0" VerticalAlignment="Center">
-                                                    <Ellipse.Style>
-                                                        <Style TargetType="Ellipse">
-                                                            <Setter Property="Fill" Value="Green"/>
-                                                            <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding IsSchemaFound}" Value="False">
-                                                                    <Setter Property="Fill" Value="Red"/>
-                                                                </DataTrigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </Ellipse.Style>
-                                                </Ellipse>
-                                                <TextBlock Text="{Binding SheetName}" Width="150"/>
-                                                <TextBlock Text="{Binding SchemaPath}" FontSize="10" Foreground="#888" TextTrimming="CharacterEllipsis"/>
-                                            </DockPanel>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </StackPanel>
+                            </Border>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
+                
                 <StackPanel Grid.Row="1" Orientation="Horizontal">
-                    <Button Content="Select All" Command="{Binding SelectAllCommand}" Width="80" Margin="0,0,5,0"/>
-                    <Button Content="Deselect All" Command="{Binding DeselectAllCommand}" Width="80"/>
-                    <Button Content="Refresh Files" Command="{Binding RefreshFilesCommand}" Width="100" Margin="10,0,0,0"/>
+                    <Button Content="Select All Files" Command="{Binding SelectAllCommand}" Width="120" Height="32" Margin="0,0,10,0"/>
+                    <Button Content="Deselect All" Command="{Binding DeselectAllCommand}" Width="120" Height="32" Margin="0,0,10,0"/>
+                    <Button Content="Refresh List" Command="{Binding RefreshFilesCommand}" Width="120" Height="32"/>
                 </StackPanel>
             </Grid>
         </GroupBox>
 
-        <Grid Grid.Row="3" Margin="0,15,0,0">
-            <StackPanel Orientation="Horizontal">
-                <CheckBox Content="Binary" IsChecked="{Binding IsBinaryChecked}" Visibility="{Binding SelectedFeature.OutputOptions.SupportsBinary, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                <CheckBox Content="JSON" IsChecked="{Binding IsJsonChecked}" Visibility="{Binding SelectedFeature.OutputOptions.SupportsJson, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" Margin="0,0,10,0"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Command="{Binding GenerateCodeCommand}" Width="150" Height="40">
-                    <Button.Style>
-                        <Style TargetType="Button">
-                            <Setter Property="Content" Value="Generate Code Only"/>
-                            <Setter Property="Margin" Value="0,0,10,0"/>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding SelectedFeature.Category}" Value="Logic">
-                                    <Setter Property="Content" Value="Generate Logic"/>
-                                    <Setter Property="Margin" Value="0"/>
-                                    <Setter Property="Background" Value="#007ACC"/>
-                                    <Setter Property="Foreground" Value="White"/>
-                                    <Setter Property="FontWeight" Value="Bold"/>
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding SelectedFeature.Category}" Value="SchemaGen">
-                                    <Setter Property="Content" Value="Generate Schemas"/>
-                                    <Setter Property="Margin" Value="0"/>
-                                    <Setter Property="Background" Value="#007ACC"/>
-                                    <Setter Property="Foreground" Value="White"/>
-                                    <Setter Property="FontWeight" Value="Bold"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Button.Style>
-                </Button>
-                <Button Content="Execute Export" Command="{Binding ExportCommand}" Width="150" Height="40" Background="#007ACC" Foreground="White" FontWeight="Bold">
-                    <Button.Style>
-                        <Style TargetType="Button">
-                            <Setter Property="Visibility" Value="Visible"/>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding SelectedFeature.Category}" Value="Logic">
-                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding SelectedFeature.Category}" Value="SchemaGen">
-                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Button.Style>
-                </Button>
-            </StackPanel>
-        </Grid>
+        <Border Grid.Row="3" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,1,0,0" Padding="0,20,0,0">
+            <Grid>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="Format:" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,15,0"/>
+                    <CheckBox Content="Binary" IsChecked="{Binding IsBinaryChecked}" Visibility="{Binding SelectedFeature.OutputOptions.SupportsBinary, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" Margin="0,0,20,0"/>
+                    <CheckBox Content="JSON" IsChecked="{Binding IsJsonChecked}" Visibility="{Binding SelectedFeature.OutputOptions.SupportsJson, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center"/>
+                </StackPanel>
+                
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Command="{Binding GenerateCodeCommand}" Width="180" Height="42" Margin="0,0,10,0">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                                <Setter Property="Content" Value="Generate Code"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding SelectedFeature.Category}" Value="Logic">
+                                        <Setter Property="Content" Value="Generate Logic"/>
+                                        <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
+                                        <Setter Property="Foreground" Value="White"/>
+                                        <Setter Property="FontWeight" Value="SemiBold"/>
+                                        <Setter Property="BorderThickness" Value="0"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding SelectedFeature.Category}" Value="SchemaGen">
+                                        <Setter Property="Content" Value="Generate Schemas"/>
+                                        <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
+                                        <Setter Property="Foreground" Value="White"/>
+                                        <Setter Property="FontWeight" Value="SemiBold"/>
+                                        <Setter Property="BorderThickness" Value="0"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    
+                    <Button Content="Execute Export" Command="{Binding ExportCommand}" Width="180" Height="42">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource PrimaryButton}">
+                                <Setter Property="Visibility" Value="Visible"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding SelectedFeature.Category}" Value="Logic">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding SelectedFeature.Category}" Value="SchemaGen">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>
