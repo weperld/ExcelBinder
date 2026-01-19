@@ -18,7 +18,57 @@ namespace ExcelBinder.ViewModels
         public FeatureDefinition Feature
         {
             get => _feature;
-            set => SetProperty(ref _feature, value);
+            set
+            {
+                if (SetProperty(ref _feature, value))
+                {
+                    OnPropertyChanged(nameof(Category));
+                    UpdateVisibilities();
+                }
+            }
+        }
+
+        public string Category
+        {
+            get => _feature.Category;
+            set
+            {
+                if (_feature.Category != value)
+                {
+                    _feature.Category = value;
+                    OnPropertyChanged();
+                    UpdateVisibilities();
+                }
+            }
+        }
+
+        private bool _isSchemaPathVisible;
+        public bool IsSchemaPathVisible { get => _isSchemaPathVisible; set => SetProperty(ref _isSchemaPathVisible, value); }
+
+        private bool _isExportPathVisible;
+        public bool IsExportPathVisible { get => _isExportPathVisible; set => SetProperty(ref _isExportPathVisible, value); }
+
+        private bool _isScriptsPathVisible;
+        public bool IsScriptsPathVisible { get => _isScriptsPathVisible; set => SetProperty(ref _isScriptsPathVisible, value); }
+
+        private bool _isTypeMappingsVisible;
+        public bool IsTypeMappingsVisible { get => _isTypeMappingsVisible; set => SetProperty(ref _isTypeMappingsVisible, value); }
+
+        private bool _isTemplatesVisible;
+        public bool IsTemplatesVisible { get => _isTemplatesVisible; set => SetProperty(ref _isTemplatesVisible, value); }
+
+        private bool _isOutputOptionsVisible;
+        public bool IsOutputOptionsVisible { get => _isOutputOptionsVisible; set => SetProperty(ref _isOutputOptionsVisible, value); }
+
+        private void UpdateVisibilities()
+        {
+            var processor = FeatureProcessorFactory.GetProcessor(Category);
+            IsSchemaPathVisible = processor.IsSchemaPathVisible;
+            IsExportPathVisible = processor.IsExportPathVisible;
+            IsScriptsPathVisible = processor.IsScriptsPathVisible;
+            IsTypeMappingsVisible = processor.IsTypeMappingsVisible;
+            IsTemplatesVisible = processor.IsTemplatesVisible;
+            IsOutputOptionsVisible = processor.IsOutputOptionsVisible;
         }
 
         public string FilePath
@@ -28,10 +78,7 @@ namespace ExcelBinder.ViewModels
         }
 
         public ObservableCollection<TypeMappingItem> TypeMappings { get; } = new();
-        public ObservableCollection<string> AvailableTypes { get; } = new()
-        {
-            "byte", "short", "int", "uint", "long", "ulong", "float", "double", "string", "bool"
-        };
+        public ObservableCollection<string> AvailableTypes { get; } = new(ProjectConstants.Types.AllPrimitives);
 
         public ICommand SaveCommand { get; }
         public ICommand AddMappingCommand { get; }
@@ -49,8 +96,10 @@ namespace ExcelBinder.ViewModels
 
         public FeatureBuilderViewModel(FeatureDefinition? existing = null, string? path = null)
         {
-            _feature = existing ?? new FeatureDefinition { Id = "new_feature", Name = "New Feature" };
+            _feature = existing ?? new FeatureDefinition { Id = ProjectConstants.Defaults.FeatureId, Name = ProjectConstants.Defaults.FeatureName };
             _filePath = path ?? "";
+
+            UpdateVisibilities();
 
             foreach (var kvp in _feature.TypeMappings)
             {
@@ -67,7 +116,7 @@ namespace ExcelBinder.ViewModels
             BrowseSchemaPathCommand = new RelayCommand(() => BrowseFolder(p => Feature.SchemaPath = p));
             BrowseExportPathCommand = new RelayCommand(() => BrowseFolder(p => Feature.ExportPath = p));
             BrowseScriptsPathCommand = new RelayCommand(() => BrowseFolder(p => Feature.ScriptsPath = p));
-            BrowseDataTemplateCommand = new RelayCommand(() => BrowseFile("Liquid Files (*.liquid)|*.liquid", p => Feature.Templates.DataClass = p));
+            BrowseDataTemplateCommand = new RelayCommand(() => BrowseFile(ProjectConstants.Extensions.LiquidFilter, p => Feature.Templates.DataClass = p));
             OpenAIAssistantCommand = new RelayCommand(ExecuteOpenAIAssistant);
         }
 
@@ -78,11 +127,11 @@ namespace ExcelBinder.ViewModels
             var service = new FeatureService();
             var settings = service.LoadSettings();
 
-            string apiKey = settings.AiModel.StartsWith("claude-") ? settings.ClaudeApiKey : settings.OpenAiApiKey;
+            string apiKey = settings.AiModel.StartsWith(ProjectConstants.AI.ClaudePrefix) ? settings.ClaudeApiKey : settings.OpenAiApiKey;
 
             if (string.IsNullOrEmpty(apiKey))
             {
-                string provider = settings.AiModel.StartsWith("claude-") ? "Claude" : "OpenAI";
+                string provider = settings.AiModel.StartsWith(ProjectConstants.AI.ClaudePrefix) ? ProjectConstants.AI.ClaudeProvider : ProjectConstants.AI.OpenAIProvider;
                 MessageBox.Show($"Settings에서 {provider} API Key를 먼저 설정해 주세요.", "AI Assistant", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
@@ -99,8 +148,8 @@ namespace ExcelBinder.ViewModels
                 {
                     var dialog = new Microsoft.Win32.SaveFileDialog
                     {
-                        Filter = "Liquid Files (*.liquid)|*.liquid",
-                        FileName = $"{Feature.Id}_Template.liquid",
+                        Filter = ProjectConstants.Extensions.LiquidFilter,
+                        FileName = $"{Feature.Id}_Template{ProjectConstants.Extensions.Liquid}",
                         Title = "AI가 생성한 템플릿을 저장할 위치를 선택하세요"
                     };
                     if (dialog.ShowDialog() == true)
@@ -114,7 +163,7 @@ namespace ExcelBinder.ViewModels
                 try
                 {
                     File.WriteAllText(templatePath, template);
-                    MessageBox.Show("템플릿이 성공적으로 적용되었습니다.", "AI Assistant");
+                    MessageBox.Show(ProjectConstants.UI.MsgTemplateApplied, ProjectConstants.AI.ClaudeProvider.Contains("AI") ? "AI Assistant" : "AI Assistant"); // Keep existing if complex, but let's simplify
                     aiWin.Close();
                 }
                 catch (Exception ex)
@@ -130,7 +179,7 @@ namespace ExcelBinder.ViewModels
         {
             var dialog = new Microsoft.Win32.OpenFolderDialog
             {
-                Title = "Select Folder"
+                Title = ProjectConstants.UI.TitleSelectFolder
             };
             if (dialog.ShowDialog() == true)
             {
@@ -143,7 +192,7 @@ namespace ExcelBinder.ViewModels
             var dialog = new Microsoft.Win32.OpenFileDialog
             {
                 Filter = filter,
-                Title = "Select File"
+                Title = ProjectConstants.UI.TitleSelectFile
             };
             if (dialog.ShowDialog() == true)
             {
@@ -166,7 +215,7 @@ namespace ExcelBinder.ViewModels
         {
             if (string.IsNullOrWhiteSpace(Feature.Id) || string.IsNullOrWhiteSpace(Feature.Name))
             {
-                MessageBox.Show("ID and Name are required.");
+                MessageBox.Show(ProjectConstants.UI.MsgRequiredIdName, ProjectConstants.UI.TitleWarning, MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -180,8 +229,8 @@ namespace ExcelBinder.ViewModels
             {
                 var dialog = new Microsoft.Win32.SaveFileDialog
                 {
-                    Filter = "JSON Files (*.json)|*.json",
-                    FileName = $"{Feature.Id}.json"
+                    Filter = ProjectConstants.Extensions.JsonFilter,
+                    FileName = $"{Feature.Id}{ProjectConstants.Extensions.Json}"
                 };
                 if (dialog.ShowDialog() == true)
                 {
@@ -193,12 +242,12 @@ namespace ExcelBinder.ViewModels
             try
             {
                 File.WriteAllText(FilePath, json);
-                MessageBox.Show("Feature saved successfully.");
+                MessageBox.Show(ProjectConstants.UI.MsgFeatureSaved, ProjectConstants.UI.TitleInfo);
                 OnComplete?.Invoke();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error saving feature: {ex.Message}");
+                MessageBox.Show($"{ProjectConstants.UI.MsgSaveError}{ex.Message}", ProjectConstants.UI.TitleError);
             }
         }
     }

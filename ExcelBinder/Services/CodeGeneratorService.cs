@@ -39,7 +39,7 @@ namespace ExcelBinder.Services
         {
             var fields = schema.Fields.Select(f =>
             {
-                var info = ParseType(f.Value, f.Key);
+                var info = TypeParser.ParseType(f.Value, f.Key);
                 string baseType = ConvertPrimitive(info.BaseType, feature);
                 return new
                 {
@@ -65,65 +65,23 @@ namespace ExcelBinder.Services
             };
         }
 
-        private struct TypeInfo
-        {
-            public string BaseType;
-            public bool IsList;
-            public bool IsReference;
-            public string? RefType;
-            public string ColumnName;
-        }
-
-        private TypeInfo ParseType(string schemaType, string fieldName)
-        {
-            var info = new TypeInfo { ColumnName = fieldName };
-            string current = schemaType;
-
-            if (current.StartsWith("List<"))
-            {
-                info.IsList = true;
-                current = current.Substring(5, current.Length - 6);
-            }
-
-            var parts = current.Split(':');
-            info.BaseType = parts[0];
-
-            if (parts.Contains("ref"))
-            {
-                info.IsReference = true;
-                int refIdx = Array.IndexOf(parts, "ref");
-                if (refIdx + 1 < parts.Length)
-                {
-                    info.RefType = parts[refIdx + 1];
-                }
-            }
-
-            string last = parts.Last();
-            if (last != info.BaseType && last != "ref" && last != info.RefType)
-            {
-                info.ColumnName = last;
-            }
-
-            return info;
-        }
-
         private string ConvertPrimitive(string baseType, FeatureDefinition feature)
         {
             if (feature.TypeMappings != null && feature.TypeMappings.TryGetValue(baseType, out var mapped)) return mapped;
             
             return baseType switch
             {
-                "int" => "int",
-                "float" => "float",
-                "string" => "string",
-                "bool" => "bool",
-                "long" => "long",
-                "double" => "double",
-                "uint" => "uint",
-                "ulong" => "ulong",
-                "short" => "short",
-                "byte" => "byte",
-                _ => "string"
+                ProjectConstants.Types.Int => ProjectConstants.Types.Int,
+                ProjectConstants.Types.Float => ProjectConstants.Types.Float,
+                ProjectConstants.Types.String => ProjectConstants.Types.String,
+                ProjectConstants.Types.Bool => ProjectConstants.Types.Bool,
+                ProjectConstants.Types.Long => ProjectConstants.Types.Long,
+                ProjectConstants.Types.Double => ProjectConstants.Types.Double,
+                ProjectConstants.Types.UInt => ProjectConstants.Types.UInt,
+                ProjectConstants.Types.ULong => ProjectConstants.Types.ULong,
+                ProjectConstants.Types.Short => ProjectConstants.Types.Short,
+                ProjectConstants.Types.Byte => ProjectConstants.Types.Byte,
+                _ => ProjectConstants.Types.String
             };
         }
 
@@ -131,26 +89,26 @@ namespace ExcelBinder.Services
         {
             if (schema.Fields.TryGetValue(schema.Key, out var type))
             {
-                var info = ParseType(type, schema.Key);
+                var info = TypeParser.ParseType(type, schema.Key);
                 return ConvertPrimitive(info.BaseType, feature);
             }
-            return "int";
+            return ProjectConstants.Types.Int;
         }
 
         private string GetReadMethod(string type)
         {
             return type switch
             {
-                "int" => "reader.ReadInt32()",
-                "float" => "reader.ReadSingle()",
-                "string" => "reader.ReadString()",
-                "bool" => "reader.ReadBoolean()",
-                "long" => "reader.ReadInt64()",
-                "double" => "reader.ReadDouble()",
-                "uint" => "reader.ReadUInt32()",
-                "ulong" => "reader.ReadUInt64()",
-                "short" => "reader.ReadInt16()",
-                "byte" => "reader.ReadByte()",
+                ProjectConstants.Types.Int => "reader.ReadInt32()",
+                ProjectConstants.Types.Float => "reader.ReadSingle()",
+                ProjectConstants.Types.String => "reader.ReadString()",
+                ProjectConstants.Types.Bool => "reader.ReadBoolean()",
+                ProjectConstants.Types.Long => "reader.ReadInt64()",
+                ProjectConstants.Types.Double => "reader.ReadDouble()",
+                ProjectConstants.Types.UInt => "reader.ReadUInt32()",
+                ProjectConstants.Types.ULong => "reader.ReadUInt64()",
+                ProjectConstants.Types.Short => "reader.ReadInt16()",
+                ProjectConstants.Types.Byte => "reader.ReadByte()",
                 _ => "reader.ReadString()"
             };
         }

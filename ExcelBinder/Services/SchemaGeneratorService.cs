@@ -16,23 +16,23 @@ namespace ExcelBinder.Services
             if (data.Count < 1) return;
 
             var header = data[0];
-            var firstValidColumn = header.FirstOrDefault(c => !string.IsNullOrWhiteSpace(c) && !c.TrimStart().StartsWith("#"));
+            var firstValidColumn = header.FirstOrDefault(c => !string.IsNullOrWhiteSpace(c) && !c.TrimStart().StartsWith(ProjectConstants.Excel.CommentPrefix));
 
             var schema = new SchemaDefinition
             {
                 ClassName = sheetName + "Data",
-                Key = firstValidColumn ?? "Id",
+                Key = firstValidColumn ?? ProjectConstants.Excel.DefaultSheetKey,
                 Fields = new Dictionary<string, string>()
             };
 
             foreach (var colName in header)
             {
                 if (string.IsNullOrWhiteSpace(colName)) continue;
-                if (colName.TrimStart().StartsWith("#")) continue;
+                if (colName.TrimStart().StartsWith(ProjectConstants.Excel.CommentPrefix)) continue;
 
                 if (!schema.Fields.ContainsKey(colName))
                 {
-                    schema.Fields[colName] = "int"; // Default to int, user can change later
+                    schema.Fields[colName] = ProjectConstants.Types.Int; // Default to int, user can change later
                 }
             }
 

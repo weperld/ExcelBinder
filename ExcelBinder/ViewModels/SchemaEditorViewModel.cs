@@ -87,10 +87,7 @@ namespace ExcelBinder.ViewModels
 
         public ObservableCollection<string> Headers { get; } = new();
         public ObservableCollection<SchemaFieldViewModel> Fields { get; } = new();
-        public ObservableCollection<string> AvailableTypes { get; } = new()
-        {
-            "byte", "short", "int", "uint", "long", "ulong", "float", "double", "string", "bool"
-        };
+        public ObservableCollection<string> AvailableTypes { get; } = new(ProjectConstants.Types.AllPrimitives);
 
         public SchemaEditorItemViewModel(string excelPath, string sheetName, string outputPath)
         {
@@ -130,23 +127,14 @@ namespace ExcelBinder.ViewModels
                 {
                     Headers.Add(group.Name);
 
-                    string selectedType = "int";
+                    string selectedType = ProjectConstants.Types.Int;
                     string referenceType = "";
 
                     if (existingSchema != null && existingSchema.Fields.TryGetValue(group.Name, out var typeStr))
                     {
-                        // Parse type string: List<type:ref:target> or type:ref:target
-                        if (typeStr.StartsWith("List<") && typeStr.EndsWith(">"))
-                        {
-                            typeStr = typeStr.Substring(5, typeStr.Length - 6);
-                        }
-
-                        var parts = typeStr.Split(':');
-                        selectedType = parts[0];
-                        if (parts.Length >= 3 && parts[1] == "ref")
-                        {
-                            referenceType = parts[2];
-                        }
+                        var info = TypeParser.ParseType(typeStr, group.Name);
+                        selectedType = info.BaseType;
+                        referenceType = info.RefType ?? "";
                     }
 
                     Fields.Add(new SchemaFieldViewModel 
@@ -164,7 +152,7 @@ namespace ExcelBinder.ViewModels
                 }
                 else
                 {
-                    _selectedKey = Headers.FirstOrDefault() ?? "Id";
+                    _selectedKey = Headers.FirstOrDefault() ?? ProjectConstants.Excel.DefaultSheetKey;
                 }
             }
         }
@@ -209,7 +197,7 @@ namespace ExcelBinder.ViewModels
         public int Count { get; set; } = 1;
         public string DisplayName => Count > 1 ? $"{HeaderName}({Count})" : HeaderName;
 
-        private string _selectedType = "int";
+        private string _selectedType = ProjectConstants.Types.Int;
         private string _referenceType = string.Empty;
 
         public string SelectedType

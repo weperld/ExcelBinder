@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.0] - 2026-01-19
+
+### Added
+- **카테고리별 UI 가시성 제어 (Feature Builder & Execution View)**
+  - 사용자가 선택한 카테고리(`StaticData`, `Logic`, `SchemaGen`)에 따라 불필요한 입력 항목 및 경로 정보를 자동으로 숨김 처리하여 UI 편의성 개선.
+- **매직 넘버 및 매직 스트링 상수화**
+  - `ProjectConstants.cs`를 신설하여 프로젝트 전반에서 사용되는 상수(카테고리명, 데이터 타입, 파일 확장자, AI 설정 등)를 통합 관리.
+
+### Changed
+- **전략 패턴(Strategy Pattern) 도입 및 구조 리팩토링**
+  - `IFeatureProcessor` 인터페이스와 카테고리별 프로세서(`StaticDataProcessor`, `LogicProcessor`, `SchemaGenProcessor`)를 도입하여 카테고리별 실행 로직 및 UI 규칙을 캡슐화.
+  - `FeatureProcessorFactory`를 통한 객체 생성으로 ViewModel 내 복잡한 `if-else` 분기 제거.
+- **공통 서비스 로직 추출**
+  - `TypeParser`: 여러 클래스에 산재해 있던 복잡한 타입 파싱 로직을 통합.
+  - `ExcelService.GetFilteredData`: 엑셀 데이터 필터링(# 접두사 처리) 로직을 공통 서비스로 이동하여 코드 중복 제거.
+
+### Fixed
+- `Logic` 카테고리 선택 시 사용되지 않는 `Export Path` 및 `Schema Path`가 UI에 노출되던 문제 수정.
+
 ## [1.0.2] - 2026-01-18
 
 ### Added

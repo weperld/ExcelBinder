@@ -18,7 +18,7 @@ namespace ExcelBinder.ViewModels
         private FeatureDefinition? _selectedFeature;
         private bool _isBinaryChecked = true;
         private bool _isJsonChecked = false;
-        private string _namespace = "GameData";
+        private string _namespace = ProjectConstants.Defaults.Namespace;
 
         public AppSettings Settings
         {
@@ -40,8 +40,34 @@ namespace ExcelBinder.ViewModels
                         _featureService.SaveSettings(Settings);
                         RefreshFiles();
                     }
+                    UpdateVisibilities();
                 }
             }
+        }
+
+        private bool _isSchemaPathVisible;
+        public bool IsSchemaPathVisible { get => _isSchemaPathVisible; set => SetProperty(ref _isSchemaPathVisible, value); }
+
+        private bool _isExportPathVisible;
+        public bool IsExportPathVisible { get => _isExportPathVisible; set => SetProperty(ref _isExportPathVisible, value); }
+
+        private bool _isScriptsPathVisible;
+        public bool IsScriptsPathVisible { get => _isScriptsPathVisible; set => SetProperty(ref _isScriptsPathVisible, value); }
+
+        private void UpdateVisibilities()
+        {
+            if (SelectedFeature == null)
+            {
+                IsSchemaPathVisible = false;
+                IsExportPathVisible = false;
+                IsScriptsPathVisible = false;
+                return;
+            }
+
+            var processor = FeatureProcessorFactory.GetProcessor(SelectedFeature.Category);
+            IsSchemaPathVisible = processor.IsSchemaPathVisible;
+            IsExportPathVisible = processor.IsExportPathVisible;
+            IsScriptsPathVisible = processor.IsScriptsPathVisible;
         }
 
         public string Namespace
@@ -101,8 +127,6 @@ namespace ExcelBinder.ViewModels
         private readonly ExcelService _excelService = new();
         private readonly ExportService _exportService = new();
         private readonly CodeGeneratorService _codeGenService = new();
-        private readonly LogicParserService _logicParserService = new();
-        private readonly SchemaGeneratorService _schemaGenService = new();
 
         public MainViewModel()
         {
@@ -232,7 +256,7 @@ namespace ExcelBinder.ViewModels
         {
             var dialog = new Microsoft.Win32.OpenFolderDialog
             {
-                Title = "Select Feature Definitions Folder"
+                Title = ProjectConstants.UI.TitleSelectFolder
             };
 
             if (dialog.ShowDialog() == true)
@@ -245,8 +269,8 @@ namespace ExcelBinder.ViewModels
         {
             var dialog = new Microsoft.Win32.OpenFileDialog
             {
-                Filter = "Feature Definition (*.json)|*.json",
-                Title = "Select Feature Definition File"
+                Filter = ProjectConstants.Extensions.JsonFilter,
+                Title = ProjectConstants.UI.TitleSelectFile
             };
 
             if (dialog.ShowDialog() == true)
@@ -262,7 +286,7 @@ namespace ExcelBinder.ViewModels
         {
             var dialog = new Microsoft.Win32.OpenFolderDialog
             {
-                Title = "Select Feature Folder to Bind"
+                Title = ProjectConstants.UI.TitleSelectFolder
             };
 
             if (dialog.ShowDialog() == true)
@@ -323,13 +347,13 @@ namespace ExcelBinder.ViewModels
                         {
                             string schemaFile = GetSchemaPath(file, sheetName);
                             bool found = File.Exists(schemaFile);
-                            bool canSelect = found || SelectedFeature.Category != "StaticData";
+                            bool canSelect = found || SelectedFeature.Category != ProjectConstants.Categories.StaticData;
 
                             fileItem.Sheets.Add(new SheetItemViewModel 
                             { 
                                 SheetName = sheetName, 
                                 IsSchemaFound = found,
-                                SchemaPath = found ? schemaFile : "Not Found",
+                                SchemaPath = found ? schemaFile : ProjectConstants.Defaults.NotFound,
                                 CanBeSelected = canSelect,
                                 IsSelected = false // Default deselected as requested
                             });
@@ -348,7 +372,7 @@ namespace ExcelBinder.ViewModels
             }
         }
 
-        private void ShowLogs()
+        internal void ShowLogs()
         {
             if (Application.Current.MainWindow != null)
             {
@@ -360,209 +384,39 @@ namespace ExcelBinder.ViewModels
         public void ExecuteExport()
         {
             if (SelectedFeature == null) return;
-            if (!Directory.Exists(SelectedFeature.ExportPath)) Directory.CreateDirectory(SelectedFeature.ExportPath);
-
-            var selectedSheets = ExcelFiles.SelectMany(f => f.Sheets.Where(s => s.IsSelected).Select(s => new { File = f, Sheet = s })).ToList();
-
-            if (selectedSheets.Count == 0)
-            {
-                LogService.Instance.Warning("Please select at least one sheet with a valid schema.");
-                ShowLogs();
-                return;
-            }
-
-            LogService.Instance.Clear();
-            LogService.Instance.Info($"Starting Export for {selectedSheets.Count} sheets...");
-
-            foreach (var item in selectedSheets)
-            {
-                string schemaFile = GetSchemaPath(item.File.FullPath, item.Sheet.SheetName);
-                if (!File.Exists(schemaFile))
-                {
-                    LogService.Instance.Warning($"Schema not found for {item.Sheet.SheetName} in {item.File.FileName}");
-                    continue;
-                }
-
-                try 
-                {
-                    var schema = JsonConvert.DeserializeObject<SchemaDefinition>(File.ReadAllText(schemaFile));
-                    if (schema == null)
-                    {
-                        LogService.Instance.Error($"Failed to deserialize schema: {schemaFile}");
-                        continue;
-                    }
-
-                    var data = _excelService.ReadExcel(item.File.FullPath, item.Sheet.SheetName);
-
-                    if (IsBinaryChecked && SelectedFeature.OutputOptions.SupportsBinary)
-                    {
-                        string binaryPath = Path.Combine(SelectedFeature.ExportPath, schema.ClassName + SelectedFeature.OutputOptions.Extension);
-                        _exportService.ExportToBinary(schema, data, binaryPath, SelectedFeature);
-                        LogService.Instance.Info($"Exported Binary: {schema.ClassName}");
-                    }
-
-                    if (IsJsonChecked && SelectedFeature.OutputOptions.SupportsJson)
-                    {
-                        string jsonPath = Path.Combine(SelectedFeature.ExportPath, schema.ClassName + ".json");
-                        _exportService.ExportToJson(schema, data, jsonPath, SelectedFeature);
-                        LogService.Instance.Info($"Exported JSON: {schema.ClassName}");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    LogService.Instance.Error($"Error exporting {item.Sheet.SheetName} from {item.File.FileName}: {ex.Message}");
-                }
-            }
-            
-            LogService.Instance.Info("Export Process Finished.");
-            ShowLogs();
+            var processor = FeatureProcessorFactory.GetProcessor(SelectedFeature.Category);
+            processor.ExecuteExport(this);
         }
 
         public void ExecuteGenerateCode()
         {
-            if (SelectedFeature == null || string.IsNullOrEmpty(SelectedFeature.ScriptsPath)) return;
-
-            if (SelectedFeature.Category != "SchemaGen")
-            {
-                if (string.IsNullOrEmpty(SelectedFeature.Templates.DataClass) || !File.Exists(SelectedFeature.Templates.DataClass))
-                {
-                    LogService.Instance.Clear();
-                    LogService.Instance.Warning($"Template file not found: {SelectedFeature.Templates.DataClass}. Code generation cancelled.");
-                    ShowLogs();
-                    return;
-                }
-            }
-
-            if (!Directory.Exists(SelectedFeature.ScriptsPath)) Directory.CreateDirectory(SelectedFeature.ScriptsPath);
-
-            LogService.Instance.Clear();
-
-            if (SelectedFeature.Category == "Logic")
-            {
-                ExecuteGenerateLogicCode();
-                return;
-            }
-
-            if (SelectedFeature.Category == "SchemaGen")
-            {
-                ExecuteGenerateSchemaGen();
-                return;
-            }
-
-            var selectedSheets = ExcelFiles.SelectMany(f => f.Sheets.Where(s => s.IsSelected).Select(s => new { File = f, Sheet = s })).ToList();
-            var schemas = new List<SchemaDefinition>();
-
-            LogService.Instance.Info($"Starting Code Generation for {selectedSheets.Count} sheets...");
-
-            if (selectedSheets.Count > 0)
-            {
-                foreach (var item in selectedSheets)
-                {
-                    string schemaFile = GetSchemaPath(item.File.FullPath, item.Sheet.SheetName);
-                    if (!File.Exists(schemaFile))
-                    {
-                        LogService.Instance.Warning($"Schema not found for {item.Sheet.SheetName} in {item.File.FileName}");
-                        continue;
-                    }
-                    ProcessSchema(schemaFile, schemas);
-                }
-            }
-            else if (Directory.Exists(SelectedFeature.SchemaPath))
-            {
-                LogService.Instance.Info("No sheets selected. Generating code for all schemas in schema path...");
-                foreach (var schemaFile in Directory.GetFiles(SelectedFeature.SchemaPath, "*.json"))
-                {
-                    ProcessSchema(schemaFile, schemas);
-                }
-            }
-
-            LogService.Instance.Info("Code Generation Finished.");
-            ShowLogs();
+            if (SelectedFeature == null) return;
+            var processor = FeatureProcessorFactory.GetProcessor(SelectedFeature.Category);
+            processor.ExecuteGenerate(this);
         }
 
-        private string GetSchemaPath(string excelFullPath, string sheetName)
+        internal string GetSchemaPath(string excelFullPath, string sheetName)
         {
             if (SelectedFeature == null) return string.Empty;
             string excelName = Path.GetFileNameWithoutExtension(excelFullPath);
             
             // Try [ExcelName]_[SheetName]_Schema.json
-            string path1 = Path.Combine(SelectedFeature.SchemaPath, $"{excelName}_{sheetName}_Schema.json");
+            string path1 = Path.Combine(SelectedFeature.SchemaPath, $"{excelName}_{sheetName}_Schema{ProjectConstants.Extensions.Json}");
             if (File.Exists(path1)) return path1;
             
             // Try [ExcelName]_Schema.json
-            string path2 = Path.Combine(SelectedFeature.SchemaPath, $"{excelName}_Schema.json");
+            string path2 = Path.Combine(SelectedFeature.SchemaPath, $"{excelName}_Schema{ProjectConstants.Extensions.Json}");
             if (File.Exists(path2)) return path2;
 
             // Fallback to sheetName.json
-            string path3 = Path.Combine(SelectedFeature.SchemaPath, sheetName + ".json");
+            string path3 = Path.Combine(SelectedFeature.SchemaPath, sheetName + ProjectConstants.Extensions.Json);
             if (File.Exists(path3)) return path3;
 
             return path1; // Default to the most specific one
         }
 
-        private void ExecuteGenerateLogicCode()
-        {
-            if (SelectedFeature == null) return;
-            var selectedSheets = ExcelFiles.SelectMany(f => f.Sheets.Where(s => s.IsSelected).Select(s => new { File = f, Sheet = s })).ToList();
-            if (selectedSheets.Count == 0)
-            {
-                LogService.Instance.Warning("Please select at least one sheet for logic generation.");
-                ShowLogs();
-                return;
-            }
 
-            LogService.Instance.Info($"Starting Logic Generation for {selectedSheets.Count} sheets...");
-
-            foreach (var item in selectedSheets)
-            {
-                try
-                {
-                    var data = _excelService.ReadExcel(item.File.FullPath, item.Sheet.SheetName);
-                    string className = item.Sheet.SheetName;
-                    var context = _logicParserService.PrepareLogicContext(data, SelectedFeature, Namespace, className);
-                    string? code = _codeGenService.GenerateLogicCode(context, SelectedFeature);
-                    if (!string.IsNullOrEmpty(code))
-                    {
-                        File.WriteAllText(Path.Combine(SelectedFeature.ScriptsPath, className + ".cs"), code);
-                        LogService.Instance.Info($"Generated Logic: {className}");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    LogService.Instance.Error($"Error generating logic for {item.Sheet.SheetName}: {ex.Message}");
-                }
-            }
-            
-            LogService.Instance.Info("Logic Generation Finished.");
-            ShowLogs();
-        }
-
-        public void ExecuteGenerateSchemaGen()
-        {
-            if (SelectedFeature == null) return;
-            var selectedSheets = ExcelFiles.SelectMany(f => f.Sheets.Where(s => s.IsSelected).Select(s => new { File = f, Sheet = s })).ToList();
-            if (selectedSheets.Count == 0)
-            {
-                LogService.Instance.Warning("Please select at least one sheet for schema generation.");
-                ShowLogs();
-                return;
-            }
-
-            if (!Directory.Exists(SelectedFeature.SchemaPath)) Directory.CreateDirectory(SelectedFeature.SchemaPath);
-
-            var targets = selectedSheets.Select(item => ((string)item.File.FullPath, (string)item.Sheet.SheetName));
-            var editorVm = new SchemaEditorViewModel(targets, SelectedFeature?.SchemaPath ?? "");
-            editorVm.OnComplete += () =>
-            {
-                LogService.Instance.Info("Schema Generation Session Finished.");
-                RefreshFiles();
-                (Application.Current.MainWindow as MainWindow)?.NavigateToExecution();
-                ShowLogs();
-            };
-            (Application.Current.MainWindow as MainWindow)?.NavigateToSchemaEditor(editorVm);
-        }
-
-        private void ProcessSchema(string schemaFile, List<SchemaDefinition> schemas)
+        internal void ProcessSchema(string schemaFile, List<SchemaDefinition> schemas)
         {
             if (SelectedFeature == null) return;
             try
@@ -578,7 +432,7 @@ namespace ExcelBinder.ViewModels
                 string? code = _codeGenService.GenerateDataCode(schema, SelectedFeature, Namespace);
                 if (!string.IsNullOrEmpty(code))
                 {
-                    File.WriteAllText(Path.Combine(SelectedFeature.ScriptsPath, schema.ClassName + ".cs"), code);
+                    File.WriteAllText(Path.Combine(SelectedFeature.ScriptsPath, schema.ClassName + ProjectConstants.Extensions.CSharp), code);
                     LogService.Instance.Info($"Generated Code: {schema.ClassName}");
                 }
             }

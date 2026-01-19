@@ -7,14 +7,14 @@ namespace ExcelBinder.Models
 {
     public class AppSettings : ViewModelBase
     {
-        private string _featureDefinitionsPath = "Features";
+        private string _featureDefinitionsPath = ProjectConstants.Defaults.FeatureDefinitionsPath;
         private string _lastFeatureId = string.Empty;
         private ObservableCollection<string> _boundFeatures = new();
         private bool _isBinaryChecked = true;
         private bool _isJsonChecked = false;
         private string _openAiApiKey = string.Empty;
         private string _claudeApiKey = string.Empty;
-        private string _aiModel = "gpt-4o";
+        private string _aiModel = ProjectConstants.AI.DefaultModel;
 
         [JsonProperty("featureDefinitionsPath")]
         public string FeatureDefinitionsPath 

@@ -53,5 +53,34 @@ namespace ExcelBinder.Services
                 yield return cellValues;
             }
         }
+
+        public List<(string[] Data, int OriginalIndex)> GetFilteredData(IEnumerable<string[]> rawData)
+        {
+            var dataList = rawData.ToList();
+            if (dataList.Count < 1) return new List<(string[], int)>();
+
+            var header = dataList[0];
+            var rows = dataList.Skip(1);
+
+            // Identify the first valid column (not starting with comment prefix)
+            int firstValidColIdx = -1;
+            for (int i = 0; i < header.Length; i++)
+            {
+                if (!string.IsNullOrWhiteSpace(header[i]) && !header[i].TrimStart().StartsWith(Models.ProjectConstants.Excel.CommentPrefix))
+                {
+                    firstValidColIdx = i;
+                    break;
+                }
+            }
+
+            // Filter rows where the first valid column's value starts with comment prefix
+            return rows.Select((row, idx) => (row, originalRowIndex: idx + 2))
+                .Where(item =>
+                {
+                    if (firstValidColIdx == -1 || firstValidColIdx >= item.row.Length) return true;
+                    var cellValue = item.row[firstValidColIdx];
+                    return string.IsNullOrEmpty(cellValue) || !cellValue.TrimStart().StartsWith(Models.ProjectConstants.Excel.CommentPrefix);
+                }).ToList();
+        }
     }
 }

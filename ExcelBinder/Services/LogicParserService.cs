@@ -16,18 +16,18 @@ namespace ExcelBinder.Services
             var header = dataList[0];
             var rows = dataList.Skip(1);
 
-            int nameIdx = Array.IndexOf(header, "Name");
-            int returnTypeIdx = Array.IndexOf(header, "ReturnType");
-            int paramsIdx = Array.IndexOf(header, "Parameters");
-            int formulaIdx = Array.IndexOf(header, "Formula");
+            int nameIdx = Array.IndexOf(header, ProjectConstants.Excel.LogicColumns.Name);
+            int returnTypeIdx = Array.IndexOf(header, ProjectConstants.Excel.LogicColumns.ReturnType);
+            int paramsIdx = Array.IndexOf(header, ProjectConstants.Excel.LogicColumns.Parameters);
+            int formulaIdx = Array.IndexOf(header, ProjectConstants.Excel.LogicColumns.Formula);
 
             if (nameIdx == -1 || formulaIdx == -1)
-                throw new Exception("Logic sheet must contain 'Name' and 'Formula' columns.");
+                throw new Exception($"Logic sheet must contain '{ProjectConstants.Excel.LogicColumns.Name}' and '{ProjectConstants.Excel.LogicColumns.Formula}' columns.");
 
             var methods = rows.Select(row =>
             {
                 string name = row[nameIdx];
-                string returnType = returnTypeIdx != -1 && returnTypeIdx < row.Length ? row[returnTypeIdx] : "void";
+                string returnType = returnTypeIdx != -1 && returnTypeIdx < row.Length ? row[returnTypeIdx] : ProjectConstants.Types.Void;
                 string parameters = paramsIdx != -1 && paramsIdx < row.Length ? row[paramsIdx] : "";
                 string formula = row[formulaIdx];
 

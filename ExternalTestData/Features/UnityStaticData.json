@@ -1,4 +1,4 @@
-﻿{
+{
   "id": "external_unity_static",
   "name": "External Unity Static Data",
   "category": "StaticData",
@@ -11,7 +11,14 @@
   "typeMappings": {
     "int": "int",
     "string": "string",
-    "float": "float"
+    "float": "float",
+    "byte": "byte",
+    "short": "short",
+    "uint": "uint",
+    "long": "long",
+    "ulong": "ulong",
+    "double": "double",
+    "bool": "bool"
   },
   "templates": {
     "dataClass": "D:\\CS Project\\ExcelBinder\\ExternalTestData\\Templates\\UnityData.liquid"

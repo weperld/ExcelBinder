@@ -6,6 +6,9 @@
              xmlns:local="clr-namespace:ExcelBinder.Views"
              mc:Ignorable="d" 
              d:DesignHeight="700" d:DesignWidth="1000" Background="White">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </UserControl.Resources>
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -32,7 +35,7 @@
 
                         <DockPanel LastChildFill="True" Margin="0,2">
                             <TextBlock Text="Category:" Width="150" VerticalAlignment="Center" Margin="5"/>
-                            <ComboBox SelectedValue="{Binding Feature.Category}" SelectedValuePath="Content" Margin="5">
+                            <ComboBox SelectedValue="{Binding Category}" SelectedValuePath="Content" Margin="5">
                                 <ComboBoxItem Content="StaticData"/>
                                 <ComboBoxItem Content="Logic"/>
                                 <ComboBoxItem Content="SchemaGen"/>
@@ -60,19 +63,19 @@
                             <TextBox Text="{Binding Feature.ExcelPath, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
                         </DockPanel>
 
-                        <DockPanel LastChildFill="True" Margin="0,2">
+                        <DockPanel LastChildFill="True" Margin="0,2" Visibility="{Binding IsSchemaPathVisible, Converter={StaticResource BoolToVis}}">
                             <TextBlock Text="Schema Path:" Width="150" VerticalAlignment="Center" Margin="5"/>
                             <Button Content="Browse" DockPanel.Dock="Right" Command="{Binding BrowseSchemaPathCommand}" Width="70" Margin="5"/>
                             <TextBox Text="{Binding Feature.SchemaPath, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
                         </DockPanel>
 
-                        <DockPanel LastChildFill="True" Margin="0,2">
+                        <DockPanel LastChildFill="True" Margin="0,2" Visibility="{Binding IsExportPathVisible, Converter={StaticResource BoolToVis}}">
                             <TextBlock Text="Export Path:" Width="150" VerticalAlignment="Center" Margin="5"/>
                             <Button Content="Browse" DockPanel.Dock="Right" Command="{Binding BrowseExportPathCommand}" Width="70" Margin="5"/>
                             <TextBox Text="{Binding Feature.ExportPath, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
                         </DockPanel>
 
-                        <DockPanel LastChildFill="True" Margin="0,2">
+                        <DockPanel LastChildFill="True" Margin="0,2" Visibility="{Binding IsScriptsPathVisible, Converter={StaticResource BoolToVis}}">
                             <TextBlock Text="Scripts Path:" Width="150" VerticalAlignment="Center" Margin="5"/>
                             <Button Content="Browse" DockPanel.Dock="Right" Command="{Binding BrowseScriptsPathCommand}" Width="70" Margin="5"/>
                             <TextBox Text="{Binding Feature.ScriptsPath, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
@@ -81,7 +84,7 @@
                 </GroupBox>
 
                 <!-- Types -->
-                <GroupBox Header="Type Mappings" Margin="0,0,0,10" Padding="10">
+                <GroupBox Header="Type Mappings" Margin="0,0,0,10" Padding="10" Visibility="{Binding IsTypeMappingsVisible, Converter={StaticResource BoolToVis}}">
                     <StackPanel>
                         <!-- Headers -->
                         <Grid Margin="0,0,0,5">
@@ -121,7 +124,7 @@
                 </GroupBox>
 
                 <!-- Templates -->
-                <GroupBox Header="Templates" Margin="0,0,0,10" Padding="10">
+                <GroupBox Header="Templates" Margin="0,0,0,10" Padding="10" Visibility="{Binding IsTemplatesVisible, Converter={StaticResource BoolToVis}}">
                     <StackPanel>
                         <DockPanel LastChildFill="True" Margin="0,2">
                             <TextBlock Text="Data Template:" Width="150" VerticalAlignment="Center" Margin="5"/>
@@ -135,7 +138,7 @@
                 </GroupBox>
 
                 <!-- Output Options -->
-                <GroupBox Header="Output Options" Margin="0,0,0,10" Padding="10">
+                <GroupBox Header="Output Options" Margin="0,0,0,10" Padding="10" Visibility="{Binding IsOutputOptionsVisible, Converter={StaticResource BoolToVis}}">
                     <StackPanel>
                         <DockPanel LastChildFill="True" Margin="0,2">
                             <TextBlock Text="File Extension:" Width="150" VerticalAlignment="Center" Margin="5"/>

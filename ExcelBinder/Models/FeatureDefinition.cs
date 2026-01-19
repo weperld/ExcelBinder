@@ -12,7 +12,7 @@ namespace ExcelBinder.Models
         public string Name { get; set; } = string.Empty;
 
         [JsonProperty("category")]
-        public string Category { get; set; } = "StaticData"; // StaticData, Logic, SchemaGen
+        public string Category { get; set; } = ProjectConstants.Categories.StaticData; // StaticData, Logic, SchemaGen
 
         [JsonProperty("description")]
         public string Description { get; set; } = string.Empty;
@@ -30,7 +30,7 @@ namespace ExcelBinder.Models
         public string ScriptsPath { get; set; } = string.Empty;
 
         [JsonProperty("defaultNamespace")]
-        public string DefaultNamespace { get; set; } = "GameData";
+        public string DefaultNamespace { get; set; } = ProjectConstants.Defaults.Namespace;
 
         [JsonProperty("typeMappings")]
         public Dictionary<string, string> TypeMappings { get; set; } = new();
@@ -51,7 +51,7 @@ namespace ExcelBinder.Models
     public class OutputOptions
     {
         [JsonProperty("extension")]
-        public string Extension { get; set; } = ".bytes";
+        public string Extension { get; set; } = ProjectConstants.Extensions.Binary;
 
         [JsonProperty("supportsBinary")]
         public bool SupportsBinary { get; set; } = true;

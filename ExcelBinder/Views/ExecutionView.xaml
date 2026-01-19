@@ -38,14 +38,14 @@
                 <TextBlock Text="Excel:" FontWeight="SemiBold" Width="60"/>
                 <TextBlock Grid.Column="1" Text="{Binding SelectedFeature.ExcelPath}" TextTrimming="CharacterEllipsis"/>
                 
-                <TextBlock Grid.Row="1" Text="Schema:" FontWeight="SemiBold" Width="60"/>
-                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding SelectedFeature.SchemaPath}" TextTrimming="CharacterEllipsis"/>
+                <TextBlock Grid.Row="1" Text="Schema:" FontWeight="SemiBold" Width="60" Visibility="{Binding IsSchemaPathVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding SelectedFeature.SchemaPath}" TextTrimming="CharacterEllipsis" Visibility="{Binding IsSchemaPathVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
-                <TextBlock Grid.Row="2" Text="Export:" FontWeight="SemiBold" Width="60"/>
-                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding SelectedFeature.ExportPath}" TextTrimming="CharacterEllipsis"/>
+                <TextBlock Grid.Row="2" Text="Export:" FontWeight="SemiBold" Width="60" Visibility="{Binding IsExportPathVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding SelectedFeature.ExportPath}" TextTrimming="CharacterEllipsis" Visibility="{Binding IsExportPathVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
-                <TextBlock Grid.Row="3" Text="Scripts:" FontWeight="SemiBold" Width="60"/>
-                <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding SelectedFeature.ScriptsPath}" TextTrimming="CharacterEllipsis"/>
+                <TextBlock Grid.Row="3" Text="Scripts:" FontWeight="SemiBold" Width="60" Visibility="{Binding IsScriptsPathVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding SelectedFeature.ScriptsPath}" TextTrimming="CharacterEllipsis" Visibility="{Binding IsScriptsPathVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
             </Grid>
         </GroupBox>
 
