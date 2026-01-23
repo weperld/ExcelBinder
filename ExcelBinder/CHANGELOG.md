@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.0] - 2026-01-23
+
+### Added
+- **비동기 처리(Async/Await) 도입**
+  - 데이터 내보내기(Export) 및 코드 생성 작업을 비동기 방식으로 전환하여 대규모 작업 중 UI 프리징 현상 제거.
+- **로딩 상태 관리(IsBusy)**
+  - 작업 진행 중 사용자의 중복 조작을 방지하기 위해 로딩 오버레이(ProgressBar) 및 상태 관리 로직 추가.
+
+### Changed
+- **성능 및 리소스 최적화**
+  - **Scriban 템플릿 캐싱**: 반복적인 코드 생성 시 템플릿 파싱 비용을 최소화하기 위해 `ConcurrentDictionary` 기반 캐싱 적용.
+  - **헤더 인덱스 맵핑**: 데이터 내보내기 시 매 행마다 수행하던 컬럼 검색을 인덱스 맵을 통해 상수 시간(O(1))으로 단축.
+  - **특징(Feature) 정의 캐싱**: 파일 시스템 I/O를 줄이기 위해 로드된 특징 파일에 대한 메모리 캐싱 적용.
+  - **HttpClient 재사용**: `AIService` 내 `HttpClient`를 정적 멤버로 전환하여 소켓 고갈 방지 및 리소스 효율 개선.
+
+### Fixed
+- 비동기 작업 중 예외 발생 시 로딩 상태가 해제되지 않던 문제를 `try-finally` 블록을 통해 해결.
+
 ## [1.1.0] - 2026-01-19
 
 ### Added
