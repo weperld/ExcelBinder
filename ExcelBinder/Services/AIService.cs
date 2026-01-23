@@ -7,12 +7,19 @@ using Newtonsoft.Json;
 
 namespace ExcelBinder.Services
 {
+    /// <summary>
+    /// LLM(OpenAI, Claude)을 사용하여 템플릿 코드를 자동 생성하는 서비스입니다.
+    /// </summary>
     public class AIService
     {
-        private readonly HttpClient _httpClient = new();
+        // 소켓 고갈 방지를 위해 HttpClient를 정적 멤버로 공유합니다.
+        private static readonly HttpClient _httpClient = new();
         private const string OpenAIEndpoint = "https://api.openai.com/v1/chat/completions";
         private const string AnthropicEndpoint = "https://api.anthropic.com/v1/messages";
 
+        /// <summary>
+        /// AI 모델을 사용하여 템플릿 내용을 생성합니다.
+        /// </summary>
         public async Task<string> GenerateTemplateAsync(string apiKey, string model, string systemPrompt, string userPrompt)
         {
             if (string.IsNullOrEmpty(apiKey))

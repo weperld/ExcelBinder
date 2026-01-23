@@ -7,21 +7,34 @@ using Newtonsoft.Json;
 
 namespace ExcelBinder.Services
 {
+    /// <summary>
+    /// 스키마 정의에 따라 엑셀 데이터를 바이너리 또는 JSON 형식으로 내보내는 서비스입니다.
+    /// </summary>
     public class ExportService
     {
         private readonly ExcelService _excelService = new();
 
+        /// <summary>
+        /// 엑셀 데이터를 바이너리 형식으로 변환하여 저장합니다.
+        /// </summary>
         public void ExportToBinary(SchemaDefinition schema, IEnumerable<string[]> excelData, string outputPath, FeatureDefinition feature)
         {
-            var dataList = excelData.ToList();
+            var dataList = excelData as List<string[]> ?? excelData.ToList();
             if (dataList.Count < 1) return;
 
+            // 헤더 컬럼 위치를 캐싱하여 검색 성능을 최적화합니다.
             var header = dataList[0];
+            var headerMap = header.Select((h, i) => new { h, i })
+                                 .Where(x => !string.IsNullOrEmpty(x.h))
+                                 .GroupBy(x => x.h)
+                                 .ToDictionary(g => g.Key, g => g.First().i);
+
             var validRows = _excelService.GetFilteredData(dataList);
 
             using var stream = new FileStream(outputPath, FileMode.Create);
             using var writer = new BinaryWriter(stream);
 
+            // 전체 행 개수를 먼저 기록합니다.
             writer.Write(validRows.Count);
 
             foreach (var item in validRows)
@@ -30,9 +43,7 @@ namespace ExcelBinder.Services
                 {
                     try
                     {
-                        var fieldName = field.Key;
-                        var fieldType = field.Value;
-                        WriteField(writer, fieldType, item.Data, header, fieldName, feature);
+                        WriteField(writer, field.Value, item.Data, header, headerMap, field.Key, feature);
                     }
                     catch (Exception ex)
                     {
@@ -42,11 +53,15 @@ namespace ExcelBinder.Services
             }
         }
 
-        private void WriteField(BinaryWriter writer, string type, string[] row, string[] header, string fieldName, FeatureDefinition feature)
+        /// <summary>
+        /// 개별 필드 데이터를 타입에 맞춰 바이너리로 기록합니다.
+        /// </summary>
+        private void WriteField(BinaryWriter writer, string type, string[] row, string[] header, Dictionary<string, int> headerMap, string fieldName, FeatureDefinition feature)
         {
             var info = TypeParser.ParseType(type, fieldName);
             if (info.IsList)
             {
+                // 리스트 타입인 경우 동일한 이름을 가진 모든 컬럼의 데이터를 수집합니다.
                 var indices = Enumerable.Range(0, header.Length).Where(i => header[i] == info.ColumnName).ToList();
                 writer.Write(indices.Count);
                 foreach (var idx in indices)
@@ -56,10 +71,15 @@ namespace ExcelBinder.Services
             }
             else
             {
-                int idx = Array.IndexOf(header, info.ColumnName);
-                if (idx == -1) idx = Array.IndexOf(header, fieldName); // Fallback
+                // 단일 타입인 경우 맵을 통해 빠르게 위치를 찾습니다.
+                if (!headerMap.TryGetValue(info.ColumnName, out int idx))
+                {
+                    headerMap.TryGetValue(fieldName, out idx); // Fallback
+                }
                 
-                string value = idx != -1 && idx < row.Length ? row[idx] : "";
+                string value = idx != 0 && idx < row.Length ? row[idx] : (idx == 0 && row.Length > 0 ? row[0] : "");
+                if (idx >= row.Length) value = "";
+
                 WritePrimitive(writer, info.BaseType, value);
             }
         }
@@ -95,10 +115,15 @@ namespace ExcelBinder.Services
 
         public void ExportToJson(SchemaDefinition schema, IEnumerable<string[]> excelData, string outputPath, FeatureDefinition feature)
         {
-            var dataList = excelData.ToList();
+            var dataList = excelData as List<string[]> ?? excelData.ToList();
             if (dataList.Count < 1) return;
 
             var header = dataList[0];
+            var headerMap = header.Select((h, i) => new { h, i })
+                                 .Where(x => !string.IsNullOrEmpty(x.h))
+                                 .GroupBy(x => x.h)
+                                 .ToDictionary(g => g.Key, g => g.First().i);
+
             var validRows = _excelService.GetFilteredData(dataList);
 
             var result = new List<Dictionary<string, object>>();
@@ -110,7 +135,7 @@ namespace ExcelBinder.Services
                 {
                     try
                     {
-                        rowDict[field.Key] = ParseField(field.Value, item.Data, header, field.Key, feature);
+                        rowDict[field.Key] = ParseField(field.Value, item.Data, header, headerMap, field.Key, feature);
                     }
                     catch (Exception ex)
                     {
@@ -123,7 +148,7 @@ namespace ExcelBinder.Services
             File.WriteAllText(outputPath, JsonConvert.SerializeObject(result, Formatting.Indented));
         }
 
-        private object ParseField(string type, string[] row, string[] header, string fieldName, FeatureDefinition feature)
+        private object ParseField(string type, string[] row, string[] header, Dictionary<string, int> headerMap, string fieldName, FeatureDefinition feature)
         {
             var info = TypeParser.ParseType(type, fieldName);
             if (info.IsList)
@@ -138,10 +163,14 @@ namespace ExcelBinder.Services
             }
             else
             {
-                int idx = Array.IndexOf(header, info.ColumnName);
-                if (idx == -1) idx = Array.IndexOf(header, fieldName);
+                if (!headerMap.TryGetValue(info.ColumnName, out int idx))
+                {
+                    headerMap.TryGetValue(fieldName, out idx);
+                }
 
-                string value = idx != -1 && idx < row.Length ? row[idx] : "";
+                string value = idx != 0 && idx < row.Length ? row[idx] : (idx == 0 && row.Length > 0 ? row[0] : "");
+                if (idx >= row.Length) value = "";
+
                 return ParsePrimitive(info.BaseType, value);
             }
         }
