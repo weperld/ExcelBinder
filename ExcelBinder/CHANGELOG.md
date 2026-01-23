@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.3] - 2026-01-23
+
+### Added
+- **스키마 에디터 UI 개선**
+  - 스키마 에디터 상단에 현재 편집 중인 엑셀 파일의 전체 경로를 표시하여 사용자 편의성 강화.
+
+### Fixed
+- **UI 가시성 및 동작 최적화**
+  - Execution View에서 `StaticData` 카테고리가 아닐 경우 하단 `Format` 섹션을 숨기도록 개선.
+  - Schema Editor에서 `Cancel` 버튼 클릭 시 로그 창이 출력되지 않도록 수정.
+- **테스트 데이터 정합성**
+  - 전역 행 규칙(1행 무시)에 맞춰 테스트용 엑셀 파일 마이그레이션 완료.
+
+### Changed
+- **가이드라인 업데이트**
+  - 로컬 변경 사항 분류 커밋 규칙 명문화.
+
 ## [1.2.2] - 2026-01-23
 
 ### Fixed
