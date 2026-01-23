@@ -66,6 +66,25 @@ namespace ExcelBinder.Services
             }
         }
 
+        /// <summary>
+        /// 특정 디렉토리 내의 모든 특징 정의 파일(.json)을 로드합니다.
+        /// </summary>
+        public IEnumerable<FeatureDefinition> LoadFeatures(string directoryPath)
+        {
+            if (!Directory.Exists(directoryPath)) return Enumerable.Empty<FeatureDefinition>();
+
+            var features = new List<FeatureDefinition>();
+            foreach (var file in Directory.GetFiles(directoryPath, "*.json"))
+            {
+                var feature = LoadFeatureFromFile(file);
+                if (feature != null)
+                {
+                    features.Add(feature);
+                }
+            }
+            return features;
+        }
+
         public string? GetFeaturePath(string featureId, AppSettings settings)
         {
             // Check in directory

@@ -27,12 +27,6 @@ namespace ExcelBinder.ViewModels
             set => SetProperty(ref field, value);
         } = string.Empty;
 
-        public bool IsBusy
-        {
-            get;
-            set => SetProperty(ref field, value);
-        }
-
         public string StatusMessage
         {
             get;
