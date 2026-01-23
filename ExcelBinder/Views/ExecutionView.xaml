@@ -131,6 +131,16 @@
         <Border Grid.Row="3" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,1,0,0" Padding="0,20,0,0">
             <Grid>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <StackPanel.Style>
+                        <Style TargetType="StackPanel">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SelectedFeature.Category}" Value="StaticData">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Style>
                     <TextBlock Text="Format:" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,15,0"/>
                     <CheckBox Content="Binary" IsChecked="{Binding IsBinaryChecked}" Visibility="{Binding SelectedFeature.OutputOptions.SupportsBinary, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" Margin="0,0,20,0"/>
                     <CheckBox Content="JSON" IsChecked="{Binding IsJsonChecked}" Visibility="{Binding SelectedFeature.OutputOptions.SupportsJson, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center"/>
