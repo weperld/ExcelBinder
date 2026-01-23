@@ -78,6 +78,9 @@ namespace ExcelBinder.ViewModels
 
         public string DisplayName => $"{_fileName} ({_sheetName})";
         public string SheetName => _sheetName;
+        public string ExcelPath => _excelPath;
+        public string ExcelFileName => Path.GetFileName(_excelPath);
+        public string ExcelDirectory => Path.GetDirectoryName(_excelPath) ?? string.Empty;
 
         public string SelectedKey
         {
