@@ -18,20 +18,21 @@ namespace ExcelBinder.Services.Processors
         public bool IsTemplatesVisible => false;
         public bool IsOutputOptionsVisible => false;
 
-        public void ExecuteExport(MainViewModel vm)
+        public System.Threading.Tasks.Task ExecuteExportAsync(MainViewModel vm)
         {
             // SchemaGen doesn't support export
+            return System.Threading.Tasks.Task.CompletedTask;
         }
 
-        public void ExecuteGenerate(MainViewModel vm)
+        public System.Threading.Tasks.Task ExecuteGenerateAsync(MainViewModel vm)
         {
-            if (vm.SelectedFeature == null) return;
+            if (vm.SelectedFeature == null) return System.Threading.Tasks.Task.CompletedTask;
             var selectedSheets = vm.ExcelFiles.SelectMany(f => f.Sheets.Where(s => s.IsSelected).Select(s => new { File = f, Sheet = s })).ToList();
             if (selectedSheets.Count == 0)
             {
                 LogService.Instance.Warning("Please select at least one sheet for schema generation.");
                 vm.ShowLogs();
-                return;
+                return System.Threading.Tasks.Task.CompletedTask;
             }
 
             if (!Directory.Exists(vm.SelectedFeature.SchemaPath)) Directory.CreateDirectory(vm.SelectedFeature.SchemaPath);
@@ -46,6 +47,8 @@ namespace ExcelBinder.Services.Processors
                 vm.ShowLogs();
             };
             (Application.Current.MainWindow as MainWindow)?.NavigateToSchemaEditor(editorVm);
+            
+            return System.Threading.Tasks.Task.CompletedTask;
         }
     }
 }

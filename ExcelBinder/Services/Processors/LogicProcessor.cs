@@ -17,12 +17,13 @@ namespace ExcelBinder.Services.Processors
         public bool IsTemplatesVisible => true;
         public bool IsOutputOptionsVisible => false;
 
-        public void ExecuteExport(MainViewModel vm)
+        public System.Threading.Tasks.Task ExecuteExportAsync(MainViewModel vm)
         {
             // Logic doesn't support export
+            return System.Threading.Tasks.Task.CompletedTask;
         }
 
-        public void ExecuteGenerate(MainViewModel vm)
+        public async System.Threading.Tasks.Task ExecuteGenerateAsync(MainViewModel vm)
         {
             if (vm.SelectedFeature == null) return;
             
@@ -55,13 +56,13 @@ namespace ExcelBinder.Services.Processors
             {
                 try
                 {
-                    var data = excelService.ReadExcel(item.File.FullPath, item.Sheet.SheetName);
+                    var data = await System.Threading.Tasks.Task.Run(() => excelService.ReadExcel(item.File.FullPath, item.Sheet.SheetName).ToList());
                     string className = item.Sheet.SheetName;
-                    var context = logicParserService.PrepareLogicContext(data, vm.SelectedFeature, vm.Namespace, className);
-                    string? code = codeGenService.GenerateLogicCode(context, vm.SelectedFeature);
+                    var context = await System.Threading.Tasks.Task.Run(() => logicParserService.PrepareLogicContext(data, vm.SelectedFeature, vm.Namespace, className));
+                    string? code = await System.Threading.Tasks.Task.Run(() => codeGenService.GenerateLogicCode(context, vm.SelectedFeature));
                     if (!string.IsNullOrEmpty(code))
                     {
-                        File.WriteAllText(Path.Combine(vm.SelectedFeature.ScriptsPath, className + ProjectConstants.Extensions.CSharp), code);
+                        await System.Threading.Tasks.Task.Run(() => File.WriteAllText(Path.Combine(vm.SelectedFeature.ScriptsPath, className + ProjectConstants.Extensions.CSharp), code));
                         LogService.Instance.Info($"Generated Logic: {className}");
                     }
                 }

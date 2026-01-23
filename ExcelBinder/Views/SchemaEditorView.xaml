@@ -43,7 +43,10 @@
 
                         <Border Grid.Row="1" Background="{StaticResource LightBackgroundBrush}" CornerRadius="6" Padding="15" Margin="0,0,0,20">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="Key Column:" VerticalAlignment="Center" Margin="0,0,15,0" FontWeight="Bold"/>
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,15,0">
+                                    <TextBlock Text="Key Column:" FontWeight="Bold"/>
+                                    <Button Style="{StaticResource HelpButtonStyle}" ToolTipService.ToolTip="{StaticResource KeyColumnHelp}"/>
+                                </StackPanel>
                                 <ComboBox ItemsSource="{Binding Headers}" SelectedItem="{Binding SelectedKey}" Width="250" Height="32"/>
                                 <TextBlock Text="(The primary identifier for this sheet)" VerticalAlignment="Center" Margin="15,0,0,0" FontSize="12" Foreground="{StaticResource MutedTextBrush}"/>
                             </StackPanel>
@@ -65,7 +68,10 @@
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Text="Excel Header" FontWeight="Bold" Foreground="{StaticResource MutedTextBrush}"/>
                                     <TextBlock Grid.Column="1" Text="Data Type" FontWeight="Bold" Foreground="{StaticResource MutedTextBrush}"/>
-                                    <TextBlock Grid.Column="2" Text="Reference (Optional)" FontWeight="Bold" Foreground="{StaticResource MutedTextBrush}"/>
+                                    <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                        <TextBlock Text="Reference (Optional)" FontWeight="Bold" Foreground="{StaticResource MutedTextBrush}"/>
+                                        <Button Style="{StaticResource HelpButtonStyle}" ToolTipService.ToolTip="{StaticResource ReferenceTypeHelp}"/>
+                                    </StackPanel>
                                 </Grid>
                                 
                                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">

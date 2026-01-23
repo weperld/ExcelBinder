@@ -11,93 +11,101 @@
 
         <TextBlock Text="Global Settings" FontSize="24" FontWeight="Bold" Margin="0,0,0,25" Foreground="{StaticResource PrimaryBrush}"/>
 
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <Grid Margin="0,0,10,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
 
-            <!-- Source Management -->
-            <StackPanel Margin="0,0,20,0">
-                <GroupBox Header="Feature Definition Management">
-                    <StackPanel>
-                        <TextBlock Text="Primary Scan Folder" FontWeight="SemiBold" Margin="0,0,0,8"/>
-                        <Grid Margin="0,0,0,15">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBox Text="{Binding Settings.FeatureDefinitionsPath, UpdateSourceTrigger=PropertyChanged}"/>
-                            <Button Grid.Column="1" Content="Browse" Command="{Binding BrowseFeatureDefinitionsPathCommand}" Width="80" Margin="10,0,0,0"/>
-                        </Grid>
+                <!-- Source Management -->
+                <StackPanel Margin="0,0,20,0">
+                    <GroupBox Header="Feature Definition Management">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                <TextBlock Text="Primary Scan Folder" FontWeight="SemiBold"/>
+                                <Button Style="{StaticResource HelpButtonStyle}" ToolTipService.ToolTip="{StaticResource PrimaryScanFolderHelp}"/>
+                            </StackPanel>
+                            <Grid Margin="0,0,0,15">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox Text="{Binding Settings.FeatureDefinitionsPath, UpdateSourceTrigger=PropertyChanged}"/>
+                                <Button Grid.Column="1" Content="Browse" Command="{Binding BrowseFeatureDefinitionsPathCommand}" Width="80" Margin="10,0,0,0"/>
+                            </Grid>
 
-                        <TextBlock Text="Additional Bound Sources" FontWeight="SemiBold" Margin="0,5,0,8"/>
-                        <ListBox ItemsSource="{Binding Settings.BoundFeatures}" Height="180" Background="{StaticResource LightBackgroundBrush}" BorderThickness="0" Margin="0,0,0,10">
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,8">
+                                <TextBlock Text="Additional Bound Sources" FontWeight="SemiBold"/>
+                                <Button Style="{StaticResource HelpButtonStyle}" ToolTipService.ToolTip="{StaticResource AdditionalBoundSourcesHelp}"/>
+                            </StackPanel>
+                            <ListBox ItemsSource="{Binding Settings.BoundFeatures}" Height="180" Background="{StaticResource LightBackgroundBrush}" BorderThickness="0" Margin="0,0,0,10" VirtualizingPanel.ScrollUnit="Pixel">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Background="White" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="4" Margin="0,2" Padding="8,4">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Text="{Binding}" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis"/>
+                                                <Button Grid.Column="1" Content="Remove" Command="{Binding DataContext.RemoveBoundFeatureCommand, RelativeSource={RelativeSource AncestorType=Window}}" 
+                                                        CommandParameter="{Binding}" Width="60" Height="22" FontSize="10" Margin="10,0,0,0" Foreground="{StaticResource DangerBrush}"/>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="+ Add Folder" Command="{Binding BindFeatureFolderCommand}" Width="100" Height="30" Margin="0,0,10,0"/>
+                                <Button Content="+ Add File" Command="{Binding BindFeatureCommand}" Width="100" Height="30"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </GroupBox>
+                </StackPanel>
+
+                <!-- AI Settings -->
+                <StackPanel Grid.Column="1">
+                    <GroupBox Header="Live Preview (Loaded Features)" Height="200">
+                        <ListBox ItemsSource="{Binding Features}" BorderThickness="0" Background="Transparent" VirtualizingPanel.ScrollUnit="Pixel">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Background="White" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="4" Margin="0,2" Padding="8,4">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="Auto"/>
-                                            </Grid.ColumnDefinitions>
-                                            <TextBlock Text="{Binding}" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis"/>
-                                            <Button Grid.Column="1" Content="Remove" Command="{Binding DataContext.RemoveBoundFeatureCommand, RelativeSource={RelativeSource AncestorType=Window}}" 
-                                                    CommandParameter="{Binding}" Width="60" Height="22" FontSize="10" Margin="10,0,0,0" Foreground="{StaticResource DangerBrush}"/>
-                                        </Grid>
+                                    <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1" Padding="0,5">
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
+                                            <TextBlock Text="{Binding Id}" FontSize="10" Foreground="{StaticResource MutedTextBrush}"/>
+                                        </StackPanel>
                                     </Border>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
-                        <StackPanel Orientation="Horizontal">
-                            <Button Content="+ Add Folder" Command="{Binding BindFeatureFolderCommand}" Width="100" Height="30" Margin="0,0,10,0"/>
-                            <Button Content="+ Add File" Command="{Binding BindFeatureCommand}" Width="100" Height="30"/>
+                    </GroupBox>
+
+                    <GroupBox Header="AI Assistant Configuration" Margin="0,10,0,0">
+                        <StackPanel>
+                            <TextBlock Text="OpenAI API Key" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                            <PasswordBox x:Name="ApiKeyBox" PasswordChar="*" Margin="0,0,0,15"/>
+
+                            <TextBlock Text="Claude API Key" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                            <PasswordBox x:Name="ClaudeApiKeyBox" PasswordChar="*" Margin="0,0,0,15"/>
+
+                            <TextBlock Text="Model Selector" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                            <ComboBox SelectedValue="{Binding Settings.AiModel}" SelectedValuePath="Content" IsEditable="True">
+                                <ComboBoxItem Content="gpt-4o"/>
+                                <ComboBoxItem Content="gpt-4o-mini"/>
+                                <Separator/>
+                                <ComboBoxItem Content="claude-3-5-sonnet-latest"/>
+                                <ComboBoxItem Content="claude-3-5-haiku-latest"/>
+                                <Separator/>
+                                <ComboBoxItem Content="o3-mini"/>
+                                <ComboBoxItem Content="o1"/>
+                            </ComboBox>
+                            <TextBlock Text="API keys are saved locally in settings.json" FontSize="11" Foreground="{StaticResource MutedTextBrush}" Margin="0,10,0,0" FontStyle="Italic"/>
                         </StackPanel>
-                    </StackPanel>
-                </GroupBox>
-            </StackPanel>
-
-            <!-- AI Settings -->
-            <StackPanel Grid.Column="1">
-                <GroupBox Header="Live Preview (Loaded Features)" Height="200">
-                    <ListBox ItemsSource="{Binding Features}" BorderThickness="0" Background="Transparent">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1" Padding="0,5">
-                                    <StackPanel>
-                                        <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
-                                        <TextBlock Text="{Binding Id}" FontSize="10" Foreground="{StaticResource MutedTextBrush}"/>
-                                    </StackPanel>
-                                </Border>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                </GroupBox>
-
-                <GroupBox Header="AI Assistant Configuration" Margin="0,10,0,0">
-                    <StackPanel>
-                        <TextBlock Text="OpenAI API Key" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                        <PasswordBox x:Name="ApiKeyBox" PasswordChar="*" Margin="0,0,0,15"/>
-                        
-                        <TextBlock Text="Claude API Key" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                        <PasswordBox x:Name="ClaudeApiKeyBox" PasswordChar="*" Margin="0,0,0,15"/>
-
-                        <TextBlock Text="Model Selector" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                        <ComboBox SelectedValue="{Binding Settings.AiModel}" SelectedValuePath="Content" IsEditable="True">
-                            <ComboBoxItem Content="gpt-4o"/>
-                            <ComboBoxItem Content="gpt-4o-mini"/>
-                            <Separator/>
-                            <ComboBoxItem Content="claude-3-5-sonnet-latest"/>
-                            <ComboBoxItem Content="claude-3-5-haiku-latest"/>
-                            <Separator/>
-                            <ComboBoxItem Content="o3-mini"/>
-                            <ComboBoxItem Content="o1"/>
-                        </ComboBox>
-                        <TextBlock Text="API keys are saved locally in settings.json" FontSize="11" Foreground="{StaticResource MutedTextBrush}" Margin="0,10,0,0" FontStyle="Italic"/>
-                    </StackPanel>
-                </GroupBox>
-            </StackPanel>
-        </Grid>
+                    </GroupBox>
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
 
         <Border Grid.Row="2" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,1,0,0" Padding="0,20,0,0" Margin="0,10,0,0">
             <Button Content="Save &amp; Apply Changes" Style="{StaticResource SecondaryButton}" 

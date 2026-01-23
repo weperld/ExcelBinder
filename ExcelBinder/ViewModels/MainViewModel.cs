@@ -381,18 +381,34 @@ namespace ExcelBinder.ViewModels
             }
         }
 
-        public void ExecuteExport()
+        public async void ExecuteExport()
         {
-            if (SelectedFeature == null) return;
-            var processor = FeatureProcessorFactory.GetProcessor(SelectedFeature.Category);
-            processor.ExecuteExport(this);
+            if (SelectedFeature == null || IsBusy) return;
+            try
+            {
+                IsBusy = true;
+                var processor = FeatureProcessorFactory.GetProcessor(SelectedFeature.Category);
+                await processor.ExecuteExportAsync(this);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
-        public void ExecuteGenerateCode()
+        public async void ExecuteGenerateCode()
         {
-            if (SelectedFeature == null) return;
-            var processor = FeatureProcessorFactory.GetProcessor(SelectedFeature.Category);
-            processor.ExecuteGenerate(this);
+            if (SelectedFeature == null || IsBusy) return;
+            try
+            {
+                IsBusy = true;
+                var processor = FeatureProcessorFactory.GetProcessor(SelectedFeature.Category);
+                await processor.ExecuteGenerateAsync(this);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         internal string GetSchemaPath(string excelFullPath, string sheetName)

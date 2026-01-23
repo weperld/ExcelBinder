@@ -21,7 +21,13 @@
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0,0,-10,0" Padding="0,10,10,0">
             <StackPanel>
                 <!-- Basic Info -->
-                <GroupBox Header="General Information">
+                <GroupBox>
+                    <GroupBox.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="General Information"/>
+                            <Button Style="{StaticResource HelpButtonStyle}" ToolTipService.ToolTip="{StaticResource GeneralInfoHelp}"/>
+                        </StackPanel>
+                    </GroupBox.Header>
                     <StackPanel Margin="5">
                         <Grid Margin="0,0,0,10">
                             <Grid.ColumnDefinitions>
@@ -31,10 +37,16 @@
                                 <ColumnDefinition Width="150"/>
                             </Grid.ColumnDefinitions>
                             
-                            <TextBlock Text="Feature ID:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,10,0"/>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,10,0">
+                                <TextBlock Text="Feature ID:" FontWeight="SemiBold"/>
+                                <Button Style="{StaticResource HelpButtonStyle}" ToolTipService.ToolTip="{StaticResource FeatureIdHelp}"/>
+                            </StackPanel>
                             <TextBox Grid.Column="1" Text="{Binding Feature.Id}" Margin="0,0,20,0"/>
 
-                            <TextBlock Grid.Column="2" Text="Category:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,10,0"/>
+                            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,10,0">
+                                <TextBlock Text="Category:" FontWeight="SemiBold"/>
+                                <Button Style="{StaticResource HelpButtonStyle}" ToolTipService.ToolTip="{StaticResource CategoryHelp}"/>
+                            </StackPanel>
                             <ComboBox Grid.Column="3" SelectedValue="{Binding Category}" SelectedValuePath="Content">
                                 <ComboBoxItem Content="StaticData"/>
                                 <ComboBoxItem Content="Logic"/>
@@ -65,14 +77,23 @@
                                 <ColumnDefinition Width="Auto" MinWidth="130"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="Default Namespace:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,10,0"/>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,10,0">
+                                <TextBlock Text="Default Namespace:" FontWeight="SemiBold"/>
+                                <Button Style="{StaticResource HelpButtonStyle}" ToolTipService.ToolTip="{StaticResource NamespaceHelp}"/>
+                            </StackPanel>
                             <TextBox Grid.Column="1" Text="{Binding Feature.DefaultNamespace}"/>
                         </Grid>
                     </StackPanel>
                 </GroupBox>
 
                 <!-- Paths -->
-                <GroupBox Header="File Paths Configuration">
+                <GroupBox>
+                    <GroupBox.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="File Paths Configuration"/>
+                            <Button Style="{StaticResource HelpButtonStyle}" ToolTipService.ToolTip="{StaticResource FilePathsHelp}"/>
+                        </StackPanel>
+                    </GroupBox.Header>
                     <StackPanel Margin="5">
                         <Grid Margin="0,0,0,10">
                             <Grid.ColumnDefinitions>
@@ -80,7 +101,10 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="Excel Directory:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,10,0"/>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,10,0">
+                                <TextBlock Text="Excel Directory:" FontWeight="SemiBold"/>
+                                <Button Style="{StaticResource HelpButtonStyle}" ToolTipService.ToolTip="{StaticResource ExcelPathHelp}"/>
+                            </StackPanel>
                             <TextBox Grid.Column="1" Text="{Binding Feature.ExcelPath, UpdateSourceTrigger=PropertyChanged}"/>
                             <Button Grid.Column="2" Content="Browse" Command="{Binding BrowseExcelPathCommand}" Width="80" Margin="10,0,0,0"/>
                         </Grid>
@@ -91,7 +115,10 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="Schema Directory:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,10,0"/>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,10,0">
+                                <TextBlock Text="Schema Directory:" FontWeight="SemiBold"/>
+                                <Button Style="{StaticResource HelpButtonStyle}" ToolTipService.ToolTip="{StaticResource SchemaPathHelp}"/>
+                            </StackPanel>
                             <TextBox Grid.Column="1" Text="{Binding Feature.SchemaPath, UpdateSourceTrigger=PropertyChanged}"/>
                             <Button Grid.Column="2" Content="Browse" Command="{Binding BrowseSchemaPathCommand}" Width="80" Margin="10,0,0,0"/>
                         </Grid>
@@ -102,7 +129,10 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="Export Directory:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,10,0"/>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,10,0">
+                                <TextBlock Text="Export Directory:" FontWeight="SemiBold"/>
+                                <Button Style="{StaticResource HelpButtonStyle}" ToolTipService.ToolTip="{StaticResource ExportPathHelp}"/>
+                            </StackPanel>
                             <TextBox Grid.Column="1" Text="{Binding Feature.ExportPath, UpdateSourceTrigger=PropertyChanged}"/>
                             <Button Grid.Column="2" Content="Browse" Command="{Binding BrowseExportPathCommand}" Width="80" Margin="10,0,0,0"/>
                         </Grid>
@@ -121,7 +151,13 @@
                 </GroupBox>
 
                 <!-- Types -->
-                <GroupBox Header="Type Mappings" Visibility="{Binding IsTypeMappingsVisible, Converter={StaticResource BoolToVis}}">
+                <GroupBox Visibility="{Binding IsTypeMappingsVisible, Converter={StaticResource BoolToVis}}">
+                    <GroupBox.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Type Mappings"/>
+                            <Button Style="{StaticResource HelpButtonStyle}" ToolTipService.ToolTip="{StaticResource TypeMappingsHelp}"/>
+                        </StackPanel>
+                    </GroupBox.Header>
                     <StackPanel Margin="5">
                         <Grid Margin="0,0,0,10">
                             <Grid.ColumnDefinitions>
@@ -160,7 +196,13 @@
                 </GroupBox>
 
                 <!-- Templates -->
-                <GroupBox Header="Templates Configuration" Visibility="{Binding IsTemplatesVisible, Converter={StaticResource BoolToVis}}">
+                <GroupBox Visibility="{Binding IsTemplatesVisible, Converter={StaticResource BoolToVis}}">
+                    <GroupBox.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Templates Configuration"/>
+                            <Button Style="{StaticResource HelpButtonStyle}" ToolTipService.ToolTip="{StaticResource TemplatesConfigurationHelp}"/>
+                        </StackPanel>
+                    </GroupBox.Header>
                     <StackPanel Margin="5">
                         <Grid>
                             <Grid.ColumnDefinitions>
@@ -179,7 +221,13 @@
                 </GroupBox>
 
                 <!-- Output Options -->
-                <GroupBox Header="Output Options" Visibility="{Binding IsOutputOptionsVisible, Converter={StaticResource BoolToVis}}">
+                <GroupBox Visibility="{Binding IsOutputOptionsVisible, Converter={StaticResource BoolToVis}}">
+                    <GroupBox.Header>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Output Options"/>
+                            <Button Style="{StaticResource HelpButtonStyle}" ToolTipService.ToolTip="{StaticResource OutputOptionsHelp}"/>
+                        </StackPanel>
+                    </GroupBox.Header>
                     <StackPanel Margin="5">
                         <Grid Margin="0,0,0,15">
                             <Grid.ColumnDefinitions>

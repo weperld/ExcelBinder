@@ -19,7 +19,7 @@ namespace ExcelBinder.Services.Processors
         public bool IsTemplatesVisible => true;
         public bool IsOutputOptionsVisible => true;
 
-        public void ExecuteExport(MainViewModel vm)
+        public async System.Threading.Tasks.Task ExecuteExportAsync(MainViewModel vm)
         {
             if (vm.SelectedFeature == null) return;
             if (!Directory.Exists(vm.SelectedFeature.ExportPath)) Directory.CreateDirectory(vm.SelectedFeature.ExportPath);
@@ -36,6 +36,9 @@ namespace ExcelBinder.Services.Processors
             LogService.Instance.Clear();
             LogService.Instance.Info($"Starting Export for {selectedSheets.Count} sheets...");
 
+            var excelService = new ExcelService();
+            var exportService = new ExportService();
+
             foreach (var item in selectedSheets)
             {
                 string schemaFile = vm.GetSchemaPath(item.File.FullPath, item.Sheet.SheetName);
@@ -47,24 +50,22 @@ namespace ExcelBinder.Services.Processors
 
                 try 
                 {
-                    var schema = JsonConvert.DeserializeObject<SchemaDefinition>(File.ReadAllText(schemaFile));
+                    var schema = await System.Threading.Tasks.Task.Run(() => JsonConvert.DeserializeObject<SchemaDefinition>(File.ReadAllText(schemaFile)));
                     if (schema == null) continue;
 
-                    var excelService = new ExcelService();
-                    var exportService = new ExportService();
-                    var data = excelService.ReadExcel(item.File.FullPath, item.Sheet.SheetName);
+                    var data = await System.Threading.Tasks.Task.Run(() => excelService.ReadExcel(item.File.FullPath, item.Sheet.SheetName).ToList());
 
                     if (vm.IsBinaryChecked && vm.SelectedFeature.OutputOptions.SupportsBinary)
                     {
                         string binaryPath = Path.Combine(vm.SelectedFeature.ExportPath, schema.ClassName + vm.SelectedFeature.OutputOptions.Extension);
-                        exportService.ExportToBinary(schema, data, binaryPath, vm.SelectedFeature);
+                        await System.Threading.Tasks.Task.Run(() => exportService.ExportToBinary(schema, data, binaryPath, vm.SelectedFeature));
                         LogService.Instance.Info($"Exported Binary: {schema.ClassName}");
                     }
 
                     if (vm.IsJsonChecked && vm.SelectedFeature.OutputOptions.SupportsJson)
                     {
                         string jsonPath = Path.Combine(vm.SelectedFeature.ExportPath, schema.ClassName + ProjectConstants.Extensions.Json);
-                        exportService.ExportToJson(schema, data, jsonPath, vm.SelectedFeature);
+                        await System.Threading.Tasks.Task.Run(() => exportService.ExportToJson(schema, data, jsonPath, vm.SelectedFeature));
                         LogService.Instance.Info($"Exported JSON: {schema.ClassName}");
                     }
                 }
@@ -78,7 +79,7 @@ namespace ExcelBinder.Services.Processors
             vm.ShowLogs();
         }
 
-        public void ExecuteGenerate(MainViewModel vm)
+        public async System.Threading.Tasks.Task ExecuteGenerateAsync(MainViewModel vm)
         {
             if (vm.SelectedFeature == null || string.IsNullOrEmpty(vm.SelectedFeature.ScriptsPath)) return;
 
@@ -108,7 +109,7 @@ namespace ExcelBinder.Services.Processors
                         LogService.Instance.Warning($"Schema not found for {item.Sheet.SheetName} in {item.File.FileName}");
                         continue;
                     }
-                    vm.ProcessSchema(schemaFile, schemas);
+                    await System.Threading.Tasks.Task.Run(() => vm.ProcessSchema(schemaFile, schemas));
                 }
             }
             else if (Directory.Exists(vm.SelectedFeature.SchemaPath))
@@ -116,7 +117,7 @@ namespace ExcelBinder.Services.Processors
                 LogService.Instance.Info("No sheets selected. Generating code for all schemas in schema path...");
                 foreach (var schemaFile in Directory.GetFiles(vm.SelectedFeature.SchemaPath, $"*{ProjectConstants.Extensions.Json}"))
                 {
-                    vm.ProcessSchema(schemaFile, schemas);
+                    await System.Threading.Tasks.Task.Run(() => vm.ProcessSchema(schemaFile, schemas));
                 }
             }
 
