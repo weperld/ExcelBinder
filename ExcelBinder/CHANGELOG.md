@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.1] - 2026-01-23
+
+### Added
+- **전역 행 처리 규칙 도입**
+  - 모든 시트의 첫 번째 행을 무시하고, 두 번째 행을 헤더(기준 행)로 사용하며, 세 번째 행부터 데이터를 추출하는 전역 규칙 적용.
+
+### Fixed
+- **데이터 안정성 강화 (ExportService)**
+  - 엑셀 헤더에서 컬럼 검색 실패 시, 인덱스 0번 데이터를 임의로 가져오던 로직을 예외 발생(Exception)으로 변경하여 데이터 오염 방지.
+- **컴파일 에러 수정**
+  - 최적화 과정에서 누락되었던 `FeatureService.LoadFeatures` 메서드 복구.
+  - `AIAssistantViewModel`의 `IsBusy` 속성 중복 선언 해결.
+
 ## [1.2.0] - 2026-01-23
 
 ### Added
