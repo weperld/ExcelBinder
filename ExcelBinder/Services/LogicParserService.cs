@@ -11,10 +11,11 @@ namespace ExcelBinder.Services
         public object PrepareLogicContext(IEnumerable<string[]> excelData, FeatureDefinition feature, string nameSpace, string className)
         {
             var dataList = excelData.ToList();
-            if (dataList.Count < 1) return new { };
+            // 전역 규칙: 첫 번째 행 무시, 두 번째 행 헤더. 최소 2행 필요.
+            if (dataList.Count < 2) return new { };
 
-            var header = dataList[0];
-            var rows = dataList.Skip(1);
+            var header = dataList[1]; // 두 번째 행을 헤더로 사용
+            var rows = dataList.Skip(2); // 세 번째 행부터 실제 데이터
 
             int nameIdx = Array.IndexOf(header, ProjectConstants.Excel.LogicColumns.Name);
             int returnTypeIdx = Array.IndexOf(header, ProjectConstants.Excel.LogicColumns.ReturnType);

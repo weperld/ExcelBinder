@@ -20,10 +20,10 @@ namespace ExcelBinder.Services
         public void ExportToBinary(SchemaDefinition schema, IEnumerable<string[]> excelData, string outputPath, FeatureDefinition feature)
         {
             var dataList = excelData as List<string[]> ?? excelData.ToList();
-            if (dataList.Count < 1) return;
+            if (dataList.Count < 2) return; // 첫 번째 행(무시) + 두 번째 행(헤더) 최소 2행 필요
 
-            // 헤더 컬럼 위치를 캐싱하여 검색 성능을 최적화합니다.
-            var header = dataList[0];
+            // 두 번째 행(index 1)을 헤더 컬럼으로 사용합니다. (첫 번째 행은 전역 규칙에 의해 무시됨)
+            var header = dataList[1];
             var headerMap = header.Select((h, i) => new { h, i })
                                  .Where(x => !string.IsNullOrEmpty(x.h))
                                  .GroupBy(x => x.h)
@@ -71,15 +71,16 @@ namespace ExcelBinder.Services
             }
             else
             {
-                // 단일 타입인 경우 맵을 통해 빠르게 위치를 찾습니다.
+                // 컬럼 검색 로직 보완: 찾지 못할 경우 예외를 발생시켜 데이터 오염 방지
                 if (!headerMap.TryGetValue(info.ColumnName, out int idx))
                 {
-                    headerMap.TryGetValue(fieldName, out idx); // Fallback
+                    if (!headerMap.TryGetValue(fieldName, out idx))
+                    {
+                        throw new Exception($"Column '{info.ColumnName}' (or '{fieldName}') not found in excel header. Please check your schema or excel file.");
+                    }
                 }
                 
-                string value = idx != 0 && idx < row.Length ? row[idx] : (idx == 0 && row.Length > 0 ? row[0] : "");
-                if (idx >= row.Length) value = "";
-
+                string value = idx < row.Length ? row[idx] : "";
                 WritePrimitive(writer, info.BaseType, value);
             }
         }
@@ -116,9 +117,9 @@ namespace ExcelBinder.Services
         public void ExportToJson(SchemaDefinition schema, IEnumerable<string[]> excelData, string outputPath, FeatureDefinition feature)
         {
             var dataList = excelData as List<string[]> ?? excelData.ToList();
-            if (dataList.Count < 1) return;
+            if (dataList.Count < 2) return;
 
-            var header = dataList[0];
+            var header = dataList[1]; // 두 번째 행을 헤더로 사용
             var headerMap = header.Select((h, i) => new { h, i })
                                  .Where(x => !string.IsNullOrEmpty(x.h))
                                  .GroupBy(x => x.h)
@@ -165,12 +166,13 @@ namespace ExcelBinder.Services
             {
                 if (!headerMap.TryGetValue(info.ColumnName, out int idx))
                 {
-                    headerMap.TryGetValue(fieldName, out idx);
+                    if (!headerMap.TryGetValue(fieldName, out idx))
+                    {
+                        throw new Exception($"Column '{info.ColumnName}' (or '{fieldName}') not found in excel header. Please check your schema or excel file.");
+                    }
                 }
 
-                string value = idx != 0 && idx < row.Length ? row[idx] : (idx == 0 && row.Length > 0 ? row[0] : "");
-                if (idx >= row.Length) value = "";
-
+                string value = idx < row.Length ? row[idx] : "";
                 return ParsePrimitive(info.BaseType, value);
             }
         }

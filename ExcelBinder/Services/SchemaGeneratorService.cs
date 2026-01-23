@@ -13,9 +13,10 @@ namespace ExcelBinder.Services
         {
             var excelService = new ExcelService();
             var data = excelService.ReadExcel(excelPath, sheetName).ToList();
-            if (data.Count < 1) return;
+            // 전역 규칙: 첫 번째 행 무시, 두 번째 행 헤더. 최소 2행 필요.
+            if (data.Count < 2) return;
 
-            var header = data[0];
+            var header = data[1]; // 두 번째 행을 헤더로 사용
             var firstValidColumn = header.FirstOrDefault(c => !string.IsNullOrWhiteSpace(c) && !c.TrimStart().StartsWith(ProjectConstants.Excel.CommentPrefix));
 
             var schema = new SchemaDefinition

@@ -57,10 +57,11 @@ namespace ExcelBinder.Services
         public List<(string[] Data, int OriginalIndex)> GetFilteredData(IEnumerable<string[]> rawData)
         {
             var dataList = rawData.ToList();
-            if (dataList.Count < 1) return new List<(string[], int)>();
+            // 전역 규칙: 첫 번째 행은 항상 무시하므로 최소 2행 이상일 때만 데이터를 처리함 (첫 행 무시, 둘째 행 헤더)
+            if (dataList.Count < 3) return new List<(string[], int)>();
 
-            var header = dataList[0];
-            var rows = dataList.Skip(1);
+            var header = dataList[1]; // 두 번째 행을 헤더로 사용
+            var rows = dataList.Skip(2); // 세 번째 행부터 실제 데이터
 
             // Identify the first valid column (not starting with comment prefix)
             int firstValidColIdx = -1;
@@ -74,7 +75,7 @@ namespace ExcelBinder.Services
             }
 
             // Filter rows where the first valid column's value starts with comment prefix
-            return rows.Select((row, idx) => (row, originalRowIndex: idx + 2))
+            return rows.Select((row, idx) => (row, originalRowIndex: idx + 3)) // Skip 2 rows, so data starts at row 3
                 .Where(item =>
                 {
                     if (firstValidColIdx == -1 || firstValidColIdx >= item.row.Length) return true;

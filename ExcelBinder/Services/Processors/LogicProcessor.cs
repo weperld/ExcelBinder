@@ -57,6 +57,8 @@ namespace ExcelBinder.Services.Processors
                 try
                 {
                     var data = await System.Threading.Tasks.Task.Run(() => excelService.ReadExcel(item.File.FullPath, item.Sheet.SheetName).ToList());
+                    if (data.Count < 2) continue; // 최소 2행 필요 (첫 행 무시, 둘째 행 헤더)
+
                     string className = item.Sheet.SheetName;
                     var context = await System.Threading.Tasks.Task.Run(() => logicParserService.PrepareLogicContext(data, vm.SelectedFeature, vm.Namespace, className));
                     string? code = await System.Threading.Tasks.Task.Run(() => codeGenService.GenerateLogicCode(context, vm.SelectedFeature));
