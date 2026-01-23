@@ -1,0 +1,8 @@
+{
+  "className": "Sheet1Data",
+  "key": "Id",
+  "fields": {
+    "Id": "int",
+    "Value": "int"
+  }
+}

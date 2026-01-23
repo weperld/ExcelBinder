@@ -4,6 +4,6 @@
   "fields": {
     "Id": "int",
     "Name": "string",
-    "Power": "double"
+    "Power": "int"
   }
 }
