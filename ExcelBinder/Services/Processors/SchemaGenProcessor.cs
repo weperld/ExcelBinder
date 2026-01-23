@@ -39,12 +39,15 @@ namespace ExcelBinder.Services.Processors
 
             var targets = selectedSheets.Select(item => ((string)item.File.FullPath, (string)item.Sheet.SheetName));
             var editorVm = new SchemaEditorViewModel(targets, vm.SelectedFeature?.SchemaPath ?? "");
-            editorVm.OnComplete += () =>
+            editorVm.OnComplete += (success) =>
             {
-                LogService.Instance.Info("Schema Generation Session Finished.");
-                vm.RefreshFiles();
+                if (success)
+                {
+                    LogService.Instance.Info("Schema Generation Session Finished.");
+                    vm.RefreshFiles();
+                    vm.ShowLogs();
+                }
                 (Application.Current.MainWindow as MainWindow)?.NavigateToExecution();
-                vm.ShowLogs();
             };
             (Application.Current.MainWindow as MainWindow)?.NavigateToSchemaEditor(editorVm);
             

@@ -26,7 +26,7 @@ namespace ExcelBinder.ViewModels
         public ICommand CompleteCommand { get; }
         public ICommand CancelCommand { get; }
 
-        public event Action OnComplete;
+        public event Action<bool>? OnComplete;
 
         public SchemaEditorViewModel(IEnumerable<(string excelPath, string sheetName)> targets, string outputPath)
         {
@@ -39,7 +39,7 @@ namespace ExcelBinder.ViewModels
             SelectedItem = Items.FirstOrDefault();
 
             CompleteCommand = new RelayCommand(ExecuteComplete);
-            CancelCommand = new RelayCommand(() => OnComplete?.Invoke());
+            CancelCommand = new RelayCommand(() => OnComplete?.Invoke(false));
         }
 
         private void ExecuteComplete()
@@ -55,7 +55,7 @@ namespace ExcelBinder.ViewModels
                     LogService.Instance.Info($"Saved schema: {item.DisplayName}");
                 }
                 LogService.Instance.Info("All schemas saved successfully.");
-                OnComplete?.Invoke();
+                OnComplete?.Invoke(true);
             }
             catch (Exception ex)
             {
@@ -63,7 +63,7 @@ namespace ExcelBinder.ViewModels
                 // We still want to invoke OnComplete to show logs if some were saved, 
                 // but usually errors here are critical. 
                 // The MainViewModel's OnComplete handler will call ShowLogs.
-                OnComplete?.Invoke();
+                OnComplete?.Invoke(true);
             }
         }
     }
