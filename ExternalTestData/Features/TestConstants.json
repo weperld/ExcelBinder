@@ -1,0 +1,9 @@
+﻿{
+  "id": "test_constants",
+  "name": "Test Constants Generation",
+  "category": "Constants",
+  "description": "Test for Constants Generation feature",
+  "excelPath": "D:\\CS Project\\ExcelBinder\\ExternalTestData\\Excel",
+  "scriptsPath": "D:\\CS Project\\ExcelBinder\\ExternalTestData\\Scripts",
+  "defaultNamespace": "TestProject.Constants"
+}

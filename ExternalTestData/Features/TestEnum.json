@@ -1,0 +1,9 @@
+﻿{
+  "id": "test_enum",
+  "name": "Test Enum Generation",
+  "category": "Enum",
+  "description": "Test for Enum Generation feature",
+  "excelPath": "D:\\CS Project\\ExcelBinder\\ExternalTestData\\Excel",
+  "scriptsPath": "D:\\CS Project\\ExcelBinder\\ExternalTestData\\Scripts",
+  "defaultNamespace": "TestProject.Enums"
+}

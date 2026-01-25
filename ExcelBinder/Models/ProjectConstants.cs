@@ -7,6 +7,8 @@ namespace ExcelBinder.Models
             public const string StaticData = "StaticData";
             public const string Logic = "Logic";
             public const string SchemaGen = "SchemaGen";
+            public const string Enum = "Enum";
+            public const string Constants = "Constants";
         }
 
         public static class Excel

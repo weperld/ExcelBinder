@@ -51,6 +51,8 @@
                                 <ComboBoxItem Content="StaticData"/>
                                 <ComboBoxItem Content="Logic"/>
                                 <ComboBoxItem Content="SchemaGen"/>
+                                <ComboBoxItem Content="Enum"/>
+                                <ComboBoxItem Content="Constants"/>
                             </ComboBox>
                         </Grid>
 
