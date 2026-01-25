@@ -1,0 +1,21 @@
+{
+  "className": "StatData",
+  "key": "id",
+  "fields": {
+    "id": "int",
+    "Power": "int",
+    "Def": "List<int>",
+    "Atk_Damge_Increase_Rate": "double",
+    "Atk_Damge_Decrease_Rate": "double",
+    "Rcv_Damge_Increase_Rate": "List<double>",
+    "Attack_Speed_Increase_Rate": "double",
+    "Skill_Speed_Increase_Rate": "double",
+    "Max_Hp": "int",
+    "Current_Hp": "int",
+    "Skill_Cooltime_INT_Decrease": "int",
+    "Skill_Cooltime_per_Decrease": "double",
+    "Current_Skill_Cooltime": "int",
+    "Move_Speed": "int",
+    "Attack_range": "int"
+  }
+}

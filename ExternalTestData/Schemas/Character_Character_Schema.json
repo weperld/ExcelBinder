@@ -1,0 +1,10 @@
+{
+  "className": "CharacterData",
+  "key": "id",
+  "fields": {
+    "id": "int",
+    "name": "string",
+    "stat": "int:ref:StatData",
+    "stat_growth": "int:ref:StatData"
+  }
+}
