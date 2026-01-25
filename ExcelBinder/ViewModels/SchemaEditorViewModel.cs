@@ -119,9 +119,9 @@ namespace ExcelBinder.ViewModels
             var excelService = new ExcelService();
             var allData = excelService.ReadExcel(excelPath, sheetName).ToList();
             
-            if (allData.Count >= 2)
+            if (allData.Count >= ProjectConstants.Excel.DataStartRowIndex)
             {
-                var data = allData[1]; // 전역 규칙: 두 번째 행을 헤더로 사용
+                var data = allData[ProjectConstants.Excel.HeaderRowIndex]; // 전역 규칙: 첫 번째 행을 헤더로 사용
                 var groupedHeaders = data
                     .Where(h => !string.IsNullOrWhiteSpace(h) && !h.TrimStart().StartsWith(ProjectConstants.Excel.CommentPrefix))
                     .GroupBy(h => h)

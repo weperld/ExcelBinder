@@ -12,7 +12,7 @@ namespace ExcelBinder.Services
     /// </summary>
     public class FeatureService
     {
-        private const string SettingsFile = "settings.json";
+        private const string SettingsFile = ProjectConstants.Files.AppSettings;
         
         // 특징 정의 파일의 역직렬화 결과를 캐싱하여 파일 I/O를 줄입니다.
         private static readonly System.Collections.Concurrent.ConcurrentDictionary<string, FeatureDefinition> _featureCache = new();

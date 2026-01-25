@@ -38,31 +38,31 @@ public partial class App : Application
         {
             switch (args[i])
             {
-                case "--feature":
+                case ProjectConstants.CLI.Feature:
                     featureId = args[++i];
                     break;
-                case "--all":
+                case ProjectConstants.CLI.All:
                     selectAll = true;
                     break;
-                case "--bind":
+                case ProjectConstants.CLI.Bind:
                     vm.Settings.BoundFeatures.Add(args[++i]);
                     featureService.SaveSettings(vm.Settings);
                     break;
-                case "--export":
+                case ProjectConstants.CLI.Export:
                     executeExport = true;
                     break;
-                case "--codegen":
+                case ProjectConstants.CLI.Codegen:
                     executeCodeGen = true;
                     break;
-                case "--binary":
+                case ProjectConstants.CLI.Binary:
                     vm.IsBinaryChecked = true;
                     vm.IsJsonChecked = false;
                     break;
-                case "--json":
+                case ProjectConstants.CLI.Json:
                     vm.IsJsonChecked = true;
                     vm.IsBinaryChecked = false;
                     break;
-                case "--both":
+                case ProjectConstants.CLI.Both:
                     vm.IsBinaryChecked = true;
                     vm.IsJsonChecked = true;
                     break;

@@ -13,6 +13,14 @@ namespace ExcelBinder.Models
         {
             public const string CommentPrefix = "#";
             public const string DefaultSheetKey = "Id";
+
+            public const int HeaderRowIndex = 0;
+            public const int DataStartRowIndex = 1;
+
+            public const string TypeDelimiter = ":";
+            public const string ReferenceMarker = "ref";
+            public const string ListPrefix = "List<";
+            public const string ListSuffix = ">";
             
             public static class LogicColumns
             {
@@ -21,6 +29,24 @@ namespace ExcelBinder.Models
                 public const string Parameters = "Parameters";
                 public const string Formula = "Formula";
             }
+        }
+
+        public static class Files
+        {
+            public const string AppSettings = "settings.json";
+            public const string SchemaSuffix = "_Schema";
+        }
+
+        public static class CLI
+        {
+            public const string Feature = "--feature";
+            public const string All = "--all";
+            public const string Bind = "--bind";
+            public const string Export = "--export";
+            public const string Codegen = "--codegen";
+            public const string Binary = "--binary";
+            public const string Json = "--json";
+            public const string Both = "--both";
         }
 
         public static class Extensions
