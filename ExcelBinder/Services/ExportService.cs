@@ -20,21 +20,16 @@ namespace ExcelBinder.Services
         public void ExportToBinary(SchemaDefinition schema, IEnumerable<string[]> excelData, string outputPath, FeatureDefinition feature)
         {
             var dataList = excelData as List<string[]> ?? excelData.ToList();
-            if (dataList.Count < 2) return; // 첫 번째 행(무시) + 두 번째 행(헤더) 최소 2행 필요
+            if (dataList.Count < 1) return; // 최소 1행(헤더) 필요
 
-            // 두 번째 행(index 1)을 헤더 컬럼으로 사용합니다. (첫 번째 행은 전역 규칙에 의해 무시됨)
-            var header = dataList[1];
-            var headerMap = header.Select((h, i) => new { h, i })
-                                 .Where(x => !string.IsNullOrEmpty(x.h))
-                                 .GroupBy(x => x.h)
-                                 .ToDictionary(g => g.Key, g => g.First().i);
+            var header = dataList[ProjectConstants.Excel.HeaderRowIndex];
+            var headerMap = CreateHeaderMap(header);
 
             var validRows = _excelService.GetFilteredData(dataList);
 
             using var stream = new FileStream(outputPath, FileMode.Create);
             using var writer = new BinaryWriter(stream);
 
-            // 전체 행 개수를 먼저 기록합니다.
             writer.Write(validRows.Count);
 
             foreach (var item in validRows)
@@ -53,16 +48,32 @@ namespace ExcelBinder.Services
             }
         }
 
-        /// <summary>
-        /// 개별 필드 데이터를 타입에 맞춰 바이너리로 기록합니다.
-        /// </summary>
+        private Dictionary<string, int> CreateHeaderMap(string[] header)
+        {
+            return header.Select((h, i) => new { h = h?.Trim(), i })
+                         .Where(x => !string.IsNullOrEmpty(x.h))
+                         .GroupBy(x => x.h, StringComparer.OrdinalIgnoreCase)
+                         .ToDictionary(g => g.Key, g => g.First().i, StringComparer.OrdinalIgnoreCase);
+        }
+
+        private int GetColumnIndex(Dictionary<string, int> headerMap, string columnName, string fieldName)
+        {
+            if (headerMap.TryGetValue(columnName, out int idx)) return idx;
+
+            var trimmedFieldName = fieldName.Trim();
+            if (headerMap.TryGetValue(trimmedFieldName, out idx)) return idx;
+
+            throw new Exception($"Column '{columnName}' (or '{trimmedFieldName}') not found in excel header. Please check your schema or excel file.");
+        }
+
         private void WriteField(BinaryWriter writer, string type, string[] row, string[] header, Dictionary<string, int> headerMap, string fieldName, FeatureDefinition feature)
         {
             var info = TypeParser.ParseType(type, fieldName);
             if (info.IsList)
             {
-                // 리스트 타입인 경우 동일한 이름을 가진 모든 컬럼의 데이터를 수집합니다.
-                var indices = Enumerable.Range(0, header.Length).Where(i => header[i] == info.ColumnName).ToList();
+                var indices = Enumerable.Range(0, header.Length)
+                    .Where(i => string.Equals(header[i]?.Trim(), info.ColumnName, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
                 writer.Write(indices.Count);
                 foreach (var idx in indices)
                 {
@@ -71,15 +82,7 @@ namespace ExcelBinder.Services
             }
             else
             {
-                // 컬럼 검색 로직 보완: 찾지 못할 경우 예외를 발생시켜 데이터 오염 방지
-                if (!headerMap.TryGetValue(info.ColumnName, out int idx))
-                {
-                    if (!headerMap.TryGetValue(fieldName, out idx))
-                    {
-                        throw new Exception($"Column '{info.ColumnName}' (or '{fieldName}') not found in excel header. Please check your schema or excel file.");
-                    }
-                }
-                
+                int idx = GetColumnIndex(headerMap, info.ColumnName, fieldName);
                 string value = idx < row.Length ? row[idx] : "";
                 WritePrimitive(writer, info.BaseType, value);
             }
@@ -87,43 +90,30 @@ namespace ExcelBinder.Services
 
         private void WritePrimitive(BinaryWriter writer, string type, string value)
         {
-            try
+            var parsed = ParsePrimitive(type, value);
+            switch (type)
             {
-                switch (type)
-                {
-                    case ProjectConstants.Types.Int:
-                        if (float.TryParse(value, out float f) && f != (int)f) 
-                            throw new Exception($"Type Mismatch: Expected int but got float-like value '{value}'");
-                        writer.Write(int.Parse(value));
-                        break;
-                    case ProjectConstants.Types.Float: writer.Write(float.Parse(value)); break;
-                    case ProjectConstants.Types.String: writer.Write(value ?? ""); break;
-                    case ProjectConstants.Types.Bool: writer.Write(bool.Parse(value)); break;
-                    case ProjectConstants.Types.Long: writer.Write(long.Parse(value)); break;
-                    case ProjectConstants.Types.Double: writer.Write(double.Parse(value)); break;
-                    case ProjectConstants.Types.UInt: writer.Write(uint.Parse(value)); break;
-                    case ProjectConstants.Types.ULong: writer.Write(ulong.Parse(value)); break;
-                    case ProjectConstants.Types.Short: writer.Write(short.Parse(value)); break;
-                    case ProjectConstants.Types.Byte: writer.Write(byte.Parse(value)); break;
-                    default: writer.Write(value ?? ""); break;
-                }
-            }
-            catch (Exception ex) when (!(ex is Exception && ex.Message.StartsWith("Type Mismatch")))
-            {
-                throw new Exception($"Cannot parse '{value}' as {type}. {ex.Message}");
+                case ProjectConstants.Types.Int: writer.Write((int)parsed); break;
+                case ProjectConstants.Types.Float: writer.Write((float)parsed); break;
+                case ProjectConstants.Types.String: writer.Write((string)parsed); break;
+                case ProjectConstants.Types.Bool: writer.Write((bool)parsed); break;
+                case ProjectConstants.Types.Long: writer.Write((long)parsed); break;
+                case ProjectConstants.Types.Double: writer.Write((double)parsed); break;
+                case ProjectConstants.Types.UInt: writer.Write((uint)parsed); break;
+                case ProjectConstants.Types.ULong: writer.Write((ulong)parsed); break;
+                case ProjectConstants.Types.Short: writer.Write((short)parsed); break;
+                case ProjectConstants.Types.Byte: writer.Write((byte)parsed); break;
+                default: writer.Write(parsed?.ToString() ?? ""); break;
             }
         }
 
         public void ExportToJson(SchemaDefinition schema, IEnumerable<string[]> excelData, string outputPath, FeatureDefinition feature)
         {
             var dataList = excelData as List<string[]> ?? excelData.ToList();
-            if (dataList.Count < 2) return;
+            if (dataList.Count < 1) return;
 
-            var header = dataList[1]; // 두 번째 행을 헤더로 사용
-            var headerMap = header.Select((h, i) => new { h, i })
-                                 .Where(x => !string.IsNullOrEmpty(x.h))
-                                 .GroupBy(x => x.h)
-                                 .ToDictionary(g => g.Key, g => g.First().i);
+            var header = dataList[ProjectConstants.Excel.HeaderRowIndex];
+            var headerMap = CreateHeaderMap(header);
 
             var validRows = _excelService.GetFilteredData(dataList);
 
@@ -154,7 +144,9 @@ namespace ExcelBinder.Services
             var info = TypeParser.ParseType(type, fieldName);
             if (info.IsList)
             {
-                var indices = Enumerable.Range(0, header.Length).Where(i => header[i] == info.ColumnName).ToList();
+                var indices = Enumerable.Range(0, header.Length)
+                    .Where(i => string.Equals(header[i]?.Trim(), info.ColumnName, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
                 var list = new List<object>();
                 foreach (var idx in indices)
                 {
@@ -164,14 +156,7 @@ namespace ExcelBinder.Services
             }
             else
             {
-                if (!headerMap.TryGetValue(info.ColumnName, out int idx))
-                {
-                    if (!headerMap.TryGetValue(fieldName, out idx))
-                    {
-                        throw new Exception($"Column '{info.ColumnName}' (or '{fieldName}') not found in excel header. Please check your schema or excel file.");
-                    }
-                }
-
+                int idx = GetColumnIndex(headerMap, info.ColumnName, fieldName);
                 string value = idx < row.Length ? row[idx] : "";
                 return ParsePrimitive(info.BaseType, value);
             }
@@ -183,7 +168,7 @@ namespace ExcelBinder.Services
             {
                 return type switch
                 {
-                    ProjectConstants.Types.Int => int.Parse(value),
+                    ProjectConstants.Types.Int => ParseInt(value),
                     ProjectConstants.Types.Float => float.Parse(value),
                     ProjectConstants.Types.Bool => bool.Parse(value),
                     ProjectConstants.Types.Long => long.Parse(value),
@@ -192,13 +177,20 @@ namespace ExcelBinder.Services
                     ProjectConstants.Types.ULong => ulong.Parse(value),
                     ProjectConstants.Types.Short => short.Parse(value),
                     ProjectConstants.Types.Byte => byte.Parse(value),
-                    _ => value
+                    _ => value ?? ""
                 };
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!(ex is Exception && ex.Message.Contains("Type Mismatch")))
             {
                 throw new Exception($"Cannot parse '{value}' as {type}. {ex.Message}");
             }
+        }
+
+        private int ParseInt(string value)
+        {
+            if (float.TryParse(value, out float f) && f != (int)f)
+                throw new Exception($"Type Mismatch: Expected int but got float-like value '{value}'");
+            return int.Parse(value);
         }
     }
 }
