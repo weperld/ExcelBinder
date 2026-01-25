@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.0] - 2026-01-25
+
+### Changed
+- **전역 행 처리 규칙 변경 및 표준화**
+  - 기존 '1행 무시, 2행 헤더' 규칙을 폐기하고, 모든 카테고리(StaticData, Logic, SchemaGen)에서 **'1행 헤더, 2행 데이터 시작'** 규칙을 일관되게 적용.
+  - 관련 서비스(`ExcelService`, `ExportService`, `LogicParserService`, `SchemaGeneratorService`, `SchemaEditorViewModel`) 로직 전면 수정.
+
+### Refactor
+- **매직 넘버 및 매직 스트링 제거 (ProjectConstants)**
+  - `ProjectConstants.cs`에 Excel 행 인덱스, CLI 인자, 파일명 접미사, 타입 구분자 등을 추가하여 전역 상수 관리 체계 강화.
+- **코드 중복 제거 및 구조 개선 (ExportService)**
+  - `CreateHeaderMap`, `GetColumnIndex` 메서드 추출을 통해 `ExportToBinary`와 `ExportToJson` 간의 중복 로직 제거.
+  - `ParsePrimitive` 및 `WritePrimitive` 리팩토링으로 데이터 파싱 로직 단일화.
+- **TypeParser 개선**
+  - `List<T>` 처리 시 사용되던 하드코딩된 오프셋 숫자를 상수로 교체하여 가독성 및 유지보수성 향상.
+
+### Docs
+- **문서 최신화 및 가독성 개선**
+  - `README.md`, `README_EXT.md`, `Requirements.md`의 행 규칙 설명 및 `#` 주석 처리 예시를 실제 동작과 일치하도록 업데이트.
+  - 루트 `README.md` 레이아웃 재구성 및 AI 프롬프트 템플릿 추가를 통한 접근성 강화.
+
 ## [1.2.3] - 2026-01-23
 
 ### Added
