@@ -42,9 +42,10 @@ namespace ExcelBinder.ViewModels
         public ICommand DeselectAllCommand { get; }
         public ICommand NavigateToDashboardCommand { get; }
 
-        public virtual bool IsSchemaPathVisible => true;
-        public virtual bool IsExportPathVisible => true;
-        public virtual bool IsScriptsPathVisible => true;
+        public bool IsSchemaPathVisible => FeatureProcessorFactory.GetProcessor(_feature.Category).IsSchemaPathVisible;
+        public bool IsExportPathVisible => FeatureProcessorFactory.GetProcessor(_feature.Category).IsExportPathVisible;
+        public bool IsScriptsPathVisible => FeatureProcessorFactory.GetProcessor(_feature.Category).IsScriptsPathVisible;
+        public bool IsSchemaStatusVisible => FeatureProcessorFactory.GetProcessor(_feature.Category).IsSchemaStatusVisible;
 
         protected ExecutionViewModelBase(FeatureDefinition feature)
         {

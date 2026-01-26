@@ -50,10 +50,20 @@
             <ContentControl Template="{StaticResource FeatureCardTemplate}"/>
         </DataTemplate>
 
+        <DataTemplate x:Key="EnumTemplate">
+            <ContentControl Template="{StaticResource FeatureCardTemplate}"/>
+        </DataTemplate>
+
+        <DataTemplate x:Key="ConstantsTemplate">
+            <ContentControl Template="{StaticResource FeatureCardTemplate}"/>
+        </DataTemplate>
+
         <local:DashboardItemTemplateSelector x:Key="DashboardItemSelector"
                                            StaticDataTemplate="{StaticResource StaticDataTemplate}"
                                            LogicTemplate="{StaticResource LogicTemplate}"
-                                           SchemaGenTemplate="{StaticResource SchemaGenTemplate}"/>
+                                           SchemaGenTemplate="{StaticResource SchemaGenTemplate}"
+                                           EnumTemplate="{StaticResource EnumTemplate}"
+                                           ConstantsTemplate="{StaticResource ConstantsTemplate}"/>
     </UserControl.Resources>
     <Grid Margin="30">
         <Grid.RowDefinitions>

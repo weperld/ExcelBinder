@@ -14,6 +14,7 @@ namespace ExcelBinder.Services.Processors
         public bool IsSchemaPathVisible => true;
         public bool IsExportPathVisible => false;
         public bool IsScriptsPathVisible => false;
+        public bool IsSchemaStatusVisible => true;
         public bool IsTypeMappingsVisible => false;
         public bool IsTemplatesVisible => false;
         public bool IsOutputOptionsVisible => false;
@@ -53,5 +54,7 @@ namespace ExcelBinder.Services.Processors
             
             return System.Threading.Tasks.Task.CompletedTask;
         }
+
+        public System.Threading.Tasks.Task CreateTemplateAsync(string filePath) => System.Threading.Tasks.Task.CompletedTask;
     }
 }

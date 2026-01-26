@@ -10,6 +10,7 @@ namespace ExcelBinder.Services
         bool IsSchemaPathVisible { get; }
         bool IsExportPathVisible { get; }
         bool IsScriptsPathVisible { get; }
+        bool IsSchemaStatusVisible { get; }
         bool IsTypeMappingsVisible { get; }
         bool IsTemplatesVisible { get; }
         bool IsOutputOptionsVisible { get; }
@@ -17,5 +18,6 @@ namespace ExcelBinder.Services
         // Actions
         System.Threading.Tasks.Task ExecuteExportAsync(ViewModels.IExecutionViewModel vm);
         System.Threading.Tasks.Task ExecuteGenerateAsync(ViewModels.IExecutionViewModel vm);
+        System.Threading.Tasks.Task CreateTemplateAsync(string filePath);
     }
 }

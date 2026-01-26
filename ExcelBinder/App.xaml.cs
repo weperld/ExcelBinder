@@ -33,6 +33,8 @@ public partial class App : Application
         bool executeExport = false;
         bool executeCodeGen = false;
         bool selectAll = false;
+        bool? cliBinary = null;
+        bool? cliJson = null;
 
         for (int i = 0; i < args.Length; i++)
         {
@@ -55,16 +57,16 @@ public partial class App : Application
                     executeCodeGen = true;
                     break;
                 case ProjectConstants.CLI.Binary:
-                    vm.IsBinaryChecked = true;
-                    vm.IsJsonChecked = false;
+                    cliBinary = true;
+                    cliJson = false;
                     break;
                 case ProjectConstants.CLI.Json:
-                    vm.IsJsonChecked = true;
-                    vm.IsBinaryChecked = false;
+                    cliJson = true;
+                    cliBinary = false;
                     break;
                 case ProjectConstants.CLI.Both:
-                    vm.IsBinaryChecked = true;
-                    vm.IsJsonChecked = true;
+                    cliBinary = true;
+                    cliJson = true;
                     break;
             }
         }
@@ -77,12 +79,36 @@ public partial class App : Application
             if (feature != null)
             {
                 vm.SelectedFeature = feature;
-                if (selectAll)
+                
+                // Create appropriate Execution ViewModel
+                IExecutionViewModel? execVm = feature.Category switch
                 {
-                    foreach (var f in vm.ExcelFiles) f.IsSelected = true;
+                    ProjectConstants.Categories.StaticData => new StaticDataExecutionViewModel(feature, vm.Settings),
+                    ProjectConstants.Categories.Logic => new LogicExecutionViewModel(feature),
+                    ProjectConstants.Categories.SchemaGen => new SchemaGenExecutionViewModel(feature),
+                    ProjectConstants.Categories.Enum => new EnumExecutionViewModel(feature),
+                    ProjectConstants.Categories.Constants => new ConstantsExecutionViewModel(feature),
+                    _ => null
+                };
+
+                if (execVm != null)
+                {
+                    if (cliBinary.HasValue) execVm.IsBinaryChecked = cliBinary.Value;
+                    if (cliJson.HasValue) execVm.IsJsonChecked = cliJson.Value;
+
+                    if (selectAll)
+                    {
+                        foreach (var f in execVm.ExcelFiles)
+                        {
+                            f.IsSelected = true;
+                            foreach (var s in f.Sheets) s.IsSelected = s.CanBeSelected;
+                        }
+                    }
+
+                    var processor = FeatureProcessorFactory.GetProcessor(feature.Category);
+                    if (executeExport) processor.ExecuteExportAsync(execVm).GetAwaiter().GetResult();
+                    if (executeCodeGen) processor.ExecuteGenerateAsync(execVm).GetAwaiter().GetResult();
                 }
-                if (executeExport) vm.ExecuteExport();
-                if (executeCodeGen) vm.ExecuteGenerateCode();
             }
             else
             {

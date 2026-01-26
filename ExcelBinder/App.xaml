@@ -2,8 +2,27 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:ExcelBinder"
+             xmlns:vm="clr-namespace:ExcelBinder.ViewModels"
+             xmlns:items="clr-namespace:ExcelBinder.Views.ExecutionItems"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
+        <!-- Data Templates for Execution ViewModels -->
+        <DataTemplate DataType="{x:Type vm:StaticDataExecutionViewModel}">
+            <items:StaticDataExecutionView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:LogicExecutionViewModel}">
+            <items:LogicExecutionView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:SchemaGenExecutionViewModel}">
+            <items:SchemaGenExecutionView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:EnumExecutionViewModel}">
+            <items:EnumExecutionView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:ConstantsExecutionViewModel}">
+            <items:ConstantsExecutionView/>
+        </DataTemplate>
+
         <!-- Colors -->
         <Color x:Key="PrimaryColor">#007ACC</Color>
         <Color x:Key="SecondaryColor">#28A745</Color>

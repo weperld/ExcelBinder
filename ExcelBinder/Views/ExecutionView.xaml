@@ -7,17 +7,5 @@
              xmlns:items="clr-namespace:ExcelBinder.Views.ExecutionItems"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="800">
-    <UserControl.Resources>
-        <DataTemplate DataType="{x:Type vm:StaticDataExecutionViewModel}">
-            <items:StaticDataExecutionView/>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type vm:LogicExecutionViewModel}">
-            <items:LogicExecutionView/>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type vm:SchemaGenExecutionViewModel}">
-            <items:SchemaGenExecutionView/>
-        </DataTemplate>
-    </UserControl.Resources>
-    
     <ContentControl Content="{Binding CurrentExecutionViewModel}"/>
 </UserControl>

@@ -143,6 +143,8 @@ namespace ExcelBinder.ViewModels
                     ProjectConstants.Categories.StaticData => new StaticDataExecutionViewModel(feature, Settings),
                     ProjectConstants.Categories.Logic => new LogicExecutionViewModel(feature),
                     ProjectConstants.Categories.SchemaGen => new SchemaGenExecutionViewModel(feature),
+                    ProjectConstants.Categories.Enum => new EnumExecutionViewModel(feature),
+                    ProjectConstants.Categories.Constants => new ConstantsExecutionViewModel(feature),
                     _ => null
                 };
 

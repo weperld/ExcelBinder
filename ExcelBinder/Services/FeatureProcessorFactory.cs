@@ -10,7 +10,9 @@ namespace ExcelBinder.Services
         {
             { ProjectConstants.Categories.StaticData, new StaticDataProcessor() },
             { ProjectConstants.Categories.Logic, new LogicProcessor() },
-            { ProjectConstants.Categories.SchemaGen, new SchemaGenProcessor() }
+            { ProjectConstants.Categories.SchemaGen, new SchemaGenProcessor() },
+            { ProjectConstants.Categories.Enum, new EnumProcessor() },
+            { ProjectConstants.Categories.Constants, new ConstantsProcessor() }
         };
 
         public static IFeatureProcessor GetProcessor(string category)

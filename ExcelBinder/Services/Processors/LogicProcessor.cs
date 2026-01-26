@@ -13,6 +13,7 @@ namespace ExcelBinder.Services.Processors
         public bool IsSchemaPathVisible => false;
         public bool IsExportPathVisible => false;
         public bool IsScriptsPathVisible => true;
+        public bool IsSchemaStatusVisible => false;
         public bool IsTypeMappingsVisible => false;
         public bool IsTemplatesVisible => true;
         public bool IsOutputOptionsVisible => false;
@@ -77,5 +78,7 @@ namespace ExcelBinder.Services.Processors
             LogService.Instance.Info("Logic Generation Finished.");
             vm.ShowLogs();
         }
+
+        public System.Threading.Tasks.Task CreateTemplateAsync(string filePath) => System.Threading.Tasks.Task.CompletedTask;
     }
 }

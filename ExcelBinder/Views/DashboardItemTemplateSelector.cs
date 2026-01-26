@@ -9,6 +9,8 @@ namespace ExcelBinder.Views
         public DataTemplate? StaticDataTemplate { get; set; }
         public DataTemplate? LogicTemplate { get; set; }
         public DataTemplate? SchemaGenTemplate { get; set; }
+        public DataTemplate? EnumTemplate { get; set; }
+        public DataTemplate? ConstantsTemplate { get; set; }
 
         public override DataTemplate? SelectTemplate(object item, DependencyObject container)
         {
@@ -19,6 +21,8 @@ namespace ExcelBinder.Views
                     ProjectConstants.Categories.StaticData => StaticDataTemplate,
                     ProjectConstants.Categories.Logic => LogicTemplate,
                     ProjectConstants.Categories.SchemaGen => SchemaGenTemplate,
+                    ProjectConstants.Categories.Enum => EnumTemplate ?? StaticDataTemplate,
+                    ProjectConstants.Categories.Constants => ConstantsTemplate ?? StaticDataTemplate,
                     _ => base.SelectTemplate(item, container)
                 };
             }

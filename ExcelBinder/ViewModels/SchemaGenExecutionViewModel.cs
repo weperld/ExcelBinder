@@ -14,8 +14,6 @@ namespace ExcelBinder.ViewModels
             GenerateCodeCommand = new RelayCommand(ExecuteGenerateCode);
         }
 
-        public override bool IsExportPathVisible => false;
-        public override bool IsScriptsPathVisible => false;
 
         protected override bool IsSheetSelectable(bool isSchemaFound) => true;
 

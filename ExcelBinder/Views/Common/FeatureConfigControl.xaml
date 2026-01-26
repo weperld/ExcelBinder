@@ -9,29 +9,26 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </UserControl.Resources>
     <GroupBox Header="Feature Configuration">
-        <Grid Margin="5">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
+        <WrapPanel Margin="5">
+            <StackPanel Orientation="Horizontal" Margin="0,5,30,5">
+                <TextBlock Text="Excel:" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                <TextBlock Text="{Binding SelectedFeature.ExcelPath}" TextTrimming="CharacterEllipsis" MaxWidth="300" VerticalAlignment="Center" Foreground="{StaticResource MutedTextBrush}"/>
+            </StackPanel>
             
-            <TextBlock Text="Excel:" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,5,10,5"/>
-            <TextBlock Grid.Column="1" Text="{Binding SelectedFeature.ExcelPath}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0,5,20,5" Foreground="{StaticResource MutedTextBrush}"/>
-            
-            <TextBlock Grid.Row="0" Grid.Column="2" Text="Schema:" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,5,10,5" Visibility="{Binding IsSchemaPathVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-            <TextBlock Grid.Row="0" Grid.Column="3" Text="{Binding SelectedFeature.SchemaPath}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0,5,0,5" Foreground="{StaticResource MutedTextBrush}" Visibility="{Binding IsSchemaPathVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            <StackPanel Orientation="Horizontal" Margin="0,5,30,5" Visibility="{Binding IsSchemaPathVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <TextBlock Text="Schema:" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                <TextBlock Text="{Binding SelectedFeature.SchemaPath}" TextTrimming="CharacterEllipsis" MaxWidth="300" VerticalAlignment="Center" Foreground="{StaticResource MutedTextBrush}"/>
+            </StackPanel>
 
-            <TextBlock Grid.Row="1" Grid.Column="0" Text="Export:" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,5,10,5" Visibility="{Binding IsExportPathVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding SelectedFeature.ExportPath}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0,5,20,5" Foreground="{StaticResource MutedTextBrush}" Visibility="{Binding IsExportPathVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            <StackPanel Orientation="Horizontal" Margin="0,5,30,5" Visibility="{Binding IsExportPathVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <TextBlock Text="Export:" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                <TextBlock Text="{Binding SelectedFeature.ExportPath}" TextTrimming="CharacterEllipsis" MaxWidth="300" VerticalAlignment="Center" Foreground="{StaticResource MutedTextBrush}"/>
+            </StackPanel>
 
-            <TextBlock Grid.Row="1" Grid.Column="2" Text="Scripts:" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,5,10,5" Visibility="{Binding IsScriptsPathVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-            <TextBlock Grid.Row="1" Grid.Column="3" Text="{Binding SelectedFeature.ScriptsPath}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="0,5,0,5" Foreground="{StaticResource MutedTextBrush}" Visibility="{Binding IsScriptsPathVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-        </Grid>
+            <StackPanel Orientation="Horizontal" Margin="0,5,0,5" Visibility="{Binding IsScriptsPathVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <TextBlock Text="Scripts:" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                <TextBlock Text="{Binding SelectedFeature.ScriptsPath}" TextTrimming="CharacterEllipsis" MaxWidth="300" VerticalAlignment="Center" Foreground="{StaticResource MutedTextBrush}"/>
+            </StackPanel>
+        </WrapPanel>
     </GroupBox>
 </UserControl>
