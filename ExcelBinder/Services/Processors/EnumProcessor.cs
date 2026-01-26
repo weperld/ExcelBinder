@@ -87,13 +87,6 @@ namespace ExcelBinder.Services.Processors
                 return;
             }
 
-            // Global Rule: Skip sheets starting with #
-            if (definitionSheetName.StartsWith(ProjectConstants.Excel.CommentPrefix))
-            {
-                LogService.Instance.Info($"Skipping 'Definition' sheet in {Path.GetFileName(filePath)} as it starts with '{ProjectConstants.Excel.CommentPrefix}'");
-                return;
-            }
-
             var rawData = excelService.ReadExcel(filePath, definitionSheetName).ToList();
             if (rawData.Count < 1)
             {
@@ -135,12 +128,6 @@ namespace ExcelBinder.Services.Processors
             if (targetSheet == null)
             {
                 LogService.Instance.Warning($"Sheet '{enumName}' not found in {Path.GetFileName(filePath)}. Skipping Enum generation.");
-                return;
-            }
-
-            if (targetSheet.StartsWith(ProjectConstants.Excel.CommentPrefix))
-            {
-                LogService.Instance.Info($"Skipping Enum '{enumName}' as its sheet starts with '{ProjectConstants.Excel.CommentPrefix}'");
                 return;
             }
 

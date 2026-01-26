@@ -78,6 +78,9 @@ namespace ExcelBinder.ViewModels
                         var sheetNames = _excelService.GetSheetNames(file);
                         foreach (var sheetName in sheetNames)
                         {
+                            // Global Rule: Skip sheets starting with #
+                            if (sheetName.StartsWith(ProjectConstants.Excel.CommentPrefix)) continue;
+
                             string schemaFile = GetSchemaPath(file, sheetName);
                             bool found = File.Exists(schemaFile);
                             bool canSelect = IsSheetSelectable(found);

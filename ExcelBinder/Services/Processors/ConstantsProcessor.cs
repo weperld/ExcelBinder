@@ -62,13 +62,6 @@ namespace ExcelBinder.Services.Processors
 
         private async Task ProcessSheet(string filePath, string sheetName, IExecutionViewModel vm, ExcelService excelService)
         {
-            // Global Rule: Skip sheets starting with #
-            if (sheetName.StartsWith(ProjectConstants.Excel.CommentPrefix))
-            {
-                LogService.Instance.Info($"Skipping sheet '{sheetName}' as it starts with '{ProjectConstants.Excel.CommentPrefix}'");
-                return;
-            }
-
             var rawData = excelService.ReadExcel(filePath, sheetName).ToList();
             if (rawData.Count < 1)
             {
