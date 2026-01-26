@@ -3,7 +3,7 @@
   "name": "Test Enum Generation",
   "category": "Enum",
   "description": "Test for Enum Generation feature",
-  "excelPath": "D:\\CS Project\\ExcelBinder\\ExternalTestData\\Excel",
-  "scriptsPath": "D:\\CS Project\\ExcelBinder\\ExternalTestData\\Scripts",
+  "excelPath": "D:\\CS Project\\ExcelBinder\\ExternalTestData\\Enum\\Excel",
+  "scriptsPath": "D:\\CS Project\\ExcelBinder\\ExternalTestData\\Enum\\Scripts",
   "defaultNamespace": "TestProject.Enums"
 }

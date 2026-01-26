@@ -3,10 +3,10 @@
   "name": "External Unity Static Data",
   "category": "StaticData",
   "description": "External Test for Unity Static Data",
-  "excelPath": "D:\\CS Project\\ExcelBinder\\ExternalTestData\\Excel",
-  "schemaPath": "D:\\CS Project\\ExcelBinder\\ExternalTestData\\Schemas",
-  "exportPath": "D:\\CS Project\\ExcelBinder\\ExternalTestData\\Output",
-  "scriptsPath": "D:\\CS Project\\ExcelBinder\\ExternalTestData\\Scripts",
+  "excelPath": "D:\\CS Project\\ExcelBinder\\ExternalTestData\\StaticData\\Excel",
+  "schemaPath": "D:\\CS Project\\ExcelBinder\\ExternalTestData\\StaticData\\Schemas",
+  "exportPath": "D:\\CS Project\\ExcelBinder\\ExternalTestData\\StaticData\\Output",
+  "scriptsPath": "D:\\CS Project\\ExcelBinder\\ExternalTestData\\StaticData\\Scripts",
   "defaultNamespace": "ExternalGameData",
   "typeMappings": {
     "int": "int",
@@ -21,7 +21,7 @@
     "bool": "bool"
   },
   "templates": {
-    "dataClass": "D:\\CS Project\\ExcelBinder\\ExternalTestData\\Templates\\UnityData.liquid"
+    "dataClass": "D:\\CS Project\\ExcelBinder\\ExternalTestData\\StaticData\\Templates\\UnityData.liquid"
   },
   "outputOptions": {
     "extension": ".bytes",

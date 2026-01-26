@@ -1,0 +1,14 @@
+[
+  {
+    "Id": 101,
+    "Name": "Sword",
+    "Desc": "Sharp sword",
+    "Price": 1000.0
+  },
+  {
+    "Id": 102,
+    "Name": "Shield",
+    "Desc": "Hard shield",
+    "Price": 500.0
+  }
+]

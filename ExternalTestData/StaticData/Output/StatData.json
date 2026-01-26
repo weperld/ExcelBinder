@@ -1,0 +1,186 @@
+[
+  {
+    "id": 1,
+    "Power": 1,
+    "Def": [
+      1,
+      1
+    ],
+    "Atk_Damge_Increase_Rate": 1.0,
+    "Atk_Damge_Decrease_Rate": 1.0,
+    "Rcv_Damge_Increase_Rate": [
+      1.0,
+      1.0
+    ],
+    "Attack_Speed_Increase_Rate": 1.0,
+    "Skill_Speed_Increase_Rate": 1.0,
+    "Max_Hp": 1,
+    "Current_Hp": 1,
+    "Skill_Cooltime_INT_Decrease": 1,
+    "Skill_Cooltime_per_Decrease": 1.0,
+    "Current_Skill_Cooltime": 1,
+    "Move_Speed": 1,
+    "Attack_range": 1
+  },
+  {
+    "id": 2,
+    "Power": 1,
+    "Def": [
+      1,
+      1
+    ],
+    "Atk_Damge_Increase_Rate": 1.0,
+    "Atk_Damge_Decrease_Rate": 1.0,
+    "Rcv_Damge_Increase_Rate": [
+      1.0,
+      1.0
+    ],
+    "Attack_Speed_Increase_Rate": 1.0,
+    "Skill_Speed_Increase_Rate": 1.0,
+    "Max_Hp": 1,
+    "Current_Hp": 1,
+    "Skill_Cooltime_INT_Decrease": 1,
+    "Skill_Cooltime_per_Decrease": 1.0,
+    "Current_Skill_Cooltime": 1,
+    "Move_Speed": 1,
+    "Attack_range": 1
+  },
+  {
+    "id": 3,
+    "Power": 1,
+    "Def": [
+      1,
+      1
+    ],
+    "Atk_Damge_Increase_Rate": 1.0,
+    "Atk_Damge_Decrease_Rate": 1.0,
+    "Rcv_Damge_Increase_Rate": [
+      1.0,
+      1.0
+    ],
+    "Attack_Speed_Increase_Rate": 1.0,
+    "Skill_Speed_Increase_Rate": 1.0,
+    "Max_Hp": 1,
+    "Current_Hp": 1,
+    "Skill_Cooltime_INT_Decrease": 1,
+    "Skill_Cooltime_per_Decrease": 1.0,
+    "Current_Skill_Cooltime": 1,
+    "Move_Speed": 1,
+    "Attack_range": 1
+  },
+  {
+    "id": 4,
+    "Power": 1,
+    "Def": [
+      1,
+      1
+    ],
+    "Atk_Damge_Increase_Rate": 1.0,
+    "Atk_Damge_Decrease_Rate": 1.0,
+    "Rcv_Damge_Increase_Rate": [
+      1.0,
+      1.0
+    ],
+    "Attack_Speed_Increase_Rate": 1.0,
+    "Skill_Speed_Increase_Rate": 1.0,
+    "Max_Hp": 1,
+    "Current_Hp": 1,
+    "Skill_Cooltime_INT_Decrease": 1,
+    "Skill_Cooltime_per_Decrease": 1.0,
+    "Current_Skill_Cooltime": 1,
+    "Move_Speed": 1,
+    "Attack_range": 1
+  },
+  {
+    "id": 5,
+    "Power": 1,
+    "Def": [
+      1,
+      1
+    ],
+    "Atk_Damge_Increase_Rate": 1.0,
+    "Atk_Damge_Decrease_Rate": 1.0,
+    "Rcv_Damge_Increase_Rate": [
+      1.0,
+      1.0
+    ],
+    "Attack_Speed_Increase_Rate": 1.0,
+    "Skill_Speed_Increase_Rate": 1.0,
+    "Max_Hp": 1,
+    "Current_Hp": 1,
+    "Skill_Cooltime_INT_Decrease": 1,
+    "Skill_Cooltime_per_Decrease": 1.0,
+    "Current_Skill_Cooltime": 1,
+    "Move_Speed": 1,
+    "Attack_range": 1
+  },
+  {
+    "id": 6,
+    "Power": 1,
+    "Def": [
+      1,
+      1
+    ],
+    "Atk_Damge_Increase_Rate": 1.0,
+    "Atk_Damge_Decrease_Rate": 1.0,
+    "Rcv_Damge_Increase_Rate": [
+      1.0,
+      1.0
+    ],
+    "Attack_Speed_Increase_Rate": 1.0,
+    "Skill_Speed_Increase_Rate": 1.0,
+    "Max_Hp": 1,
+    "Current_Hp": 1,
+    "Skill_Cooltime_INT_Decrease": 1,
+    "Skill_Cooltime_per_Decrease": 1.0,
+    "Current_Skill_Cooltime": 1,
+    "Move_Speed": 1,
+    "Attack_range": 1
+  },
+  {
+    "id": 7,
+    "Power": 1,
+    "Def": [
+      1,
+      1
+    ],
+    "Atk_Damge_Increase_Rate": 1.0,
+    "Atk_Damge_Decrease_Rate": 1.0,
+    "Rcv_Damge_Increase_Rate": [
+      1.0,
+      1.0
+    ],
+    "Attack_Speed_Increase_Rate": 1.0,
+    "Skill_Speed_Increase_Rate": 1.0,
+    "Max_Hp": 1,
+    "Current_Hp": 1,
+    "Skill_Cooltime_INT_Decrease": 1,
+    "Skill_Cooltime_per_Decrease": 1.0,
+    "Current_Skill_Cooltime": 1,
+    "Move_Speed": 1,
+    "Attack_range": 1
+  },
+  {
+    "id": 8,
+    "Power": 1,
+    "Def": [
+      1,
+      1
+    ],
+    "Atk_Damge_Increase_Rate": 1.0,
+    "Atk_Damge_Decrease_Rate": 1.0,
+    "Rcv_Damge_Increase_Rate": [
+      1.0,
+      1.0
+    ],
+    "Attack_Speed_Increase_Rate": 1.0,
+    "Skill_Speed_Increase_Rate": 1.0,
+    "Max_Hp": 1,
+    "Current_Hp": 1,
+    "Skill_Cooltime_INT_Decrease": 1,
+    "Skill_Cooltime_per_Decrease": 1.0,
+    "Current_Skill_Cooltime": 1,
+    "Move_Speed": 1,
+    "Attack_range": 1
+  }
+]

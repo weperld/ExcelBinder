@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "name": "a",
+    "stat": 1,
+    "stat_growth": 2
+  },
+  {
+    "id": 2,
+    "name": "b",
+    "stat": 3,
+    "stat_growth": 4
+  },
+  {
+    "id": 3,
+    "name": "c",
+    "stat": 5,
+    "stat_growth": 6
+  },
+  {
+    "id": 4,
+    "name": "d",
+    "stat": 7,
+    "stat_growth": 8
+  }
+]

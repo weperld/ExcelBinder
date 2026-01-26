@@ -3,7 +3,7 @@
   "name": "Test Constants Generation",
   "category": "Constants",
   "description": "Test for Constants Generation feature",
-  "excelPath": "D:\\CS Project\\ExcelBinder\\ExternalTestData\\Excel",
-  "scriptsPath": "D:\\CS Project\\ExcelBinder\\ExternalTestData\\Scripts",
+  "excelPath": "D:\\CS Project\\ExcelBinder\\ExternalTestData\\Constants\\Excel",
+  "scriptsPath": "D:\\CS Project\\ExcelBinder\\ExternalTestData\\Constants\\Scripts",
   "defaultNamespace": "TestProject.Constants"
 }
