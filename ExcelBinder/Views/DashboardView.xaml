@@ -3,8 +3,58 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ExcelBinder.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <!-- Common Card Content Template -->
+        <ControlTemplate x:Key="FeatureCardTemplate" TargetType="ContentControl">
+            <Border Style="{StaticResource CardStyle}" Width="280" Height="200" Margin="0,0,20,20">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    
+                    <DockPanel>
+                        <Border Background="{StaticResource LightBackgroundBrush}" CornerRadius="4" Padding="6,2" DockPanel.Dock="Right">
+                            <TextBlock Text="{Binding Category}" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TagTextBrush}"/>
+                        </Border>
+                        <TextBlock Text="{Binding Name}" FontSize="18" FontWeight="Bold" TextTrimming="CharacterEllipsis"/>
+                    </DockPanel>
+
+                    <TextBlock Grid.Row="1" Text="{Binding Description}" FontSize="13" Foreground="{StaticResource MutedTextBrush}" 
+                               TextWrapping="Wrap" Margin="0,10,0,0" LineHeight="18"/>
+
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+                        <Button Content="Edit" Command="{Binding DataContext.EditFeatureCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                                CommandParameter="{Binding}" Margin="0,0,10,0" Width="60" Height="32"/>
+                        <Button Content="Open" Style="{StaticResource PrimaryButton}" 
+                                Command="{Binding DataContext.SelectFeatureCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                                CommandParameter="{Binding}" Width="80" Height="32"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </ControlTemplate>
+
+        <DataTemplate x:Key="StaticDataTemplate">
+            <ContentControl Template="{StaticResource FeatureCardTemplate}"/>
+        </DataTemplate>
+
+        <DataTemplate x:Key="LogicTemplate">
+            <ContentControl Template="{StaticResource FeatureCardTemplate}"/>
+        </DataTemplate>
+
+        <DataTemplate x:Key="SchemaGenTemplate">
+            <ContentControl Template="{StaticResource FeatureCardTemplate}"/>
+        </DataTemplate>
+
+        <local:DashboardItemTemplateSelector x:Key="DashboardItemSelector"
+                                           StaticDataTemplate="{StaticResource StaticDataTemplate}"
+                                           LogicTemplate="{StaticResource LogicTemplate}"
+                                           SchemaGenTemplate="{StaticResource SchemaGenTemplate}"/>
+    </UserControl.Resources>
     <Grid Margin="30">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -18,6 +68,7 @@
         </StackPanel>
 
         <ListBox Grid.Row="1" ItemsSource="{Binding Features}" BorderThickness="0" Background="Transparent" 
+                 ItemTemplateSelector="{StaticResource DashboardItemSelector}"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -36,37 +87,6 @@
                     </Setter>
                 </Style>
             </ListBox.ItemContainerStyle>
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <Border Style="{StaticResource CardStyle}" Width="280" Height="200" Margin="0,0,20,20">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            
-                            <DockPanel>
-                                <Border Background="{StaticResource LightBackgroundBrush}" CornerRadius="4" Padding="6,2" DockPanel.Dock="Right">
-                                    <TextBlock Text="{Binding Category}" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TagTextBrush}"/>
-                                </Border>
-                                <TextBlock Text="{Binding Name}" FontSize="18" FontWeight="Bold" TextTrimming="CharacterEllipsis"/>
-                            </DockPanel>
-
-                            <TextBlock Grid.Row="1" Text="{Binding Description}" FontSize="13" Foreground="{StaticResource MutedTextBrush}" 
-                                       TextWrapping="Wrap" Margin="0,10,0,0" LineHeight="18"/>
-
-                            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
-                                <Button Content="Edit" Command="{Binding DataContext.EditFeatureCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" 
-                                        CommandParameter="{Binding}" Margin="0,0,10,0" Width="60" Height="32"/>
-                                <Button Content="Open" Style="{StaticResource PrimaryButton}" 
-                                        Command="{Binding DataContext.SelectFeatureCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" 
-                                        CommandParameter="{Binding}" Width="80" Height="32"/>
-                            </StackPanel>
-                        </Grid>
-                    </Border>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
         </ListBox>
 
         <Border Grid.Row="2" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,1,0,0" Padding="0,20,0,0">
