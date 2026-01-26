@@ -7,7 +7,9 @@
 ## 1. ⚙️ 핵심 기능 (Core Logic)
 
 - [x] **범용 추출 엔진**
-  - [x] `StaticData`, `Logic`, `SchemaGen` 카테고리별 특화 로직.
+  - [x] `StaticData`, `Logic`, `SchemaGen`, `Enum`, `Constants` 카테고리별 특화 로직.
+  - [x] **Enum 생성기**: `Definition` 시트 기반 열거형 정의 및 값 시트 매핑.
+  - [x] **상수 생성기**: 시트별 `partial static class` 기반 상수 정의.
   - [x] **시트(Sheet) 기반 처리**: 엑셀 파일명이 아닌 시트명을 기준으로 스키마 매칭.
   - [x] **전역 행 규칙**: 첫 번째 행 헤더, 두 번째 행 이후 데이터 시작.
   - [x] **필터링 규칙 (`#` 접두사)**:
@@ -40,7 +42,7 @@
 
 - [x] **Windows Desktop (WPF)**: .NET 10.0 기반의 사용자 친화적 환경.
 - [x] **CLI (Command Line Interface)**: CI/CD 연동을 위한 인자 방식 실행 지원.
-- [ ] **Logging System**: (진행 예정) 상세 실행 로그 저장 및 조회 기능.
+- [x] **Logging System**: 상세 실행 로그 저장 및 조회 기능 (완료).
 
 ---
 

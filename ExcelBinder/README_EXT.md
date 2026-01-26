@@ -13,7 +13,7 @@ FDF는 특정 프로젝트의 추출 규칙을 정의하는 JSON 파일입니다
 | 필드 | 설명 | 비고 |
 | :--- | :--- | :--- |
 | `id` / `name` | 기능의 고유 식별자와 대시보드 표시 이름 | 필수 |
-| `category` | 추출 성격 지정 | `StaticData`, `Logic`, `SchemaGen` |
+| `category` | 추출 성격 지정 | `StaticData`, `Logic`, `SchemaGen`, `Enum`, `Constants` |
 | `paths` | 데이터 및 스크립트의 입출력 경로 설정 | `excelPath`, `schemaPath` 등 |
 | `typeMappings` | 엑셀 타입 → 프로젝트 전용 타입 변환 규칙 | 예: `"int": "int32"` |
 | `templates` | 사용할 `.liquid` 템플릿 파일의 경로 | 절대 경로 권장 |

@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.0.0] - 2026-01-26
+
+### Added
+- **Enum 및 Constant 코드 생성 기능 도입**
+  - **Enum 생성기**: `Definition` 시트와 각 열거형 값 시트를 조합하여 C# Enum 스크립트를 생성. `[Flags]` 어트리뷰트 및 `using System;` 자동 추가 지원.
+  - **상수(Constant) 생성기**: 시트별로 독립된 `public static partial class` 상수를 생성. `string`, `float` 등 타입별 자동 포맷팅 지원.
+- **카테고리별 전용 엑셀 템플릿 생성 기능**
+  - Enum 및 Constants 작성을 즉시 시작할 수 있도록 필수 헤더가 포함된 엑셀 파일을 생성하는 기능 추가.
+
+### Refactor
+- **아키텍처 대규모 개편 (MVVM 강화)**
+  - **카테고리별 ViewModel/View 분리**: `ExecutionViewModelBase`를 도입하고 각 카테고리(StaticData, Logic, SchemaGen, Enum, Constants)를 독립된 ViewModel 및 View로 격리하여 유지보수성 및 확장성 극대화.
+  - **MainViewModel 경량화**: 거대 객체였던 `MainViewModel`에서 실행 관련 로직을 각 카테고리별 ViewModel로 분산.
+  - **UI 컴포넌트화**: 헤더, 설정 창, 파일 리스트 등 중복 UI 요소를 `UserControl`로 분리하여 전역 재사용성 확보.
+- **테스트 데이터 구조 재편성**
+  - `ExternalTestData` 폴더를 카테고리별(StaticData, Logic, Enum, Constants)로 분류하여 독립적인 테스트 환경 구축.
+
+### UI/UX
+- **실행 화면 레이아웃 최적화**
+  - `Feature Configuration` 영역에 `WrapPanel`을 적용하여 카테고리별 사용 항목에 따라 유동적이고 정돈된 배치를 제공.
+  - 사용하지 않는 설정 항목 및 스키마 상태 표시기를 카테고리에 따라 동적으로 숨김 처리.
+- **파일 리스트 사용성 개선**
+  - **부드러운 스크롤**: 모든 리스트 뷰에 픽셀 단위 스크롤(`VirtualizingPanel.ScrollUnit="Pixel"`) 적용.
+  - **전체 영역 토글**: 작은 체크박스 대신 항목 전체 영역을 클릭하여 선택 상태를 전환할 수 있도록 개선.
+  - **UI 일관성 확보**: 각 카테고리 간의 들여쓰기, 구분선, 버튼 규격 등을 통일하여 일관된 사용자 경험 제공.
+
+### Fixed
+- **CLI 모드 안정화**: 아키텍처 변경에 맞춰 CLI 명령 수행 시에도 신규 카테고리와 프로세서가 정상적으로 작동하도록 수정.
+- **레이아웃 이슈 해결**: 특정 카테고리에서 여백이 사라지거나 정렬이 어긋나던 문제들을 전수 조사하여 수정.
+
 ## [1.3.0] - 2026-01-25
 
 ### Changed
