@@ -18,13 +18,13 @@ namespace ExcelBinder.Services.Processors
         public bool IsTemplatesVisible => false;
         public bool IsOutputOptionsVisible => false;
 
-        public System.Threading.Tasks.Task ExecuteExportAsync(MainViewModel vm)
+        public System.Threading.Tasks.Task ExecuteExportAsync(IExecutionViewModel vm)
         {
             // SchemaGen doesn't support export
             return System.Threading.Tasks.Task.CompletedTask;
         }
 
-        public System.Threading.Tasks.Task ExecuteGenerateAsync(MainViewModel vm)
+        public System.Threading.Tasks.Task ExecuteGenerateAsync(IExecutionViewModel vm)
         {
             if (vm.SelectedFeature == null) return System.Threading.Tasks.Task.CompletedTask;
             var selectedSheets = vm.ExcelFiles.SelectMany(f => f.Sheets.Where(s => s.IsSelected).Select(s => new { File = f, Sheet = s })).ToList();

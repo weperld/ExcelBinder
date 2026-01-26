@@ -15,7 +15,7 @@ namespace ExcelBinder.Services
         bool IsOutputOptionsVisible { get; }
 
         // Actions
-        System.Threading.Tasks.Task ExecuteExportAsync(ViewModels.MainViewModel vm);
-        System.Threading.Tasks.Task ExecuteGenerateAsync(ViewModels.MainViewModel vm);
+        System.Threading.Tasks.Task ExecuteExportAsync(ViewModels.IExecutionViewModel vm);
+        System.Threading.Tasks.Task ExecuteGenerateAsync(ViewModels.IExecutionViewModel vm);
     }
 }

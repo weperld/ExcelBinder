@@ -17,13 +17,13 @@ namespace ExcelBinder.Services.Processors
         public bool IsTemplatesVisible => true;
         public bool IsOutputOptionsVisible => false;
 
-        public System.Threading.Tasks.Task ExecuteExportAsync(MainViewModel vm)
+        public System.Threading.Tasks.Task ExecuteExportAsync(IExecutionViewModel vm)
         {
             // Logic doesn't support export
             return System.Threading.Tasks.Task.CompletedTask;
         }
 
-        public async System.Threading.Tasks.Task ExecuteGenerateAsync(MainViewModel vm)
+        public async System.Threading.Tasks.Task ExecuteGenerateAsync(IExecutionViewModel vm)
         {
             if (vm.SelectedFeature == null) return;
             

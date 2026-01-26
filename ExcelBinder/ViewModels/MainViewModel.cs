@@ -16,9 +16,13 @@ namespace ExcelBinder.ViewModels
     {
         private AppSettings _settings = new();
         private FeatureDefinition? _selectedFeature;
-        private bool _isBinaryChecked = true;
-        private bool _isJsonChecked = false;
-        private string _namespace = ProjectConstants.Defaults.Namespace;
+        private ExecutionViewModelBase? _currentExecutionViewModel;
+
+        public ExecutionViewModelBase? CurrentExecutionViewModel
+        {
+            get => _currentExecutionViewModel;
+            set => SetProperty(ref _currentExecutionViewModel, value);
+        }
 
         public AppSettings Settings
         {
@@ -35,75 +39,14 @@ namespace ExcelBinder.ViewModels
                 {
                     if (value != null)
                     {
-                        Namespace = value.DefaultNamespace;
                         Settings.LastFeatureId = value.Id;
                         _featureService.SaveSettings(Settings);
-                        RefreshFiles();
                     }
-                    UpdateVisibilities();
-                }
-            }
-        }
-
-        private bool _isSchemaPathVisible;
-        public bool IsSchemaPathVisible { get => _isSchemaPathVisible; set => SetProperty(ref _isSchemaPathVisible, value); }
-
-        private bool _isExportPathVisible;
-        public bool IsExportPathVisible { get => _isExportPathVisible; set => SetProperty(ref _isExportPathVisible, value); }
-
-        private bool _isScriptsPathVisible;
-        public bool IsScriptsPathVisible { get => _isScriptsPathVisible; set => SetProperty(ref _isScriptsPathVisible, value); }
-
-        private void UpdateVisibilities()
-        {
-            if (SelectedFeature == null)
-            {
-                IsSchemaPathVisible = false;
-                IsExportPathVisible = false;
-                IsScriptsPathVisible = false;
-                return;
-            }
-
-            var processor = FeatureProcessorFactory.GetProcessor(SelectedFeature.Category);
-            IsSchemaPathVisible = processor.IsSchemaPathVisible;
-            IsExportPathVisible = processor.IsExportPathVisible;
-            IsScriptsPathVisible = processor.IsScriptsPathVisible;
-        }
-
-        public string Namespace
-        {
-            get => _namespace;
-            set => SetProperty(ref _namespace, value);
-        }
-
-        public bool IsBinaryChecked
-        {
-            get => _isBinaryChecked;
-            set 
-            {
-                if (SetProperty(ref _isBinaryChecked, value))
-                {
-                    Settings.IsBinaryChecked = value;
-                    _featureService.SaveSettings(Settings);
-                }
-            }
-        }
-
-        public bool IsJsonChecked
-        {
-            get => _isJsonChecked;
-            set 
-            {
-                if (SetProperty(ref _isJsonChecked, value))
-                {
-                    Settings.IsJsonChecked = value;
-                    _featureService.SaveSettings(Settings);
                 }
             }
         }
 
         public ObservableCollection<FeatureDefinition> Features { get; } = new();
-        public ObservableCollection<FileItemViewModel> ExcelFiles { get; } = new();
 
         public ICommand RefreshFeaturesCommand { get; }
         public ICommand SelectFeatureCommand { get; }
@@ -116,12 +59,6 @@ namespace ExcelBinder.ViewModels
         public ICommand RemoveBoundFeatureCommand { get; }
         public ICommand CreateFeatureCommand { get; }
         public ICommand EditFeatureCommand { get; }
-
-        public ICommand RefreshFilesCommand { get; }
-        public ICommand ExportCommand { get; }
-        public ICommand GenerateCodeCommand { get; }
-        public ICommand SelectAllCommand { get; }
-        public ICommand DeselectAllCommand { get; }
 
         private readonly FeatureService _featureService = new();
         private readonly ExcelService _excelService = new();
@@ -142,29 +79,7 @@ namespace ExcelBinder.ViewModels
             CreateFeatureCommand = new RelayCommand(ExecuteCreateFeature);
             EditFeatureCommand = new RelayCommand<FeatureDefinition>(ExecuteEditFeature);
 
-            RefreshFilesCommand = new RelayCommand(RefreshFiles);
-            ExportCommand = new RelayCommand(ExecuteExport);
-            GenerateCodeCommand = new RelayCommand(ExecuteGenerateCode);
-            SelectAllCommand = new RelayCommand(() => 
-            { 
-                foreach (var f in ExcelFiles) 
-                {
-                    f.IsSelected = true;
-                    foreach (var s in f.Sheets) s.IsSelected = true;
-                }
-            });
-            DeselectAllCommand = new RelayCommand(() => 
-            { 
-                foreach (var f in ExcelFiles) 
-                {
-                    f.IsSelected = false;
-                    foreach (var s in f.Sheets) s.IsSelected = false;
-                }
-            });
-
             _settings = _featureService.LoadSettings();
-            _isBinaryChecked = _settings.IsBinaryChecked;
-            _isJsonChecked = _settings.IsJsonChecked;
             
             // Subscribe to settings changes for live preview
             _settings.PropertyChanged += (s, e) => { if (e.PropertyName == nameof(AppSettings.FeatureDefinitionsPath)) RefreshFeatures(); };
@@ -221,6 +136,16 @@ namespace ExcelBinder.ViewModels
             try
             {
                 SelectedFeature = feature;
+                
+                // Create appropriate Execution ViewModel
+                CurrentExecutionViewModel = feature.Category switch
+                {
+                    ProjectConstants.Categories.StaticData => new StaticDataExecutionViewModel(feature, Settings),
+                    ProjectConstants.Categories.Logic => new LogicExecutionViewModel(feature),
+                    ProjectConstants.Categories.SchemaGen => new SchemaGenExecutionViewModel(feature),
+                    _ => null
+                };
+
                 (Application.Current.MainWindow as MainWindow)?.NavigateToExecution();
             }
             catch (Exception ex)
@@ -326,53 +251,7 @@ namespace ExcelBinder.ViewModels
             (Application.Current.MainWindow as MainWindow)?.NavigateToFeatureBuilder(builderVm);
         }
 
-        public void RefreshFiles()
-        {
-            try
-            {
-                if (SelectedFeature == null || !Directory.Exists(SelectedFeature.ExcelPath)) return;
-
-                ExcelFiles.Clear();
-                var files = Directory.GetFiles(SelectedFeature.ExcelPath, "*.xlsx")
-                                     .Where(f => !Path.GetFileName(f).StartsWith("~$"));
-                foreach (var file in files)
-                {
-                    var fileItem = new FileItemViewModel { FileName = Path.GetFileName(file), FullPath = file };
-                    
-                    // Load sheets and check schemas
-                    try
-                    {
-                        var sheetNames = _excelService.GetSheetNames(file);
-                        foreach (var sheetName in sheetNames)
-                        {
-                            string schemaFile = GetSchemaPath(file, sheetName);
-                            bool found = File.Exists(schemaFile);
-                            bool canSelect = found || SelectedFeature.Category != ProjectConstants.Categories.StaticData;
-
-                            fileItem.Sheets.Add(new SheetItemViewModel 
-                            { 
-                                SheetName = sheetName, 
-                                IsSchemaFound = found,
-                                SchemaPath = found ? schemaFile : ProjectConstants.Defaults.NotFound,
-                                CanBeSelected = canSelect,
-                                IsSelected = false // Default deselected as requested
-                            });
-                        }
-                    }
-                    catch { /* Skip error files */ }
-
-                    ExcelFiles.Add(fileItem);
-                }
-            }
-            catch (Exception ex)
-            {
-                LogService.Instance.Clear();
-                LogService.Instance.Error($"Error loading excel files from {SelectedFeature?.ExcelPath}: {ex.Message}");
-                ShowLogs();
-            }
-        }
-
-        internal void ShowLogs()
+        public void ShowLogs()
         {
             if (Application.Current.MainWindow != null)
             {
@@ -380,168 +259,5 @@ namespace ExcelBinder.ViewModels
                 logWin.ShowDialog();
             }
         }
-
-        public async void ExecuteExport()
-        {
-            if (SelectedFeature == null || IsBusy) return;
-            try
-            {
-                IsBusy = true;
-                var processor = FeatureProcessorFactory.GetProcessor(SelectedFeature.Category);
-                await processor.ExecuteExportAsync(this);
-            }
-            finally
-            {
-                IsBusy = false;
-            }
-        }
-
-        public async void ExecuteGenerateCode()
-        {
-            if (SelectedFeature == null || IsBusy) return;
-            try
-            {
-                IsBusy = true;
-                var processor = FeatureProcessorFactory.GetProcessor(SelectedFeature.Category);
-                await processor.ExecuteGenerateAsync(this);
-            }
-            finally
-            {
-                IsBusy = false;
-            }
-        }
-
-        internal string GetSchemaPath(string excelFullPath, string sheetName)
-        {
-            if (SelectedFeature == null) return string.Empty;
-            string excelName = Path.GetFileNameWithoutExtension(excelFullPath);
-            
-            // Try [ExcelName]_[SheetName]_Schema.json
-            string path1 = Path.Combine(SelectedFeature.SchemaPath, $"{excelName}_{sheetName}_Schema{ProjectConstants.Extensions.Json}");
-            if (File.Exists(path1)) return path1;
-            
-            // Try [ExcelName]_Schema.json
-            string path2 = Path.Combine(SelectedFeature.SchemaPath, $"{excelName}_Schema{ProjectConstants.Extensions.Json}");
-            if (File.Exists(path2)) return path2;
-
-            // Fallback to sheetName.json
-            string path3 = Path.Combine(SelectedFeature.SchemaPath, sheetName + ProjectConstants.Extensions.Json);
-            if (File.Exists(path3)) return path3;
-
-            return path1; // Default to the most specific one
-        }
-
-
-        internal void ProcessSchema(string schemaFile, List<SchemaDefinition> schemas)
-        {
-            if (SelectedFeature == null) return;
-            try
-            {
-                var schema = JsonConvert.DeserializeObject<SchemaDefinition>(File.ReadAllText(schemaFile));
-                if (schema == null)
-                {
-                    LogService.Instance.Error($"Failed to deserialize schema: {schemaFile}");
-                    return;
-                }
-                schemas.Add(schema);
-
-                string? code = _codeGenService.GenerateDataCode(schema, SelectedFeature, Namespace);
-                if (!string.IsNullOrEmpty(code))
-                {
-                    File.WriteAllText(Path.Combine(SelectedFeature.ScriptsPath, schema.ClassName + ProjectConstants.Extensions.CSharp), code);
-                    LogService.Instance.Info($"Generated Code: {schema.ClassName}");
-                }
-            }
-            catch (Exception ex)
-            {
-                LogService.Instance.Error($"Error processing schema {Path.GetFileName(schemaFile)}: {ex.Message}");
-            }
-        }
-    }
-
-    public class SheetItemViewModel : ViewModelBase
-    {
-        private bool _isSelected;
-        private bool _canBeSelected = true;
-
-        public string SheetName { get; set; } = string.Empty;
-        public bool IsSchemaFound { get; set; }
-        public string SchemaPath { get; set; } = string.Empty;
-
-        public bool CanBeSelected
-        {
-            get => _canBeSelected;
-            set => SetProperty(ref _canBeSelected, value);
-        }
-
-        public bool IsSelected
-        {
-            get => _isSelected;
-            set 
-            {
-                if (value && !CanBeSelected) return;
-                SetProperty(ref _isSelected, value);
-            }
-        }
-    }
-
-    public class FileItemViewModel : ViewModelBase
-    {
-        private bool _isSelected;
-        public string FileName { get; set; } = string.Empty;
-        public string FullPath { get; set; } = string.Empty;
-        public ObservableCollection<SheetItemViewModel> Sheets { get; } = new();
-
-        public ICommand SelectAllCommand { get; }
-        public ICommand DeselectAllCommand { get; }
-
-        public FileItemViewModel()
-        {
-            SelectAllCommand = new RelayCommand(() => 
-            { 
-                foreach (var sheet in Sheets) sheet.IsSelected = true;
-                _isSelected = true;
-                OnPropertyChanged(nameof(IsSelected));
-            });
-            DeselectAllCommand = new RelayCommand(() => 
-            { 
-                foreach (var sheet in Sheets) sheet.IsSelected = false;
-                _isSelected = false;
-                OnPropertyChanged(nameof(IsSelected));
-            });
-        }
-
-        public bool IsSelected
-        {
-            get => _isSelected;
-            set
-            {
-                if (SetProperty(ref _isSelected, value))
-                {
-                    foreach (var sheet in Sheets)
-                    {
-                        sheet.IsSelected = value;
-                    }
-                }
-            }
-        }
-    }
-
-    public class RelayCommand : ICommand
-    {
-        private readonly Action _execute;
-        public RelayCommand(Action execute) => _execute = execute;
-        public bool CanExecute(object? parameter) => true;
-        public void Execute(object? parameter) => _execute();
-        public event EventHandler? CanExecuteChanged;
-    }
-
-    public class RelayCommand<T> : ICommand
-    {
-        private readonly Action<T> _execute;
-        public RelayCommand(Action<T> execute) => _execute = execute;
-        public bool CanExecute(object? parameter) => true;
-        public void Execute(object? parameter) => _execute((T)parameter!);
-        public event EventHandler? CanExecuteChanged;
     }
 }

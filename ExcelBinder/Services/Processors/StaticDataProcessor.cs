@@ -19,7 +19,7 @@ namespace ExcelBinder.Services.Processors
         public bool IsTemplatesVisible => true;
         public bool IsOutputOptionsVisible => true;
 
-        public async System.Threading.Tasks.Task ExecuteExportAsync(MainViewModel vm)
+        public async System.Threading.Tasks.Task ExecuteExportAsync(IExecutionViewModel vm)
         {
             if (vm.SelectedFeature == null) return;
             if (!Directory.Exists(vm.SelectedFeature.ExportPath)) Directory.CreateDirectory(vm.SelectedFeature.ExportPath);
@@ -79,7 +79,7 @@ namespace ExcelBinder.Services.Processors
             vm.ShowLogs();
         }
 
-        public async System.Threading.Tasks.Task ExecuteGenerateAsync(MainViewModel vm)
+        public async System.Threading.Tasks.Task ExecuteGenerateAsync(IExecutionViewModel vm)
         {
             if (vm.SelectedFeature == null || string.IsNullOrEmpty(vm.SelectedFeature.ScriptsPath)) return;
 
