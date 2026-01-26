@@ -1,0 +1,65 @@
+﻿<UserControl x:Class="ExcelBinder.Views.ExecutionItems.ConstantsSourceFileListControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vm="clr-namespace:ExcelBinder.ViewModels"
+             mc:Ignorable="d"
+             d:DesignHeight="400" d:DesignWidth="800">
+    <GroupBox Header="Source Sheets (Class per Sheet)">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <ListBox ItemsSource="{Binding ExcelFiles}" Margin="0,0,0,10" Background="{StaticResource LightBackgroundBrush}" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" VirtualizingPanel.ScrollUnit="Pixel" VirtualizingPanel.VirtualizationMode="Recycling">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListBoxItem">
+                                    <ContentPresenter/>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border Background="White" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="4" Margin="0,0,0,8" Padding="15">
+                            <StackPanel>
+                                <DockPanel Margin="0,0,0,10">
+                                    <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,15,0">
+                                        <Button Content="All" Command="{Binding SelectAllCommand}" Width="45" Height="24" Margin="0,0,5,0" FontSize="11"/>
+                                        <Button Content="None" Command="{Binding DeselectAllCommand}" Width="55" Height="24" FontSize="11"/>
+                                    </StackPanel>
+                                    <TextBlock Text="{Binding FileName}" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                </DockPanel>
+                                
+                                <ItemsControl ItemsSource="{Binding Sheets}" Margin="25,0,0,0">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1">
+                                                <CheckBox IsChecked="{Binding IsSelected}" IsEnabled="{Binding CanBeSelected}" 
+                                                          HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" Padding="10,8">
+                                                    <TextBlock Text="{Binding SheetName}" VerticalAlignment="Center" FontWeight="Medium"/>
+                                                </CheckBox>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <StackPanel Grid.Row="1" Orientation="Horizontal">
+                <Button Content="Select All Files" Command="{Binding SelectAllCommand}" Width="120" Height="32" Margin="0,0,10,0"/>
+                <Button Content="Deselect All" Command="{Binding DeselectAllCommand}" Width="120" Height="32" Margin="0,0,10,0"/>
+                <Button Content="Refresh List" Command="{Binding RefreshFilesCommand}" Width="120" Height="32"/>
+            </StackPanel>
+        </Grid>
+    </GroupBox>
+</UserControl>
