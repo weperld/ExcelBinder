@@ -145,7 +145,10 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="Scripts Directory:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,10,0"/>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,10,0">
+                                <TextBlock Text="Scripts Directory:" FontWeight="SemiBold"/>
+                                <Button Style="{StaticResource HelpButtonStyle}" ToolTipService.ToolTip="{StaticResource ScriptsPathHelp}"/>
+                            </StackPanel>
                             <TextBox Grid.Column="1" Text="{Binding Feature.ScriptsPath, UpdateSourceTrigger=PropertyChanged}"/>
                             <Button Grid.Column="2" Content="Browse" Command="{Binding BrowseScriptsPathCommand}" Width="80" Margin="10,0,0,0"/>
                         </Grid>
