@@ -22,6 +22,8 @@ ExcelBinder는 앱 자체에 고정된 로직을 담지 않습니다. 모든 동
   - `StaticData`: 바이너리/JSON 데이터 추출 및 모델 코드 생성.
   - `Logic`: 엑셀 수식을 분석하여 실행 가능한 C# 클래스 생성.
   - `SchemaGen`: 헤더 분석을 통한 JSON 스키마 자동 생성.
+  - `Enum`: `Definition` 시트 기반 전용 Enum 코드 생성.
+  - `Constants`: 시트별 독립 상수 클래스(`partial class`) 생성.
 - **🏗️ Feature Builder**: 복잡한 JSON 설정을 UI에서 시각적으로 편집.
 - **🔄 유연한 타입 매핑**: 엑셀 타입을 프로젝트 전용 타입으로 자유롭게 매핑.
 - **⚡ 고성능 비동기 엔진**: 대규모 엑셀 처리 시 UI 프리징 방지 (`async/await` 구조).
