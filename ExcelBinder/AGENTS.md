@@ -143,19 +143,16 @@ CONTINUE: WIP-20250202-001
 
 | 섹션 | 설명 | 문서 |
 |------|------|------|
+| 🆕 | **프로젝트 요약** | [PROJECT_SUMMARY.md](./PROJECT_SUMMARY.md) |
+| 🆕 | **에이전트 역할 정의** | [AGENT_ROLES.md](./AGENT_ROLES.md) |
+| 🆕 | **기획서 워크플로우** | [WORKFLOW_PLANNING.md](./WORKFLOW_PLANNING.md) |
+| 🆕 | **작업 추적** | [WORK_IN_PROGRESS.md](./WORK_IN_PROGRESS.md) |
+| 🆕 | **빠른 참조** | [QUICK_REFERENCE.md](./QUICK_REFERENCE.md) |
+| 🆕 | **구조화된 컨텍스트** | [CONTEXT.json](./CONTEXT.json) |
 | 1️⃣ | **빌드 및 개발** | [BUILD_GUIDE.md](./.guides/BUILD_GUIDE.md) |
 | 2️⃣ | **작업 워크플로우** | [WORKFLOW_GUIDE.md](./.guides/WORKFLOW_GUIDE.md) |
 | 3️⃣ | **코드 스타일** | [CODE_STYLE.md](./.guides/CODE_STYLE.md) |
-| 4️⃣ | **기술 규칙** | [TECHNICAL_RULES.md](./.guides/TECHNICAL_RULES.md) |
-
-### 도구 및 템플릿
-
-| 도구 | 용도 | 링크 |
-|------|------|------|
-| **구조화된 컨텍스트** | JSON 형식 프로젝트 정보 | [CONTEXT.json](./CONTEXT.json) |
-| **기획서 템플릿** | 표준화된 기획서 작성 지원 | [PLANNING_TEMPLATE.md](./.guides/PLANNING_TEMPLATE.md) |
-| **WorkID 생성** | Python/PowerShell 스크립트 | [utils/](./.guides/utils/) |
-| **작업 히스토리** | 완료/취소 작업 저장 | [WORK_HISTORY.json](./WORK_HISTORY.json) |
+| 4️⃣ | **기술적 준수 사항** | [TECHNICAL_RULES.md](./.guides/TECHNICAL_RULES.md) |
 
 ---
 
