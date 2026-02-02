@@ -317,12 +317,22 @@ ExcelBinder/
 
 ## 🎯 새 대화에서의 빠른 시작
 
+### 필독 순서 (중요!)
 ```
 1. AGENTS.md 읽기 (메뉴 확인)
 2. PROJECT_SUMMARY.md 읽기 (프로젝트 이해)
-3. 필요한 가이드 읽기
-4. "요약: PROJ_SUMMARY"로 빠른 컨텍스트 전달
-5. "기획: ..." 또는 "수정: ..."로 작업 시작
+3. WORKFLOW_PLANNING.md 읽기 (기획서 처리 방법)
+4. WORK_IN_PROGRESS.md 읽기 (현재 진행 중 작업 확인)
+5. 필요에 따라 상세 가이드 참조 (CODE_STYLE.md, TECHNICAL_RULES.md 등)
+```
+
+### 작업 시작
+```
+1. AGENTS.md에서 지시 템플릿 확인
+2. PROJECT_SUMMARY.md에서 프로젝트 컨텍스트 파악
+3. "요약: PROJ_SUMMARY"로 빠른 컨텍스트 전달
+4. "기획: ..." 또는 "수정: ..."로 작업 시작
+5. 모든 단계에서 WORK_IN_PROGRESS.md 자동 업데이트
 ```
 
 ---

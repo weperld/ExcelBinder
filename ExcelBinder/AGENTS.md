@@ -5,6 +5,23 @@
 
 ---
 
+## 📌 에이전트 필독 순서 (중요!)
+
+새로운 대화에서 작업을 시작할 때, **반드시 다음 순서대로 문서를 읽으세요**:
+
+1. **AGENTS.md** (현재 파일) - 전체 메뉴 및 지시 템플릿 확인
+2. **PROJECT_SUMMARY.md** - 프로젝트 30초 요약 (핵심 컨텍스트)
+3. **WORKFLOW_PLANNING.md** - 기획서 처리 및 자동 업데이트 시스템
+4. **WORK_IN_PROGRESS.md** - 현재 진행 중인 작업 확인
+5. 필요에 따라 상세 가이드 참조
+
+**원칙:**
+- 모든 단계에서 **WORK_IN_PROGRESS.md를 자동으로 업데이트**하세요
+- 사용자가 별도 업데이트 지시할 필요가 없습니다
+- 작업 완료/취소 시에도 자동으로 업데이트하세요
+
+---
+
 ## 🎯 토큰 절약용 지시 템플릿
 
 ### 프로젝트 이해 필요
@@ -112,17 +129,33 @@ CONTINUE: WIP-20250202-001
 
 ## 📚 문서 인덱스
 
+### 핵심 문서 (반드시 읽어야 함)
+
+| 순서 | 문서 | 용도 | 링크 |
+|------|------|------|------|
+| 1️⃣ | **AGENTS.md** | 전체 메뉴 및 에이전트 동작 원칙 | [현재 파일](#) |
+| 2️⃣ | **PROJECT_SUMMARY.md** | 프로젝트 30초 요약, 빠른 컨텍스트 | [읽기 →](./PROJECT_SUMMARY.md) |
+| 3️⃣ | **WORKFLOW_PLANNING.md** | 기획서 처리 및 자동 업데이트 시스템 | [읽기 →](./WORKFLOW_PLANNING.md) |
+| 4️⃣ | **WORK_IN_PROGRESS.md** | 현재 진행 중 작업 상태 확인 | [읽기 →](./WORK_IN_PROGRESS.md) |
+| 5️⃣ | **QUICK_REFERENCE.md** | 자주 쓰는 명령어, 패턴, 단축어 | [읽기 →](./QUICK_REFERENCE.md) |
+
+### 상세 가이드 (필요 시 참조)
+
 | 섹션 | 설명 | 문서 |
 |------|------|------|
-| 🆕 | **프로젝트 요약** | [PROJECT_SUMMARY.md](./PROJECT_SUMMARY.md) |
-| 🆕 | **기획서 워크플로우** | [WORKFLOW_PLANNING.md](./WORKFLOW_PLANNING.md) |
-| 🆕 | **작업 추적** | [WORK_IN_PROGRESS.md](./WORK_IN_PROGRESS.md) |
-| 🆕 | **빠른 참조** | [QUICK_REFERENCE.md](./QUICK_REFERENCE.md) |
-| 🆕 | **구조화된 컨텍스트** | [CONTEXT.json](./CONTEXT.json) |
 | 1️⃣ | **빌드 및 개발** | [BUILD_GUIDE.md](./.guides/BUILD_GUIDE.md) |
 | 2️⃣ | **작업 워크플로우** | [WORKFLOW_GUIDE.md](./.guides/WORKFLOW_GUIDE.md) |
 | 3️⃣ | **코드 스타일** | [CODE_STYLE.md](./.guides/CODE_STYLE.md) |
 | 4️⃣ | **기술 규칙** | [TECHNICAL_RULES.md](./.guides/TECHNICAL_RULES.md) |
+
+### 도구 및 템플릿
+
+| 도구 | 용도 | 링크 |
+|------|------|------|
+| **구조화된 컨텍스트** | JSON 형식 프로젝트 정보 | [CONTEXT.json](./CONTEXT.json) |
+| **기획서 템플릿** | 표준화된 기획서 작성 지원 | [PLANNING_TEMPLATE.md](./.guides/PLANNING_TEMPLATE.md) |
+| **WorkID 생성** | Python/PowerShell 스크립트 | [utils/](./.guides/utils/) |
+| **작업 히스토리** | 완료/취소 작업 저장 | [WORK_HISTORY.json](./WORK_HISTORY.json) |
 
 ---
 
@@ -186,6 +219,37 @@ if (schema == null)
 ```
 WIP-YYYYMMDD-NN
 예: WIP-20250202-001
+```
+
+---
+
+## 📌 에이전트 가이드 요약
+
+### 시스템 이해
+```
+📋 문서 구조
+├── AGENTS.md (핵심)
+├── PROJECT_SUMMARY.md (컨텍스트)
+├── WORKFLOW_PLANNING.md (프로세스)
+├── WORK_IN_PROGRESS.md (상태 추적)
+└── QUICK_REFERENCE.md (빠른 참조)
+
+🔄 자동화 시스템
+├── WorkID 생성 (스크립트 또는 자동)
+├── WORK_IN_PROGRESS.md 자동 업데이트
+├── 완료/취소 자동 처리
+└── 보고서 자동 생성
+```
+
+### 에이전트 동작 원칙
+1. **모든 단계에서 WORK_IN_PROGRESS.md 자동 업데이트**
+2. **사용자가 별도 업데이트 지시 불필요**
+3. **작업 완료/취소 시 자동 처리**
+
+### 필독 순서
+```
+새 대화 시작 → AGENTS.md 읽기 → PROJECT_SUMMARY.md 읽기 
+→ 필요한 가이드 읽기 → 작업 시작
 ```
 
 ---
