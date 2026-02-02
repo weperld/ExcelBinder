@@ -1,0 +1,111 @@
+{
+  "project": {
+    "name": "ExcelBinder",
+    "purpose": "Excel 데이터 추출 및 C# 코드 자동 생성 엔진",
+    "type": "WPF Desktop Application",
+    "description": "엑셀 데이터를 JSON/Binary로 변환하고, C# 코드를 자동 생성하는 범용 엔진"
+  },
+  "stack": {
+    "language": "C#",
+    "framework": "WPF",
+    "net_version": "10.0",
+    "libraries": [
+      {
+        "name": "NPOI",
+        "purpose": "Excel 처리",
+        "version": "2.7.5"
+      },
+      {
+        "name": "Newtonsoft.Json",
+        "purpose": "JSON 직렬화",
+        "version": "13.0.4"
+      },
+      {
+        "name": "Scriban",
+        "purpose": "템플릿 엔진",
+        "version": "6.5.2"
+      }
+    ]
+  },
+  "structure": {
+    "models": "Models/",
+    "viewmodels": "ViewModels/",
+    "views": "Views/",
+    "services": "Services/",
+    "processors": "Services/Processors/"
+  },
+  "patterns": {
+    "mvvm": true,
+    "base_class": "ViewModelBase",
+    "command": "RelayCommand",
+    "async_pattern": "try-finally with IsBusy",
+    "data_integrity": "Exception over defaults"
+  },
+  "principles": {
+    "data_integrity": "기본값 대신 예외 발생",
+    "async_handling": "Mandatory try-finally",
+    "commit_format": "[tag] summary (Korean)",
+    "naming": {
+      "public": "PascalCase",
+      "private": "_camelCase",
+      "interface": "IPascalCase"
+    }
+  },
+  "features": {
+    "categories": [
+      "StaticData",
+      "Logic",
+      "SchemaGen",
+      "Enum",
+      "Constants"
+    ],
+    "data_formats": [
+      "Binary (.bytes)",
+      "JSON (.json)"
+    ],
+    "filtering": {
+      "column_prefix": "#",
+      "row_prefix": "#",
+      "header_row": 1,
+      "data_start_row": 2
+    }
+  },
+  "guides": {
+    "main": "AGENTS.md",
+    "summary": "PROJECT_SUMMARY.md",
+    "planning": "WORKFLOW_PLANNING.md",
+    "tracking": "WORK_IN_PROGRESS.md",
+    "quick": "QUICK_REFERENCE.md",
+    "context": "CONTEXT.json",
+    "code_style": ".guides/CODE_STYLE.md",
+    "technical": ".guides/TECHNICAL_RULES.md",
+    "build": ".guides/BUILD_GUIDE.md",
+    "workflow": ".guides/WORKFLOW_GUIDE.md"
+  },
+  "commands": {
+    "build": "dotnet build",
+    "run_gui": "dotnet run",
+    "run_cli": "dotnet run -- --feature [ID] [options]",
+    "cli_options": [
+      "--export",
+      "--codegen",
+      "--both",
+      "--all"
+    ]
+  },
+  "work_tracking": {
+    "id_format": "WIP-YYYYMMDD-NN",
+    "status_types": [
+      "active",
+      "completed",
+      "cancelled"
+    ],
+    "commands": {
+      "resume": "재개: WIP-YYYYMMDD-NN 또는 CONTINUE: WIP-YYYYMMDD-NN",
+      "complete": "완료: WIP-YYYYMMDD-NN",
+      "cancel": "취소: WIP-YYYYMMDD-NN [사유]",
+      "status": "상태: WIP-YYYYMMDD-NN 또는 상태: 전체"
+    }
+  },
+  "first_read": "AGENTS.md"
+}

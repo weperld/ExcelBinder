@@ -1,40 +1,198 @@
 # Junie Working Guidelines
 
-## 1. 지시 사항 준수 원칙
-- 모든 작업은 사용자의 명시적인 지시(Effective Issue)에 근거하여 수행한다.
-- 지시 사항 이외의 임의적인 코드 수정, 최적화, 리팩토링은 엄격히 금지한다.
+> 에이전트 및 코파일럿을 위한 ExcelBinder 프로젝트 작업 가이드입니다.
+> 각 항목의 상세 내용은 링크된 세부 문서를 참고하세요.
 
-## 2. 추가 작업 제안 및 승인 프로세스
-- 지시 사항 외에 추가 작업이 필요하다고 판단되는 경우(버그 발견, 안정성 문제 등), 작업을 진행하기 전에 반드시 사용자에게 보고하고 승인을 받아야 한다.
-- 모든 코드 수정은 단 한 줄이라도 사용자의 의도와 어떻게 연결되는지 설명할 수 있어야 하며, 임의의 수정을 금지한다.
-- 보고 시에는 다음 형식을 준수한다:
-    - **[작업 내용]**: 무엇을 수정하거나 추가할 것인지 파일명과 로직 수준에서 명확히 기술.
-    - **[이유]**: 해당 작업이 왜 필요한지, 사용자 지시 사항과 어떤 연관이 있는지 상세히 설명.
+---
 
-## 3. 보고 및 설명 의무
-- 모든 작업(지시 사항 이행 포함) 완료 후에는 어떤 파일의 어느 부분이 왜 수정되었는지 사용자가 명확히 이해할 수 있도록 상세히 설명한다.
-- 기술적인 변경 사항이 사용자의 의도를 어떻게 충족시키는지 연결하여 보고한다.
+## 🎯 토큰 절약용 지시 템플릿
 
-## 4. 작업 우선순위 및 태도
-- 사용자의 판단을 최우선으로 존중하며, "해야 할지 말아야 할지"는 사용자가 결정한다.
-- 명심하라고 지시받은 모든 사항을 작업 시 항상 최우선으로 고려한다.
+### 프로젝트 이해 필요
+```
+요약: PROJ_SUMMARY 읽고 3줄로 설명
+```
+→ 에이전트가 PROJECT_SUMMARY.md 읽고 핵심 3줄로 요약
 
-## 5. 버전 관리 및 커밋 규칙
-- 커밋 메시지는 `[태그] 요약` 형식을 사용하며, 요약은 한글로 명확하게 작성한다.
-- 커밋 할 때에는 로컬 변경 사항에 대해 각 내용을 기능 단위로 적절히 분류하여 진행한다.
-- 주요 태그 종류:
-    - **feat**: 새로운 기능 추가
-    - **fix**: 버그 수정
-    - **docs**: 문서 수정 (README, 가이드라인 등)
-    - **style**: 코드 포맷팅, 세미콜론 누락 등 (코드 로직 변경 없음)
-    - **refactor**: 코드 리팩토링 (기능 변화 없는 구조 변경)
-    - **test**: 테스트 코드 추가 및 수정
-    - **chore**: 빌드 설정, 패키지 관리, 환경 설정 등
+---
 
-## 6. 릴리즈 규칙
-- 릴리즈는 사용자의 명시적인 지시가 있을 때만 진행한다.
-- 릴리즈 시 별도의 지시사항이 없다면 깃허브 릴리즈를 수행한다.
+### 기획서 처리
+```
+기획: [파일경로]
+또는
+기획: "기획서 내용"
+```
+→ WORKFLOW_PLANNING.md 참고 → 분석 → 계획 → 확인
 
-## 7. 기술적 준수 사항
-- **[비동기 예외 처리]**: 모든 비동기 작업은 `try-finally` 블록을 사용하여 어떤 상황(예외 발생 등)에서도 로딩 상태(`IsBusy`)가 해제되도록 보장한다.
-- **[데이터 무결성 우선]**: 엑셀 데이터와 스키마 정의가 불일치하거나 필수 데이터를 찾을 수 없는 경우, 임의의 기본값을 채우는 대신 명시적인 예외(Exception)를 발생시켜 데이터 오염을 방지한다.
+**예시:**
+```
+기획: ./docs/planning/feature_001.md
+기획: "엑셀 데이터 CSV로도 추출 가능하게 해줘"
+```
+
+---
+
+### 기능 수정
+```
+수정: [파일:라인] [문제]
+또는
+수정: [문제 설명]
+```
+→ 유형A 분석 → 계획 → 확인 → 구현
+
+**예시:**
+```
+수정: ExportService.cs:20 null 체크 추가
+수정: ExportService에서 null 참조 버그 수정
+```
+
+---
+
+### 새로운 기능
+```
+신규: [기능 설명]
+```
+→ 유형B 분석 → 계획 → 확인 → 구현
+
+**예시:**
+```
+신규: CSV 데이터 추출 기능 추가
+신규: LogicProcessor 기능 추가
+```
+
+---
+
+### 작업 재개
+```
+재개: WIP-YYYYMMDD-NN
+또는
+CONTINUE: WIP-YYYYMMDD-NN
+```
+→ WORK_IN_PROGRESS.md에서 상태 확인 → 재개
+
+**예시:**
+```
+재개: WIP-20250202-001
+CONTINUE: WIP-20250202-001
+```
+
+---
+
+### 작업 완료/취소
+```
+완료: WIP-YYYYMMDD-NN
+취소: WIP-YYYYMMDD-NN [사유]
+상태: WIP-YYYYMMDD-NN 또는 상태: 전체
+```
+
+---
+
+### 내보내기
+```
+내보내기: json
+또는
+내보내기: markdown
+```
+→ WORK_IN_PROGRESS.md의 완료/취소 작업을 WORK_HISTORY.json 또는 마크다운으로 내보내기
+
+---
+
+### 긴급 버그
+```
+🚨 [파일:라인] [오류 메시지]
+```
+→ 즉시 LOG 확인 → 문제 분석 → 수정
+
+**예시:**
+```
+🚨 ExportService.cs:45 NullReferenceException 발생
+🚨 MainViewModel에서 빌드 오류
+```
+
+---
+
+## 📚 문서 인덱스
+
+| 섹션 | 설명 | 문서 |
+|------|------|------|
+| 🆕 | **프로젝트 요약** | [PROJECT_SUMMARY.md](./PROJECT_SUMMARY.md) |
+| 🆕 | **기획서 워크플로우** | [WORKFLOW_PLANNING.md](./WORKFLOW_PLANNING.md) |
+| 🆕 | **작업 추적** | [WORK_IN_PROGRESS.md](./WORK_IN_PROGRESS.md) |
+| 🆕 | **빠른 참조** | [QUICK_REFERENCE.md](./QUICK_REFERENCE.md) |
+| 🆕 | **구조화된 컨텍스트** | [CONTEXT.json](./CONTEXT.json) |
+| 1️⃣ | **빌드 및 개발** | [BUILD_GUIDE.md](./.guides/BUILD_GUIDE.md) |
+| 2️⃣ | **작업 워크플로우** | [WORKFLOW_GUIDE.md](./.guides/WORKFLOW_GUIDE.md) |
+| 3️⃣ | **코드 스타일** | [CODE_STYLE.md](./.guides/CODE_STYLE.md) |
+| 4️⃣ | **기술 규칙** | [TECHNICAL_RULES.md](./.guides/TECHNICAL_RULES.md) |
+
+---
+
+## 🚀 빠른 참조
+
+### 빌드
+```bash
+cd ExcelBinder
+dotnet build                    # Debug 빌드 (../Build 폴더)
+dotnet build -c Release         # Release 빌드
+```
+
+### 실행
+```bash
+dotnet run -- --feature [FeatureID] [options]
+# 옵션:
+#   --export      데이터 추출 실행
+#   --codegen     코드 생성 실행
+#   --both        둘 다 실행
+#   --all         모든 파일 처리
+```
+
+### 기술 원칙 (📌 즉시 확인 필요)
+- **데이터 무결성 우선**: 기본값 대신 예외 발생
+- **비동기 작업**: try-finally로 IsBusy 상태 보장
+- **커밋 메시지**: `[태그] 요약` 형식 (한글)
+
+---
+
+## 🔍 자주 찾는 내용
+
+### 명명 규칙
+- 클래스/메서드/속성: `PascalCase`
+- private 필드: `_camelCase`
+- 인터페이스: `IPascalCase`
+
+### 비동기 패턴 필수
+```csharp
+private async void ExecuteExport()
+{
+    if (IsBusy) return;
+    try
+    {
+        IsBusy = true;
+        await processor.ExecuteExportAsync(this);
+    }
+    finally
+    {
+        IsBusy = false;
+    }
+}
+```
+
+### 에러 처리
+```csharp
+if (schema == null)
+    throw new FileNotFoundException("Schema not found");
+```
+
+### WorkID 형식
+```
+WIP-YYYYMMDD-NN
+예: WIP-20250202-001
+```
+
+---
+
+## 📖 상세 가이드 확인
+
+- 작업 절차: [WORKFLOW_PLANNING.md](./WORKFLOW_PLANNING.md)
+- 작업 추적: [WORK_IN_PROGRESS.md](./WORK_IN_PROGRESS.md)
+- 코드 작성법: [CODE_STYLE.md](./.guides/CODE_STYLE.md)
+- 기술 규칙: [TECHNICAL_RULES.md](./.guides/TECHNICAL_RULES.md)
