@@ -15,6 +15,11 @@
 4. **WORK_IN_PROGRESS.md** - 현재 진행 중인 작업 확인
 5. 필요에 따라 상세 가이드 참조
 
+**커스텀 에이전트 사용:**
+- `@coordinator`, `@analyst`, `@developer`, `@reviewer`, `@doc-manager`, `@tester`로 직접 호출 가능
+- 자동화 모드: `@coordinator [지시]`로 전체 워크플로우 자동화
+- 수동 모드: 각 에이전트를 직접 호출하여 세밀한 컨트롤 가능
+
 **원칙:**
 - 모든 단계에서 **WORK_IN_PROGRESS.md를 자동으로 업데이트**하세요
 - 사용자가 별도 업데이트 지시할 필요가 없습니다
@@ -23,6 +28,29 @@
 ---
 
 ## 🎯 토큰 절약용 지시 템플릿
+
+### 커스텀 에이전트 직접 호출
+```
+@coordinator [지시]
+@analyst [지시]
+@developer [지시]
+@reviewer [지시]
+@doc-manager [지시]
+@tester [지시]
+```
+→ 해당 에이전트를 직접 호출하여 작업 수행
+
+**예시:**
+```
+@coordinator CSV 기능 추가해줘
+@analyst 기획서 분석해줘
+@developer 코드 작성해줘
+@reviewer 코드 리뷰해줘
+@doc-manager 문서 업데이트해줘
+@tester 테스트해줘
+```
+
+---
 
 ### 프로젝트 이해 필요
 ```
@@ -149,10 +177,12 @@ CONTINUE: WIP-20250202-001
 | 🆕 | **작업 추적** | [WORK_IN_PROGRESS.md](./WORK_IN_PROGRESS.md) |
 | 🆕 | **빠른 참조** | [QUICK_REFERENCE.md](./QUICK_REFERENCE.md) |
 | 🆕 | **구조화된 컨텍스트** | [CONTEXT.json](./CONTEXT.json) |
+| 🆕 | **커스텀 에이전트** | [.opencode/agent/](./.opencode/agent/) |
 | 1️⃣ | **빌드 및 개발** | [BUILD_GUIDE.md](./.guides/BUILD_GUIDE.md) |
 | 2️⃣ | **작업 워크플로우** | [WORKFLOW_GUIDE.md](./.guides/WORKFLOW_GUIDE.md) |
 | 3️⃣ | **코드 스타일** | [CODE_STYLE.md](./.guides/CODE_STYLE.md) |
 | 4️⃣ | **기술적 준수 사항** | [TECHNICAL_RULES.md](./.guides/TECHNICAL_RULES.md) |
+| 5️⃣ | **테스트 가이드** | [TEST_GUIDE.md](./.guides/TEST_GUIDE.md) |
 
 ---
 

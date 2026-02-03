@@ -89,9 +89,40 @@ D:\CS Project\ExcelBinder\
 
 ## 🧪 테스트
 
-⚠️ **현재 테스트 인프라가 없습니다.**
+### 테스트 프로젝트 빌드
+```bash
+cd ExcelBinder.Tests
+dotnet build
+```
 
-테스트가 필요한 경우 다음 패키지 추가 고려:
-- xUnit: `dotnet add package xunit`
-- NUnit: `dotnet add package NUnit`
-- Moq: `dotnet add package Moq`
+### 단위 테스트 실행
+```bash
+cd ExcelBinder.Tests
+dotnet test
+```
+
+### 특정 테스트 실행
+```bash
+cd ExcelBinder.Tests
+dotnet test --filter "CSVProcessorTests"
+```
+
+### 테스트 상세 출력
+```bash
+cd ExcelBinder.Tests
+dotnet test --logger "console;verbosity=detailed"
+```
+
+### 커버리지 확인
+```bash
+cd ExcelBinder.Tests
+dotnet test --collect:"XPlat Code Coverage"
+```
+
+### 커버리지 리포트 생성
+```bash
+cd ExcelBinder.Tests
+dotnet test --collect:"XPlat Code Coverage" --results-directory ./coverage
+```
+
+커버리지 리포트는 `./coverage/coverage.cobertura.xml` 파일로 생성됩니다.

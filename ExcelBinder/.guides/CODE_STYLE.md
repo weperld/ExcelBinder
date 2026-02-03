@@ -150,24 +150,201 @@ using ExcelBinder.Services;
 
 ## 📖 XML 문서화
 
-### 한국어 주석 필수
-public API에 `///` 주석 추가
+### 필수 XML 주석
+- 모든 **public** 클래스, 메서드, 속성
+- `summary`, `param`, `returns`, `exception` 태그 사용
+- 한국어로 작성
 
+### 예시
+
+#### 클래스
 ```csharp
 /// <summary>
-/// 특정 디렉토리 내의 모든 특징 정의 파일(.json)을 로드합니다.
+/// CSV 파일을 처리하여 데이터를 추출하는 프로세서 클래스입니다.
 /// </summary>
-public IEnumerable<FeatureDefinition> LoadFeatures(string directoryPath)
+public class CSVProcessor : IFeatureProcessor
 {
     // ...
 }
+```
 
+#### 메서드
+```csharp
 /// <summary>
-/// 엑셀 데이터를 바이너리 형식으로 변환하여 저장합니다.
+/// CSV 파일을 처리하여 데이터를 추출합니다.
 /// </summary>
-public void ExportToBinary(SchemaDefinition schema, IEnumerable<string[]> excelData, string outputPath)
+/// <param name="filePath">CSV 파일 경로</param>
+/// <returns>추출된 데이터 목록</returns>
+/// <exception cref="FileNotFoundException">파일이 존재하지 않을 때 발생</exception>
+/// <exception cref="IOException">파일 읽기 오류 발생 시</exception>
+public async Task<List<DataItem>> ExportAsync(string filePath)
 {
     // ...
+}
+```
+
+#### 속성
+```csharp
+/// <summary>
+/// 처리 중인지 여부를 나타냅니다.
+/// </summary>
+public bool IsProcessing { get; private set; }
+
+/// <summary>
+/// 현재 진척도를 0~100 사이의 값으로 나타냅니다.
+/// </summary>
+public int Progress { get; private set; }
+```
+
+#### 이벤트
+```csharp
+/// <summary>
+/// 처리 완료 시 발생하는 이벤트입니다.
+/// </summary>
+public event EventHandler<ProcessCompleteEventArgs>? ProcessComplete;
+```
+
+#### 인터페이스
+```csharp
+/// <summary>
+/// 기능 프로세서를 위한 인터페이스입니다.
+/// </summary>
+public interface IFeatureProcessor
+{
+    /// <summary>
+    /// 기능을 실행합니다.
+    /// </summary>
+    /// <param name="viewModel">실행 뷰모델</param>
+    Task ExecuteAsync(IExecutionViewModel viewModel);
+}
+```
+
+### XML 주석 태그
+
+| 태그 | 용도 | 예시 |
+|-----|------|------|
+| `summary` | 요약 | `/// <summary>`데이터를 추출합니다.`</summary>` |
+| `param` | 파라미터 | `/// <param name="filePath">파일 경로</param>` |
+| `returns` | 반환값 | `/// <returns>`추출된 데이터 목록</returns>` |
+| `exception` | 예외 | `/// <exception cref="FileNotFoundException">`파일이 존재하지 않을 때 발생`</exception>` |
+| `remarks` | 비고 | `/// <remarks>`이 메서드는 비동기로 실행됩니다.`</remarks>` |
+| `example` | 예시 | `/// <example>`이 메서드를 사용하는 방법...`</example>` |
+| `see` | 참조 | `/// <see cref="ExportAsync"/>` |
+
+### XML 문서 생성
+
+#### 프로젝트 파일 설정 (ExcelBinder.csproj)
+```xml
+<PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+</PropertyGroup>
+```
+
+#### API 문서 생성
+```bash
+cd ExcelBinder
+dotnet build
+```
+
+빌드 시 `ExcelBinder.xml` 파일이 생성됩니다. 이 파일을 사용하여 API 문서를 자동으로 생성할 수 있습니다.
+
+### 예외 처리 문서화
+```csharp
+/// <summary>
+/// 엑셀 데이터를 로드합니다.
+/// </summary>
+/// <param name="filePath">엑셀 파일 경로</param>
+/// <returns>로드된 데이터 목록</returns>
+/// <exception cref="FileNotFoundException">
+/// 지정된 파일이 존재하지 않을 때 발생
+/// </exception>
+/// <exception cref="IOException">
+/// 파일 읽기 오류 발생 시 발생
+/// </exception>
+/// <exception cref="NotSupportedException">
+/// 지원하지 않는 파일 형식일 때 발생
+/// </exception>
+public async Task<List<string[]>> LoadExcelDataAsync(string filePath)
+{
+    if (!File.Exists(filePath))
+        throw new FileNotFoundException($"Excel file not found: {filePath}");
+
+    if (!filePath.EndsWith(".xlsx") && !filePath.EndsWith(".xls"))
+        throw new NotSupportedException("Only .xlsx and .xls files are supported");
+
+    // ...
+}
+```
+
+### 사용자 정의 태그
+```csharp
+/// <summary>
+/// CSV 파일을 처리합니다.
+/// </summary>
+/// <param name="filePath">CSV 파일 경로</param>
+/// <feature category="StaticData" />
+/// <author>Junie</author>
+/// <version>1.0.0</version>
+public async Task<List<DataItem>> ExportAsync(string filePath)
+{
+    // ...
+}
+```
+
+### XML 주석 예시 (전체)
+```csharp
+/// <summary>
+/// CSV 파일을 처리하여 데이터를 추출하는 프로세서 클래스입니다.
+/// </summary>
+/// <remarks>
+/// 이 클래스는 CSV 파일을 읽고, 데이터를 추출하여 JSON 형식으로 변환합니다.
+/// 지원하는 CSV 형식은 다음과 같습니다:
+/// - UTF-8 인코딩
+/// - 쉼표(,) 구분자
+/// - 따옴표(") 필드 구분자
+/// </remarks>
+/// <example>
+/// 다음은 CSVProcessor를 사용하는 방법입니다:
+/// <code>
+/// var processor = new CSVProcessor();
+/// var data = await processor.ExportAsync("data.csv");
+/// foreach (var item in data)
+/// {
+///     Console.WriteLine($"{item.Id}: {item.Name}");
+/// }
+/// </code>
+/// </example>
+public class CSVProcessor : IFeatureProcessor
+{
+    /// <summary>
+    /// CSV 파일을 처리하여 데이터를 추출합니다.
+    /// </summary>
+    /// <param name="filePath">CSV 파일 경로</param>
+    /// <returns>추출된 데이터 목록</returns>
+    /// <exception cref="FileNotFoundException">파일이 존재하지 않을 때 발생</exception>
+    /// <exception cref="IOException">파일 읽기 오류 발생 시</exception>
+    /// <exception cref="CSVFormatException">CSV 형식이 올바르지 않을 때 발생</exception>
+    public async Task<List<DataItem>> ExportAsync(string filePath)
+    {
+        if (!File.Exists(filePath))
+            throw new FileNotFoundException($"CSV file not found: {filePath}");
+
+        // ...
+
+        return data;
+    }
+
+    /// <summary>
+    /// CSV 데이터를 파싱합니다.
+    /// </summary>
+    /// <param name="csvContent">CSV 파일 내용</param>
+    /// <param name="separator">구분자 (기본값: 쉼표)</param>
+    /// <returns>파싱된 데이터 목록</returns>
+    private List<string[]> ParseCSV(string csvContent, char separator = ',')
+    {
+        // ...
+    }
 }
 ```
 
