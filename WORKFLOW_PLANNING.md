@@ -6,14 +6,15 @@
 
 ## 🔄 전체 프로세스
 
-### 6단계 개발 파이프라인
+### 7단계 개발 파이프라인
 ```
 1. Plan (계획): 기능 요청 분석, 작업 단위 분해, 파일 식별
-2. Code (코딩): 코드 구현, 코드 스타일 준수
-3. Test (테스트): 단위 테스트 자동 생성, 기능 테스트, 빌드 테스트
-4. Docs (문서화): 각 단계별 문서 업데이트, API 문서 생성
-5. QA (품질검사): 코드 품질, 스타일, 아키텍처 준수 검토
-6. Review (최종검토): 전체 결과물 종합 검토
+2. Design (설계): 아키텍처 설계, 기술적 검증 (순환 참조, 성능, 스레드 안전성 등)
+3. Code (코딩): 코드 구현, 코드 스타일 준수
+4. Test (테스트): 단위 테스트 자동 생성, 기능 테스트, 빌드 테스트
+5. Docs (문서화): 각 단계별 문서 업데이트, API 문서 생성
+6. QA (품질검사): 코드 품질, 스타일, 아키텍처 준수 검토
+7. Review (최종검토): 전체 결과물 종합 검토
 ```
 
 ### 커스텀 에이전트 워크플로우
@@ -26,15 +27,17 @@
   ↓
 1. Plan: @analyst (기획서 분석 → 유형 판단 → 계획 수립)
   ↓
-2. Code: @developer (구현 → 빌드 확인)
+2. Design: @architect (아키텍처 설계 → 기술적 검증)
   ↓
-3. Test: @tester (단위 테스트 자동 생성 → 기능 테스트 → 빌드 테스트)
+3. Code: @developer (구현 → 빌드 확인)
   ↓
-4. Docs: @doc-manager (각 단계별 문서 업데이트 → API 문서 생성)
+4. Test: @tester (단위 테스트 자동 생성 → 기능 테스트 → 빌드 테스트)
   ↓
-5. QA: @reviewer (코드 품질, 스타일, 아키텍처 준수 검토)
+5. Docs: @doc-manager (각 단계별 문서 업데이트 → API 문서 생성)
   ↓
-6. Review: @coordinator (전체 결과물 종합 검토 → 최종 승인)
+6. QA: @reviewer (코드 품질, 스타일, 아키텍처 준수 검토)
+  ↓
+7. Review: @coordinator (전체 결과물 종합 검토 → 최종 승인)
 ```
 
 #### 방식 2: 수동 모드 (사용자 직접 호출)
@@ -291,7 +294,175 @@
 
 #### 1. 작업 시작 시
 ```
-사용자: "신규: CSV 데이터 추출 기능"
+사용자: "신규: CSV 데이터 추출"
+```
+
+에이전트 자동 작업:
+
+**Step 1: WorkID 생성**
+```markdown
+1. 오늘 날짜 확인: 2025-02-05 → 20250205
+2. WORK_IN_PROGRESS.md에서 WIP-20250205-* 패턴 검색
+3. 가장 높은 NN 찾기 (예: WIP-20250205-002 → 002)
+4. 새로운 WorkID 생성: WIP-20250205-003
+5. (검색 결과 없으면) WIP-20250205-001 생성
+```
+
+**WorkID 생성 예시:**
+
+| WORK_IN_PROGRESS.md 내용 | 마지막 WorkID | 새 WorkID |
+|--------------------------|---------------|-----------|
+| 없음 | 없음 | WIP-20250205-001 |
+| WIP-20250204-001 | 2025-02-04 | WIP-20250205-001 |
+| WIP-20250205-001 | WIP-20250205-001 | WIP-20250205-002 |
+| WIP-20250205-009 | WIP-20250205-009 | WIP-20250205-010 |
+
+**WorkID 생성 구현 로직 (마크다운):**
+```markdown
+## WorkID 생성 로직
+
+1. 오늘 날짜 구하기: `YYYYMMDD`
+2. WORK_IN_PROGRESS.md에서 `WIP-YYYYMMDD-NNN` 패턴 검색
+3. 같은 날짜의 WorkID가 있으면 가장 높은 NN에 +1
+4. 같은 날짜의 WorkID가 없으면 001부터 시작
+5. 형식: `WIP-YYYYMMDD-NNN` (3자리 숫자, 0 패딩)
+```
+
+**WorkID 충돌 방지 로직:**
+
+```markdown
+## WorkID 충돌 방지
+
+### 충돌 가능 상황
+- 병렬 작업: 2개 이상의 에이전트가 동시에 WorkID 생성 시도
+- 단일 진실 공급원: WORK_IN_PROGRESS.md가 모든 작업의 중심이므로, 충돌은 드뭅니다
+
+### 충돌 방지 전략
+
+#### 1. 쓰기 전 읽기 (Read-Before-Write)
+```markdown
+1. WORK_IN_PROGRESS.md 전체 읽기
+2. 마지막 WorkID 확인
+3. 새 WorkID 생성
+4. WORK_IN_PROGRESS.md 다시 읽기 (중간에 다른 에이전트가 썼는지 확인)
+5. 마지막 WorkID가 변경되었으면 2부터 다시 시작
+6. 변경되지 않았으면 쓰기
+```
+
+#### 2. 재시도 로직
+```markdown
+최대 3번 재시도:
+- 1차 시도: WorkID 생성 시도
+- 2차 시도: 충돌 시 다시 WorkID 생성
+- 3차 시도: 또 충돌 시 다시 WorkID 생성
+- 3차 시도 후 실패: 사용자에게 수동 요청
+```
+
+#### 3. 에이전트 구현 예시
+```markdown
+## WorkID 생성 함수
+
+def create_workid():
+    """
+    새로운 WorkID를 생성합니다.
+    충돌 방지를 위해 최대 3번 재시도합니다.
+    """
+    for attempt in range(1, 4):
+        # 1. WORK_IN_PROGRESS.md 읽기
+        content = read_file("WORK_IN_PROGRESS.md")
+        last_workid = find_last_workid(content)
+
+        # 2. 새 WorkID 생성
+        new_workid = generate_new_workid(last_workid)
+
+        # 3. WORK_IN_PROGRESS.md 다시 읽기 (중간 확인)
+        content_check = read_file("WORK_IN_PROGRESS.md")
+        last_workid_check = find_last_workid(content_check)
+
+        # 4. 충돌 확인
+        if last_workid == last_workid_check:
+            # 충돌 없음: 쓰기
+            write_to_file("WORK_IN_PROGRESS.md", new_workid)
+            return new_workid
+        else:
+            # 충돌: 재시도
+            print(f"충돌 발견! {attempt}차 시도 재시도 중...")
+            continue
+
+    # 3번 시도 후 실패
+    raise Exception("WorkID 생성 실패: 3번 시도 후 충돌 발생")
+```
+
+### 충돌 발생 시 처리
+
+#### 자동 재시도 (최대 3번)
+```markdown
+1차 시도:
+  - WorkID: WIP-20250205-001 생성 시도
+  - 충돌 발견 → 2차 시도
+
+2차 시도:
+  - WORK_IN_PROGRESS.md 다시 읽기
+  - 마지막 WorkID 확인: WIP-20250205-001 (다른 에이전트가 생성)
+  - 새 WorkID: WIP-20250205-002 생성 시도
+  - 충돌 발견 → 3차 시도
+
+3차 시도:
+  - WORK_IN_PROGRESS.md 다시 읽기
+  - 마지막 WorkID 확인: WIP-20250205-002 (다른 에이전트가 생성)
+  - 새 WorkID: WIP-20250205-003 생성 시도
+  - 충돌 없음 → 쓰기 성공 ✅
+```
+
+#### 수동 요청 (3번 시도 후 실패)
+```markdown
+에이전트:
+⚠️ WorkID 생성 실패: 3번 시도 후 충돌 발생
+
+[상황]
+- 시도한 WorkID: WIP-20250205-003
+- 마지막 WorkID: WIP-20250205-003 (다른 에이전트가 생성)
+
+[요청]
+사용자가 직접 WorkID를 지정하거나, 나중에 다시 시도해주세요.
+
+[옵션]
+1. 사용자: "WorkID는 WIP-20250205-004로 지정해줘"
+2. 사용자: "나중에 다시 시도해줘"
+```
+
+**Step 2: WORK_IN_PROGRESS.md "활성 작업"에 자동 추가**
+```markdown
+1. "### 활성 작업 (진행 중)" 섹션 찾기
+2. 테이블에 새 행 추가:
+   | WIP-20250205-001 | ⏸️ 진행 중 | 신규 | CSV 데이터 추출 | 2025-02-05 | 0% |
+3. (테이블이 없으면) 새로 생성
+```
+
+**Step 3: 해당 WorkID 상세 섹션 자동 생성**
+```markdown
+1. "## 📝 작업 상세" 섹션 끝에 추가
+2. 새 섹션 생성:
+    ### WIP-20250205-001: CSV 데이터 추출
+
+    #### 📋 계획 요약
+    - **유형**: 신규
+    - **시작일**: 2025-02-05
+
+    #### ✅ 완료 단계
+    - [ ] 1. Plan (계획): 기획서 분석, 유형 판단, 계획 수립
+    - [ ] 2. Design (설계): 아키텍처 설계, 기술적 검증
+    - [ ] 3. Code (코딩): 코드 구현, 빌드 확인
+    - [ ] 4. Test (테스트): 단위 테스트 자동 생성, 기능 테스트, 빌드 테스트
+    - [ ] 5. Docs (문서화): 각 단계별 문서 업데이트, API 문서 생성
+    - [ ] 6. QA (품질검사): 코드 품질, 스타일, 아키텍처 준수 검토
+    - [ ] 7. Review (최종검토): 전체 결과물 종합 검토, 최종 승인
+
+    #### 🔗 관련 파일
+    - (아직 없음)
+
+    #### 💬 사용자 메모
+    - (아직 없음)
 ```
 
 에이전트 자동 작업:
@@ -448,6 +619,63 @@ WORK_IN_PROGRESS.md 업데이트 (자동):
 
 ---
 
+### 에이전트 간 통신 프로토콜
+
+#### 단일 진실 공급원(Single Source of Truth)
+
+**WORK_IN_PROGRESS.md가 모든 에이전트의 단일 진실 공급원입니다.**
+
+- 모든 에이전트는 WORK_IN_PROGRESS.md를 읽고 씀
+- WorkID 기반으로 작업 추적
+- 에이전트 간 직접 통신 없이 WORK_IN_PROGRESS.md를 통한 간접 통신
+
+#### 통신 흐름
+
+```
+@coordinator
+  ↓ (WORK_IN_PROGRESS.md 업데이트: WorkID 생성)
+  ↓
+@analyst (WORK_IN_PROGRESS.md 읽기)
+  ↓ (WORK_IN_PROGRESS.md 업데이트: Plan 단계 완료)
+  ↓
+@architect (WORK_IN_PROGRESS.md 읽기)
+  ↓ (WORK_IN_PROGRESS.md 업데이트: Design 단계 완료)
+  ↓
+@developer (WORK_IN_PROGRESS.md 읽기)
+  ↓ (WORK_IN_PROGRESS.md 업데이트: Code 단계 완료)
+  ↓
+@tester (WORK_IN_PROGRESS.md 읽기)
+  ↓ (WORK_IN_PROGRESS.md 업데이트: Test 단계 완료)
+  ↓
+@doc-manager (WORK_IN_PROGRESS.md 읽기)
+  ↓ (WORK_IN_PROGRESS.md 업데이트: Docs 단계 완료)
+  ↓
+@reviewer (WORK_IN_PROGRESS.md 읽기)
+  ↓ (WORK_IN_PROGRESS.md 업데이트: QA 단계 완료)
+  ↓
+@coordinator (WORK_IN_PROGRESS.md 읽기)
+  ↓ (WORK_IN_PROGRESS.md 업데이트: Review 단계 완료)
+```
+
+#### 에이전트 통신 규칙
+
+1. **각 에이전트의 첫 번째 동작**: WORK_IN_PROGRESS.md 읽기
+2. **각 에이전트의 마지막 동작**: WORK_IN_PROGRESS.md 업데이트
+3. **다음 에이전트에게 명시적인 전달 불필요**: WORK_IN_PROGRESS.md가 자동으로 상태 전달
+4. **에러 발생 시**: WORK_IN_PROGRESS.md에 에러 기록 및 진행 상황 업데이트
+
+#### 데이터 공유 방식
+
+| 데이터 | 저장 위치 | 읽기 권한 | 쓰기 권한 |
+|--------|-----------|-----------|-----------|
+| WorkID | WORK_IN_PROGRESS.md | 모든 에이전트 | @coordinator, @doc-manager |
+| 현재 단계 | WORK_IN_PROGRESS.md | 모든 에이전트 | 해당 에이전트 |
+| 진행 상황 | WORK_IN_PROGRESS.md | 모든 에이전트 | 해당 에이전트 |
+| 에러 메시지 | WORK_IN_PROGRESS.md | 모든 에이전트 | 해당 에이전트 |
+| 파일 목록 | WORK_IN_PROGRESS.md | 모든 에이전트 | @developer, @analyst |
+
+---
+
 ### 전체 프로세스 요약
 
 ```
@@ -462,6 +690,10 @@ WORK_IN_PROGRESS.md 업데이트 (자동):
 사용자: "y" (확인)
      ↓
 [자동] 사용자 확인 완료 → 체크박스 체크
+     ↓
+[자동] 아키텍처 설계 완료 → 체크박스 체크
+     ↓
+[자동] 기술적 검증 완료 → 체크박스 체크
      ↓
 [자동] 파일 생성 → 진행 상황 타임스탬프
      ↓
@@ -500,6 +732,301 @@ WORK_IN_PROGRESS.md 업데이트 (자동):
 - [x] 취소 작업으로 자동 이동
 - [x] 활성 작업에서 자동 제거
 - [x] 취소 사유 기록
+
+---
+
+## 에러 상황 처리 프로토콜
+
+### 단계별 에러 처리
+
+#### 1단계: Plan (계획) 에러
+
+**에러 예시:**
+- 기획서 파일을 찾을 수 없음
+- 기획서 내용을 이해할 수 없음
+- 유형 판단 실패 (애매한 내용)
+
+**처리 프로세스:**
+```markdown
+@analyst:
+❌ Plan 단계 실패
+
+[에러]
+- 기획서 파일을 찾을 수 없음: ./docs/planning/feature_001.md
+
+[대응]
+1. WORK_IN_PROGRESS.md 업데이트: 에러 기록
+2. 사용자에게 결정 요청
+   옵션1: 기획서 파일 경로 수정
+   옵션2: 기획서 내용을 직접 입력
+   옵션3: 작업 취소
+```
+
+**WORK_IN_PROGRESS.md 업데이트:**
+```markdown
+### WIP-20250205-001: CSV 기능 추가
+
+#### ❌ 에러 기록
+[2025-02-05 10:15] Plan 단계 실패
+에러: 기획서 파일을 찾을 수 없음
+위치: ./docs/planning/feature_001.md
+```
+
+---
+
+#### 2단계: Code (코딩) 에러
+
+**에러 예시:**
+- 빌드 실패
+- 파일 생성 실패
+- 파일 쓰기 권한 없음
+
+**처리 프로세스:**
+```markdown
+@developer:
+❌ Code 단계 실패
+
+[에러]
+- 빌드 실패: CS8602 NullReferenceException
+위치: Services/Processors/CSVProcessor.cs:45
+
+[대응]
+1. WORK_IN_PROGRESS.md 업데이트: 에러 기록
+2. 에러 원인 분석
+3. 수정 시도
+4. 3번 시도 후 실패 시 @coordinator에게 보고
+```
+
+**WORK_IN_PROGRESS.md 업데이트:**
+```markdown
+#### ❌ 에러 기록
+[2025-02-05 11:30] Code 단계 실패 (1차 시도)
+에러: CS8602 NullReferenceException
+위치: Services/Processors/CSVProcessor.cs:45
+메시지: NullReferenceException: Object reference not set to an instance of an object.
+
+[2025-02-05 11:35] Code 단계 실패 (2차 시도)
+에러: CS8602 NullReferenceException
+위치: Services/Processors/CSVProcessor.cs:45
+메시지: 여전히 null 참조 발생
+
+[2025-02-05 11:40] Code 단계 실패 (3차 시도)
+에러: CS8602 NullReferenceException
+위치: Services/Processors/CSVProcessor.cs:45
+메시지: 3번 시도 후 실패 → @coordinator에 보고
+```
+
+---
+
+#### 3단계: Test (테스트) 에러
+
+**에러 예시:**
+- 단위 테스트 실패
+- 기능 테스트 실패
+- 빌드 테스트 실패
+
+**처리 프로세스:**
+```markdown
+@tester:
+❌ Test 단계 실패
+
+[에러]
+- 단위 테스트 실패: Test_ExportAsync_ValidFile_Success
+예상: 성공
+실제: NullReferenceException
+
+[대응]
+1. WORK_IN_PROGRESS.md 업데이트: 에러 기록
+2. 버그 재현 단계 기록
+3. @developer에게 버그 수정 요청
+4. @developer 수정 후 @reviewer에게 리뷰 요청
+5. @reviewer 리뷰 후 재테스트
+```
+
+**WORK_IN_PROGRESS.md 업데이트:**
+```markdown
+#### ❌ 에러 기록
+[2025-02-05 12:00] Test 단계 실패
+에러: 단위 테스트 실패
+테스트: Test_ExportAsync_ValidFile_Success
+예상: 성공
+실제: NullReferenceException
+
+[버그 재현 단계]
+1. CSVProcessor.cs 생성 완료
+2. 단위 테스트 실행: Test_ExportAsync_ValidFile_Success
+3. NullReferenceException 발생
+
+[다음 단계]
+→ @developer에게 버그 수정 요청
+→ @developer 수정 후 @reviewer 리뷰
+→ @reviewer 리뷰 후 재테스트
+```
+
+---
+
+#### 4단계: Docs (문서화) 에러
+
+**에러 예시:**
+- WORK_IN_PROGRESS.md 쓰기 실패
+- WORK_HISTORY.json 업데이트 실패
+- 보고서 생성 실패
+
+**처리 프로세스:**
+```markdown
+@doc-manager:
+❌ Docs 단계 실패
+
+[에러]
+- WORK_IN_PROGRESS.md 쓰기 실패: 파일 잠김
+
+[대응]
+1. WORK_IN_PROGRESS.md 쓰기 재시도 (최대 3번)
+2. 3번 시도 후 실패 시 @coordinator에게 보고
+3. 사용자에게 수동 업데이트 요청
+```
+
+---
+
+#### 5단계: QA (품질검사) 에러
+
+**에러 예시:**
+- 코드 스타일 위반
+- 아키텍처 위반
+- 잠재적 버그 발견
+
+**처리 프로세스:**
+```markdown
+@reviewer:
+❌ QA 단계 실패
+
+[에러]
+- 코드 스타일 위반: _camelCase 대신 camelCase 사용
+위치: ViewModels/CSVExecutionViewModel.cs:20
+
+[대응]
+1. WORK_IN_PROGRESS.md 업데이트: 에러 기록
+2. @developer에게 수정 요청
+3. @developer 수정 후 재리뷰
+4. 재리뷰 통과 시 다음 단계
+```
+
+---
+
+### 롤백 프로세스
+
+#### 시나리오 1: 단계 실패 후 재시도
+
+```
+@tester: Test 단계 실패 (버그 발견)
+  ↓
+WORK_IN_PROGRESS.md 업데이트 (에러 기록)
+  ↓
+@developer: 버그 수정
+  ↓
+WORK_IN_PROGRESS.md 업데이트 (수정 완료)
+  ↓
+@reviewer: 수정 리뷰
+  ↓
+WORK_IN_PROGRESS.md 업데이트 (리뷰 통과)
+  ↓
+@tester: 재테스트
+  ↓
+WORK_IN_PROGRESS.md 업데이트 (테스트 통과)
+  ↓
+다음 단계 (Docs)
+```
+
+#### 시나리오 2: 다중 단계 실패 후 롤백
+
+```
+@tester: Test 단계 실패 (버그 발견)
+  ↓
+@developer: 버그 수정 시도
+  ↓
+@developer: 수정 실패 (더 깊은 문제 발견)
+  ↓
+@coordinator: 이전 단계로 롤백 결정
+  ↓
+WORK_IN_PROGRESS.md 업데이트 (Code 단계로 롤백)
+  ↓
+@analyst: 계획 재검토
+  ↓
+@developer: 재구현
+  ↓
+@reviewer: 재리뷰
+  ↓
+@tester: 재테스트
+  ↓
+성공 ✅
+```
+
+#### 시나리오 3: 긴급 버그 수정 후 원래 작업 재개
+
+```
+[상황: WIP-20250205-001 진행 중]
+@developer: Code 단계 진행 중...
+  ↓
+사용자: "🚨 ExportService.cs:45 NullReferenceException"
+  ↓
+@coordinator: 긴급 대응 모드 시작
+  ↓
+WIP-20250205-001 일시 정지 (상태: ⏸️ 일시 정지)
+  ↓
+[새 WorkID 생성: WIP-20250205-999 (긴급)]
+  ↓
+@analyst: 오류 분석
+  ↓
+@developer: 즉시 수정
+  ↓
+@tester: 수정 검증
+  ↓
+@reviewer: 수정 검토
+  ↓
+WIP-20250205-999 완료 ✅
+  ↓
+WIP-20250205-001 재개 (상태: ⏸️ 진행 중)
+  ↓
+@developer: 원래 작업 계속
+```
+
+---
+
+### 에러 상황 사용자 결정 요청
+
+#### 결정 요청 형식
+```markdown
+@coordinator:
+⚠️ 단계 실패: 사용자 결정 요청
+
+[WorkID]: WIP-20250205-001
+[실패 단계]: Code
+[에러]: 빌드 실패: CS8602 NullReferenceException
+[위치]: Services/Processors/CSVProcessor.cs:45
+
+[옵션]
+1. 재시도: @developer가 에러 수정을 다시 시도합니다.
+2. 수정: @developer에게 구체적인 수정 방법을 지정합니다.
+3. 롤백: 이전 단계로 롤백하여 다시 시작합니다.
+4. 취소: 작업을 취소합니다.
+
+[추천]
+옵션2: null 체크 추가 권장
+```
+
+#### 사용자 응답
+```markdown
+사용자: "옵션2: CSVProcessor.cs:45에 if (data == null) throw new Exception(...) 추가해줘"
+
+@developer:
+✅ 사용자 지시대로 수정 완료
+
+[수정 내용]
+- CSVProcessor.cs:45에 null 체크 추가
+- 빌드 성공 ✅
+
+@reviewer에게 리뷰를 요청합니다...
+```
 
 ---
 

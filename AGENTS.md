@@ -16,7 +16,7 @@
 5. 필요에 따라 상세 가이드 참조
 
 **커스텀 에이전트 사용:**
-- `@coordinator`, `@analyst`, `@developer`, `@reviewer`, `@doc-manager`, `@tester`로 직접 호출 가능
+- `@coordinator`, `@analyst`, `@architect`, `@developer`, `@reviewer`, `@doc-manager`, `@tester`로 직접 호출 가능
 - 자동화 모드: `@coordinator [지시]`로 전체 워크플로우 자동화
 - 수동 모드: 각 에이전트를 직접 호출하여 세밀한 컨트롤 가능
 
@@ -33,6 +33,7 @@
 ```
 @coordinator [지시]
 @analyst [지시]
+@architect [지시]
 @developer [지시]
 @reviewer [지시]
 @doc-manager [지시]
@@ -44,6 +45,7 @@
 ```
 @coordinator CSV 기능 추가해줘
 @analyst 기획서 분석해줘
+@architect 아키텍처 설계해줘
 @developer 코드 작성해줘
 @reviewer 코드 리뷰해줘
 @doc-manager 문서 업데이트해줘
@@ -177,6 +179,7 @@ CONTINUE: WIP-20250202-001
 | 🆕 | **작업 추적** | [WORK_IN_PROGRESS.md](./WORK_IN_PROGRESS.md) |
 | 🆕 | **빠른 참조** | [QUICK_REFERENCE.md](./QUICK_REFERENCE.md) |
 | 🆕 | **구조화된 컨텍스트** | [CONTEXT.json](./CONTEXT.json) |
+| 🆕 | **아키텍처 설계** | [architect.md](./.opencode/agent/architect.md) |
 | 🆕 | **커스텀 에이전트** | [.opencode/agent/](./.opencode/agent/) |
 | 1️⃣ | **빌드 및 개발** | [BUILD_GUIDE.md](./.guides/BUILD_GUIDE.md) |
 | 2️⃣ | **작업 워크플로우** | [WORKFLOW_GUIDE.md](./.guides/WORKFLOW_GUIDE.md) |
