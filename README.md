@@ -1,4 +1,4 @@
-﻿# 🚀 ExcelBinder
+# 🚀 ExcelBinder
 > **Universal Data Extraction & Code Generation Engine**
 
 [![.NET](https://img.shields.io/badge/.NET-10.0-512bd4?logo=dotnet)](https://dotnet.microsoft.com/)
@@ -178,3 +178,4 @@ CI/CD 환경이나 배치 파일에서 다음과 같이 활용할 수 있습니�
 - [💻 설치 및 환경 설정 (ExcelBinder/SETUP.md)](./ExcelBinder/SETUP.md)
 - [📝 기능 정의 및 템플릿 가이드 (ExcelBinder/README_EXT.md)](./ExcelBinder/README_EXT.md)
 - [📋 전체 요구사항 명세 (ExcelBinder/Requirements.md)](./ExcelBinder/Requirements.md)
+- [📦 에이전트 및 개발 가이드 (.guides/)](./.guides/COMMIT_RULES.md)

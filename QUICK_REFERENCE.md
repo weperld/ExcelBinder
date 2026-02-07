@@ -310,6 +310,7 @@ WIP-20250203-001  # 다음 날 첫 번째 작업
 - [작업 워크플로우](.guides/WORKFLOW_GUIDE.md)
 - [코드 스타일](.guides/CODE_STYLE.md)
 - [기술 규칙](.guides/TECHNICAL_RULES.md)
+- [커밋 규칙](.guides/COMMIT_RULES.md)
 
 ---
 

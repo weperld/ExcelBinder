@@ -200,6 +200,7 @@ CONTINUE: WIP-20250202-001
 | 3️⃣ | **코드 스타일** | [CODE_STYLE.md](./.guides/CODE_STYLE.md) |
 | 4️⃣ | **기술적 준수 사항** | [TECHNICAL_RULES.md](./.guides/TECHNICAL_RULES.md) |
 | 5️⃣ | **테스트 가이드** | [TEST_GUIDE.md](./.guides/TEST_GUIDE.md) |
+| 6️⃣ | **커밋 규칙** | [COMMIT_RULES.md](./.guides/COMMIT_RULES.md) |
 
 ---
 
