@@ -163,42 +163,109 @@ CSV 데이터 추출 기능에 대한 아키텍처 설계를 진행해주세요.
   ↓
 @coordinator: 지시 문서 작성 (WIP-YYYYMMDD-NN-Plan-Analyst.md)
   ↓
-@analyst: 지시 문서 참고하여 작업 진행
+@analyst: 독립 WIP 생성 (.wips/WIP-Plan-YYYYMMDD-NN.md)
+  ↓
+@analyst: 독립 WIP 경로를 @coordinator에게 전달
+  ↓
+@coordinator: 전달받은 독립 WIP 내용을 WORK_IN_PROGRESS.md에 기록하여 관리
+  - WorkID 등록
+  - Plan 단계 상태: 준비
+  - 독립 WIP 링크 추가: .wips/WIP-Plan-YYYYMMDD-NN.md
+  - 지시 내용 요약 기록
+  ↓
+@coordinator: @analyst에게 작업 시작 지시
+  ↓
+@analyst: 지시 문서 및 독립 WIP 참고하여 작업 진행
   ↓ (WORK_IN_PROGRESS.md 업데이트: Plan 단계 완료 체크박스)
   ↓
 ### 2. Design 단계 (3단계 프로세스)
   ↓
 @coordinator: 지시 문서 작성 (WIP-YYYYMMDD-NN-Design-Architect.md)
   ↓
-@architect: 지시 문서 참고하여 작업 진행
+@architect: 독립 WIP 생성 (.wips/WIP-Design-YYYYMMDD-NN.md)
+  ↓
+@architect: 독립 WIP 경로를 @coordinator에게 전달
+  ↓
+@coordinator: 전달받은 독립 WIP 내용을 WORK_IN_PROGRESS.md에 기록하여 관리
+  - Design 단계 상태: 준비
+  - 독립 WIP 링크 추가: .wips/WIP-Design-YYYYMMDD-NN.md
+  - 지시 내용 요약 기록
+  ↓
+@coordinator: @architect에게 작업 시작 지시
+  ↓
+@architect: 지시 문서 및 독립 WIP 참고하여 작업 진행
   ↓ (WORK_IN_PROGRESS.md 업데이트: Design 단계 완료 체크박스)
   ↓
 ### 3. Code 단계 (3단계 프로세스)
   ↓
 @coordinator: 지시 문서 작성 (WIP-YYYYMMDD-NN-Code-Developer.md)
   ↓
-@developer: 지시 문서 참고하여 작업 진행
+@developer: 독립 WIP 생성 (.wips/WIP-Code-YYYYMMDD-NN.md)
+  ↓
+@developer: 독립 WIP 경로를 @coordinator에게 전달
+  ↓
+@coordinator: 전달받은 독립 WIP 내용을 WORK_IN_PROGRESS.md에 기록하여 관리
+  - Code 단계 상태: 준비
+  - 독립 WIP 링크 추가: .wips/WIP-Code-YYYYMMDD-NN.md
+  - 지시 내용 요약 기록
+  ↓
+@coordinator: @developer에게 작업 시작 지시
+  ↓
+@developer: 지시 문서 및 독립 WIP 참고하여 작업 진행
   ↓ (WORK_IN_PROGRESS.md 업데이트: Code 단계 완료 체크박스)
   ↓
 ### 4. Test 단계 (3단계 프로세스)
   ↓
 @coordinator: 지시 문서 작성 (WIP-YYYYMMDD-NN-Test-Tester.md)
   ↓
-@tester: 지시 문서 참고하여 작업 진행
+@tester: 독립 WIP 생성 (.wips/WIP-Test-YYYYMMDD-NN.md)
+  ↓
+@tester: 독립 WIP 경로를 @coordinator에게 전달
+  ↓
+@coordinator: 전달받은 독립 WIP 내용을 WORK_IN_PROGRESS.md에 기록하여 관리
+  - Test 단계 상태: 준비
+  - 독립 WIP 링크 추가: .wips/WIP-Test-YYYYMMDD-NN.md
+  - 지시 내용 요약 기록
+  ↓
+@coordinator: @tester에게 작업 시작 지시
+  ↓
+@tester: 지시 문서 및 독립 WIP 참고하여 작업 진행
   ↓ (WORK_IN_PROGRESS.md 업데이트: Test 단계 완료 체크박스)
   ↓
 ### 5. Docs 단계 (3단계 프로세스)
   ↓
 @coordinator: 지시 문서 작성 (WIP-YYYYMMDD-NN-Docs-DocManager.md)
   ↓
-@doc-manager: 지시 문서 참고하여 작업 진행
+@doc-manager: 독립 WIP 생성 (.wips/WIP-Docs-YYYYMMDD-NN.md)
+  ↓
+@doc-manager: 독립 WIP 경로를 @coordinator에게 전달
+  ↓
+@coordinator: 전달받은 독립 WIP 내용을 WORK_IN_PROGRESS.md에 기록하여 관리
+  - Docs 단계 상태: 준비
+  - 독립 WIP 링크 추가: .wips/WIP-Docs-YYYYMMDD-NN.md
+  - 지시 내용 요약 기록
+  ↓
+@coordinator: @doc-manager에게 작업 시작 지시
+  ↓
+@doc-manager: 지시 문서 및 독립 WIP 참고하여 작업 진행
   ↓ (WORK_IN_PROGRESS.md 업데이트: Docs 단계 완료 체크박스)
   ↓
 ### 6. QA 단계 (3단계 프로세스)
   ↓
 @coordinator: 지시 문서 작성 (WIP-YYYYMMDD-NN-QA-Reviewer.md)
   ↓
-@reviewer: 지시 문서 참고하여 작업 진행
+@reviewer: 독립 WIP 생성 (.wips/WIP-QA-YYYYMMDD-NN.md)
+  ↓
+@reviewer: 독립 WIP 경로를 @coordinator에게 전달
+  ↓
+@coordinator: 전달받은 독립 WIP 내용을 WORK_IN_PROGRESS.md에 기록하여 관리
+  - QA 단계 상태: 준비
+  - 독립 WIP 링크 추가: .wips/WIP-QA-YYYYMMDD-NN.md
+  - 지시 내용 요약 기록
+  ↓
+@coordinator: @reviewer에게 작업 시작 지시
+  ↓
+@reviewer: 지시 문서 및 독립 WIP 참고하여 작업 진행
   ↓ (WORK_IN_PROGRESS.md 업데이트: QA 단계 완료 체크박스)
   ↓
 ### 7. Review 단계 (3단계 프로세스)
