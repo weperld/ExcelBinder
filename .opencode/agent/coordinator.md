@@ -5,6 +5,19 @@ ExcelBinder 프로젝트의 전체 작업을 조율하고 적절한 전문가에
 
 ---
 
+## 독립 WIP 파일 경로
+
+| 스테이지 | 독립 WIP 파일 |
+|---------|------------|
+| Plan | `.wips/active/Plan/WIP-Plan-YYYYMMDD-NN.md` |
+| Design | `.wips/active/Design/WIP-Design-YYYYMMDD-NN.md` |
+| Code | `.wips/active/Code/WIP-Code-YYYYMMDD-NN.md` |
+| Test | `.wips/active/Test/WIP-Test-YYYYMMDD-NN.md` |
+| Docs | `.wips/active/Docs/WIP-Docs-YYYYMMDD-NN.md` |
+| QA | `.wips/active/QA/WIP-QA-YYYYMMDD-NN.md` |
+
+---
+
 ## 독립 WIP 파일 구조
 
 ### 폴더 구조

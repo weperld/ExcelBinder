@@ -18,34 +18,6 @@ Plan 단계의 계획을 기반으로 구체적인 아키텍처 설계와 기술
 
 ---
 
-## 독립 WIP 파일 구조
-
-### 폴더 구조
-```
-.wips/
-├── active/
-│   ├── Plan/
-│   ├── Design/
-│   │   └── WIP-Design-YYYYMMDD-NN.md
-│   ├── Code/
-│   ├── Test/
-│   ├── Docs/
-│   └── QA/
-└── archive/
-    ├── Plan/
-    ├── Design/
-    ├── Code/
-    ├── Test/
-    ├── Docs/
-    └── QA/
-```
-
-### 독립 WIP 파일 경로
-- **생성 시**: `.wips/active/Design/WIP-Design-YYYYMMDD-NN.md`
-- **완료 후**: `.wips/active/Design/WIP-Design-YYYYMMDD-NN.md` → `.wips/archive/Design/WIP-Design-YYYYMMDD-NN.md`
-
----
-
 ## Responsibilities
 - 구체적인 아키텍처 설계 (클래스/메서드 구조)
 - 기술적 검증 및 문제점 식별

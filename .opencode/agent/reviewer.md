@@ -18,34 +18,6 @@
 
 ---
 
-## 독립 WIP 파일 구조
-
-### 폴더 구조
-```
-.wips/
-├── active/
-│   ├── Plan/
-│   ├── Design/
-│   ├── Code/
-│   ├── Test/
-│   ├── Docs/
-│   └── QA/
-│       └── WIP-QA-YYYYMMDD-NN.md
-└── archive/
-    ├── Plan/
-    ├── Design/
-    ├── Code/
-    ├── Test/
-    ├── Docs/
-    └── QA/
-```
-
-### 독립 WIP 파일 경로
-- **생성 시**: `.wips/active/QA/WIP-QA-YYYYMMDD-NN.md`
-- **완료 후**: `.wips/active/QA/WIP-QA-YYYYMMDD-NN.md` → `.wips/archive/QA/WIP-QA-YYYYMMDD-NN.md`
-
----
-
 ## Responsibilities
 - 코드 스타일 검토
 - 아키텍처 준수 확인
