@@ -141,6 +141,95 @@
 
 ## 2단계: 계획 수립
 
+### 🚪 검증 게이트 시스템
+
+```
+Plan  → [Gate-1] → Design  → [Gate-2] → Code    → [Gate-3] → Test    → [Gate-4] → Docs  → [Gate-5] → QA    → [Gate-6] → Review → [Gate-7] → 완료
+```
+
+#### 검증 게이트 개요
+
+| 게이트 | 검증 대상 | 자체 더블체크 | 크로스체크 에이전트 | 실패 시 롤백 |
+|--------|----------|---------------|---------------------|--------------|
+| Gate-1 | Plan → Design | @analyst 2회 | @architect 1회 | Plan 재계획 |
+| Gate-2 | Design → Code | @architect 2회 | @developer 1회 | Plan 재계획 |
+| Gate-3 | Code → Test | @developer 2회 | @reviewer 1회 | Design 재설계 |
+| Gate-4 | Test → Docs | @tester 2회 | @developer 1회 | Code 재구현 |
+| Gate-5 | Docs → QA | @doc-manager 2회 | @reviewer 1회 | Test 재수행 |
+| Gate-6 | QA → Review | @reviewer 2회 | @architect 1회 | Code 재구현 |
+| Gate-7 | Review → 완료 | @coordinator 최종 | - | 적절 단계로 롤백 |
+
+#### 게이트 통과 조건
+
+**Gate-1 (Plan → Design)**
+- ✅ 계획 명확성 검증
+- ✅ 영향 파일 완전성 검증
+- ✅ 위험 요소 식별 완료
+- ✅ 사용자 승인 완료
+- ✅ @analyst 1차 검증
+- ✅ @analyst 2차 검증
+- ✅ @architect 크로스체크
+
+**Gate-2 (Design → Code)**
+- ✅ 순환 참조 없음
+- ✅ 스택 오버플로우 안전
+- ✅ 성능 O(n) 이하
+- ✅ 스레드 안전성 보장
+- ✅ 메모리 누수 없음
+- ✅ 데이터 무결성 준수
+- ✅ UI 프리징 방지
+- ✅ 아키텍처 준수
+- ✅ @architect 1차 검증
+- ✅ @architect 2차 검증
+- ✅ @developer 크로스체크
+
+**Gate-3 (Code → Test)**
+- ✅ 빌드 성공 (Exit Code 0)
+- ✅ 컴파일 에러 0개
+- ✅ 컴파일 경고 < 5개 (심각 경고 0개)
+- ✅ 참조 에러 0개
+- ✅ 코드 스타일 준수
+- ✅ 기술 규칙 준수
+- ✅ @developer 1차 빌드
+- ✅ @developer 2차 빌드
+- ✅ @reviewer 크로스 빌드
+
+**Gate-4 (Test → Docs)**
+- ✅ 빌드 테스트 통과
+- ✅ 단위 테스트 통과율 100%
+- ✅ 기능 테스트 통과
+- ✅ 버그 0개 (또는 문서화된 버그만 존재)
+- ✅ @tester 1차 테스트
+- ✅ @tester 2차 테스트
+- ✅ @developer 재테스트
+
+**Gate-5 (Docs → QA)**
+- ✅ XML 주석 완비 (public API)
+- ✅ API 문서 생성 완료
+- ✅ 사용자 가이드 완성
+- ✅ 변경 로그 작성
+- ✅ @doc-manager 1차 검증
+- ✅ @doc-manager 2차 검증
+- ✅ @reviewer 크로스체크
+
+**Gate-6 (QA → Review)**
+- ✅ 코드 스타일 완벽 준수
+- ✅ 아키텍처 완벽 준수
+- ✅ 잠재적 버그 0개
+- ✅ 성능 기준 충족
+- ✅ 보안 취약점 0개
+- ✅ @reviewer 1차 리뷰
+- ✅ @reviewer 2차 리뷰
+- ✅ @architect 크로스 리뷰
+
+**Gate-7 (Review → 완료)**
+- ✅ 모든 게이트 통과
+- ✅ 모든 체크박스 완료
+- ✅ 사용자 승인
+- ✅ @coordinator 최종 검증
+
+---
+
 ### 기능 수정 계획 템플릿
 
 ```markdown
@@ -162,6 +251,10 @@
 - [ ] 호환성 문제
 - [ ] 데이터 무결성 영향
 - [ ] 성능 영향
+
+### 검증 계획
+- **더블체크 계획**: 1차 검증 후 2차 검증
+- **크로스체크 에이전트**: @architect
 
 ### 예상 소요 시간
 ...
@@ -209,6 +302,10 @@
 
 ### 위험 요소
 ...
+
+### 검증 계획
+- **더블체크 계획**: 각 단계별 1차, 2차 검증
+- **크로스체크 에이전트**: @architect (Gate-2), @reviewer (Gate-3), @developer (Gate-4)
 
 ### 예상 소요 시간
 ...
@@ -287,6 +384,285 @@
 **에이전트는 모든 작업 단계에서 자동으로 WORK_IN_PROGRESS.md를 업데이트합니다.**
 
 사용자가 별도 업데이트 지시할 필요가 없습니다!
+
+---
+
+### 📋 WIP 관리 핵심 구조
+
+#### 단일 진실 공급원 (Single Source of Truth)
+- **WORK_IN_PROGRESS.md**: 모든 작업의 중심 저장소
+- **WorkID 기반 추적**: 각 작업은 고유한 WorkID로 식별
+- **에이전트 간 간접 통신**: 직접 통신 없이 WORK_IN_PROGRESS.md를 통한 상태 공유
+
+#### WORK_IN_PROGRESS.md 구조
+```markdown
+# 작업 추적 및 재개 시스템
+
+## 📊 현재 작업 목록
+### 활성 작업 (진행 중)
+### 완료 작업 (히스토리)
+### 취소된 작업 (취소 히스토리)
+
+## 📝 작업 상세
+### WIP-YYYYMMDD-NN: [작업 제목]
+#### 📋 계획 요약
+#### ✅ 완료 단계
+#### 🚪 Validation Gates
+#### 🚧 진행 상황
+#### 🔗 관련 파일
+#### 💬 사용자 메모
+
+## 🎯 WorkID 형식
+## 🚨 긴급 명령어
+## 📝 작업 완료/취소 시 처리
+## 🔍 상태 확인 명령어
+## 📊 보고서 생성
+## 🎯 에이전트 동작 가이드
+## 🔄 WorkID 충돌 방지 시스템
+## 📊 상태 전이 다이어그램
+```
+
+---
+
+### 🔄 WorkID 충돌 방지 시스템
+
+#### 충돌 가능 상황
+- 병렬 작업: 2개 이상의 에이전트가 동시에 WorkID 생성 시도
+- 단일 진실 공급원: WORK_IN_PROGRESS.md가 모든 작업의 중심이므로, 충돌은 드뭅니다
+
+#### 충돌 방지 전략
+
+##### 1. 쓰기 전 읽기 (Read-Before-Write)
+```markdown
+## WorkID 생성 로직
+
+1. WORK_IN_PROGRESS.md 전체 읽기
+2. 마지막 WorkID 확인
+3. 새 WorkID 생성
+4. WORK_IN_PROGRESS.md 다시 읽기 (중간에 다른 에이전트가 썼는지 확인)
+5. 마지막 WorkID가 변경되었으면 2부터 다시 시작
+6. 변경되지 않았으면 쓰기
+```
+
+##### 2. 재시도 로직
+```markdown
+## WorkID 생성 함수
+
+def create_workid():
+    """
+    새로운 WorkID를 생성합니다.
+    충돌 방지를 위해 최대 3번 재시도합니다.
+    """
+    for attempt in range(1, 4):
+        # 1. WORK_IN_PROGRESS.md 읽기
+        content = read_file("WORK_IN_PROGRESS.md")
+        last_workid = find_last_workid(content)
+
+        # 2. 새 WorkID 생성
+        new_workid = generate_new_workid(last_workid)
+
+        # 3. WORK_IN_PROGRESS.md 다시 읽기 (중간 확인)
+        content_check = read_file("WORK_IN_PROGRESS.md")
+        last_workid_check = find_last_workid(content_check)
+
+        # 4. 충돌 확인
+        if last_workid == last_workid_check:
+            # 충돌 없음: 쓰기
+            write_to_file("WORK_IN_PROGRESS.md", new_workid)
+            return new_workid
+        else:
+            # 충돌: 재시도
+            print(f"충돌 발견! {attempt}차 시도 재시도 중...")
+            continue
+
+    # 3번 시도 후 실패
+    raise Exception("WorkID 생성 실패: 3번 시도 후 충돌 발생")
+```
+
+##### 3. 에이전트 구현 예시
+```markdown
+## WorkID 생성 예시
+
+### 시나리오: 1차 시도 성공
+1차 시도:
+  - WORK_IN_PROGRESS.md 읽기
+  - 마지막 WorkID: WIP-20250205-001
+  - 새 WorkID: WIP-20250205-002 생성 시도
+  - WORK_IN_PROGRESS.md 다시 읽기
+  - 마지막 WorkID: WIP-20250205-001 (변경 없음)
+  - 성공: WIP-20250205-002 생성 ✅
+
+### 시나리오: 충돌 발생 및 해결
+1차 시도:
+  - WORK_IN_PROGRESS.md 읽기
+  - 마지막 WorkID: WIP-20250205-001
+  - 새 WorkID: WIP-20250205-002 생성 시도
+  - WORK_IN_PROGRESS.md 다시 읽기
+  - 마지막 WorkID: WIP-20250205-002 (다른 에이전트가 생성)
+  - 충돌 발견 → 2차 시도
+
+2차 시도:
+  - WORK_IN_PROGRESS.md 다시 읽기
+  - 마지막 WorkID: WIP-20250205-002
+  - 새 WorkID: WIP-20250205-003 생성 시도
+  - WORK_IN_PROGRESS.md 다시 읽기
+  - 마지막 WorkID: WIP-20250205-002 (변경 없음)
+  - 성공: WIP-20250205-003 생성 ✅
+
+### 시나리오: 3번 시도 후 성공
+1차 시도: 충돌 → 2차 시도
+2차 시도: 충돌 → 3차 시도
+3차 시도:
+  - WORK_IN_PROGRESS.md 읽기
+  - 마지막 WorkID: WIP-20250205-003
+  - 새 WorkID: WIP-20250205-004 생성 시도
+  - WORK_IN_PROGRESS.md 다시 읽기
+  - 마지막 WorkID: WIP-20250205-003 (변경 없음)
+  - 성공: WIP-20250205-004 생성 ✅
+```
+
+##### 4. 충돌 발생 시 처리
+```markdown
+## 수동 요청 (3번 시도 후 실패)
+
+에이전트:
+⚠️ WorkID 생성 실패: 3번 시도 후 충돌 발생
+
+[상황]
+- 시도한 WorkID: WIP-20250205-003
+- 마지막 WorkID: WIP-20250205-003 (다른 에이전트가 생성)
+
+[요청]
+사용자가 직접 WorkID를 지정하거나, 나중에 다시 시도해주세요.
+
+[옵션]
+1. 사용자: "WorkID는 WIP-20250205-004로 지정해줘"
+2. 사용자: "나중에 다시 시도해줘"
+```
+
+---
+
+### 📊 상태 전이 다이어그램
+
+#### 전체 상태 전이
+```mermaid
+stateDiagram-v2
+    [*] --> New: 새 작업 요청
+    New --> Plan: WorkID 생성
+    
+    Plan --> Plan: 1차 더블체크
+    Plan --> Plan: 2차 더블체크
+    Plan --> Gate1: 크로스체크
+    Gate1 --> Design: 통과
+    Gate1 --> Plan: 수정 요청 (최대 3번)
+    Gate1 --> [*]: 3번 실패 → 취소
+    
+    Design --> Design: 1차 더블체크
+    Design --> Design: 2차 더블체크
+    Design --> Gate2: 크로스체크
+    Gate2 --> Code: 통과
+    Gate2 --> Plan: 수정 요청 (최대 3번)
+    Gate2 --> [*]: 3번 실패 → 롤백
+    
+    Code --> Code: 1차 빌드
+    Code --> Code: 2차 빌드
+    Code --> Gate3: 크로스 빌드
+    Gate3 --> Test: 통과
+    Gate3 --> Design: 수정 요청 (최대 3번)
+    Gate3 --> [*]: 3번 실패 → 롤백
+    
+    Test --> Test: 1차 테스트
+    Test --> Test: 2차 테스트
+    Test --> Gate4: 크로스 테스트
+    Gate4 --> Docs: 통과
+    Gate4 --> Code: 수정 요청 (최대 3번)
+    Gate4 --> [*]: 3번 실패 → 롤백
+    
+    Docs --> Docs: 1차 검증
+    Docs --> Docs: 2차 검증
+    Docs --> Gate5: 크로스체크
+    Gate5 --> QA: 통과
+    Gate5 --> Test: 수정 요청 (최대 3번)
+    Gate5 --> [*]: 3번 실패 → 롤백
+    
+    QA --> QA: 1차 리뷰
+    QA --> QA: 2차 리뷰
+    QA --> Gate6: 크로스 리뷰
+    Gate6 --> Review: 통과
+    Gate6 --> Code: 수정 요청 (최대 3번)
+    Gate6 --> [*]: 3번 실패 → 롤백
+    
+    Review --> Review: 1차 최종 검증
+    Review --> Review: 2차 최종 검증
+    Review --> Gate7: 사용자 승인
+    Gate7 --> Completed: 통과
+    Gate7 --> [*]: 취소 요청
+    
+    Completed --> [*]: 작업 완료
+```
+
+#### 에이전트 간 상태 공유 프로토콜
+
+```markdown
+## 에이전트 간 통신 프로토콜
+
+### 통신 규칙
+1. **각 에이전트의 첫 번째 동작**: WORK_IN_PROGRESS.md 읽기
+2. **각 에이전트의 마지막 동작**: WORK_IN_PROGRESS.md 업데이트
+3. **다음 에이전트에게 명시적인 전달 불필요**: WORK_IN_PROGRESS.md가 자동으로 상태 전달
+4. **에러 발생 시**: WORK_IN_PROGRESS.md에 에러 기록 및 진행 상황 업데이트
+
+### 데이터 공유 방식
+
+| 데이터 | 저장 위치 | 읽기 권한 | 쓰기 권한 |
+|--------|-----------|-----------|-----------|
+| WorkID | WORK_IN_PROGRESS.md | 모든 에이전트 | @coordinator, @doc-manager |
+| 현재 단계 | WORK_IN_PROGRESS.md | 모든 에이전트 | 해당 에이전트 |
+| 진행 상황 | WORK_IN_PROGRESS.md | 모든 에이전트 | 해당 에이전트 |
+| 에러 메시지 | WORK_IN_PROGRESS.md | 모든 에이전트 | 해당 에이전트 |
+| 파일 목록 | WORK_IN_PROGRESS.md | 모든 에이전트 | @developer, @analyst |
+
+### 통신 흐름 예시
+
+#### 정상 흐름 (Gate 통과)
+```
+@analyst
+  ↓ (WORK_IN_PROGRESS.md 업데이트: WorkID 생성)
+  ↓
+@architect (WORK_IN_PROGRESS.md 읽기)
+  ↓ (WORK_IN_PROGRESS.md 업데이트: Design 단계 완료)
+  ↓
+@developer (WORK_IN_PROGRESS.md 읽기)
+  ↓ (WORK_IN_PROGRESS.md 업데이트: Code 단계 완료)
+  ↓
+@tester (WORK_IN_PROGRESS.md 읽기)
+  ↓ (WORK_IN_PROGRESS.md 업데이트: Test 단계 완료)
+  ↓
+@doc-manager (WORK_IN_PROGRESS.md 읽기)
+  ↓ (WORK_IN_PROGRESS.md 업데이트: Docs 단계 완료)
+  ↓
+@reviewer (WORK_IN_PROGRESS.md 읽기)
+  ↓ (WORK_IN_PROGRESS.md 업데이트: QA 단계 완료)
+  ↓
+@coordinator (WORK_IN_PROGRESS.md 읽기)
+  ↓ (WORK_IN_PROGRESS.md 업데이트: Review 단계 완료)
+```
+
+#### 오류 흐름 (Gate 실패)
+```
+@developer: Code 단계 진행 중...
+  ↓ (WORK_IN_PROGRESS.md 업데이트: 빌드 에러)
+  ↓
+@reviewer (WORK_IN_PROGRESS.md 읽기: 빌드 에러 확인)
+  ↓ (WORK_IN_PROGRESS.md 업데이트: 수정 요청)
+  ↓
+@developer (WORK_IN_PROGRESS.md 읽기: 수정 요청 확인)
+  ↓ (WORK_IN_PROGRESS.md 업데이트: 수정 완료)
+  ↓
+@reviewer (WORK_IN_PROGRESS.md 읽기: 재검증)
+  ↓ (WORK_IN_PROGRESS.md 업데이트: 통과)
+```
+```
 
 ---
 
@@ -737,6 +1113,64 @@ WORK_IN_PROGRESS.md 업데이트 (자동):
 
 ## 에러 상황 처리 프로토콜
 
+### 검증 게이트 실패 시 처리 프로토콜
+
+#### Gate 실패 시 기본 흐름
+```
+[Gate 실패]
+    ↓
+[1차 수정 시도] 같은 단계에서 수정
+    ↓
+[성공?] 예 → 다시 Gate 통과 시도
+    ↓
+[실패?]
+    ↓
+[2차 수정 시도] 다른 방법으로 수정
+    ↓
+[성공?] 예 → 다시 Gate 통과 시도
+    ↓
+[실패?]
+    ↓
+[3차 수정 시도] 마지막 시도
+    ↓
+[성공?] 예 → 다시 Gate 통과 시도
+    ↓
+[실패?] → [이전 단계로 롤백]
+```
+
+#### 게이트별 롤백 매핑
+| 실패한 Gate | 롤백 단계 | 이유 |
+|------------|-----------|------|
+| Gate-1 | Plan → 재계획 | 설계 불가능한 계획 |
+| Gate-2 | Design → Plan | 설계 해결 불가 |
+| Gate-3 | Code → Design | 구현 해결 불가 |
+| Gate-4 | Test → Code | 버그 수정 불가 |
+| Gate-5 | Docs → Test | 문서화 해결 불가 |
+| Gate-6 | QA → Code | 품질 문제 해결 불가 |
+
+### 더블체크 실패 시 처리
+```
+[에이전트] 작업 완료
+    ↓
+[1차 더블체크] 자체 검증 1차
+    ↓
+[실패?] 예 → 수정 후 2차 더블체크
+    ↓
+[성공?] 예 → 크로스체크로 전달
+    ↓
+[크로스체크 에이전트] 독립적 검증
+    ↓
+[실패?] 예 → [원래 에이전트]에게 수정 요청
+    ↓
+[원래 에이전트] 수정 후 재제출
+    ↓
+[크로스체크 에이전트] 재검증 (최대 3번)
+    ↓
+[통과?] 예 → 다음 단계로 전달
+```
+
+### 단계별 에러 처리
+
 ### 단계별 에러 처리
 
 #### 1단계: Plan (계획) 에러
@@ -914,6 +1348,87 @@ WORK_IN_PROGRESS.md 업데이트 (자동):
 ---
 
 ### 롤백 프로세스
+
+#### 롤백 시 상태 복구 메커니즘
+
+##### 상태 스냅샷 저장
+```markdown
+## 상태 스냅샷 저장 규칙
+
+### Gate 통과 시 스냅샷 저장
+각 Gate 통과 시 WORK_IN_PROGRESS.md에 상태 스냅샷 자동 저장:
+
+```markdown
+#### 📸 상태 스냅샷
+[Gate-1 통과 시점: 2025-02-07 15:30]
+- 완료 단계: Plan ✅
+- Gate 상태: Gate-1 통과 ✅
+- 다음 단계: Design
+- 진척도: 10%
+```
+
+### Gate 진입 전 상태 백업
+Gate 진입 전 현재 상태를 백업 섹션에 저장:
+
+```markdown
+#### 💾 Gate 진입 전 백업
+[Gate-1 진입 전: 2025-02-07 15:00]
+- 완료 단계: (이전 상태)
+- 계획 요약: (이전 계획)
+- 진척도: (이전 진척도)
+```
+```
+
+##### 롤백 시 상태 복구
+```markdown
+## 롤백 시 상태 복구 절차
+
+### 1. 백업 확인
+```
+1. WORK_IN_PROGRESS.md에서 Gate 진입 전 백업 섹션 확인
+2. 스냅샷 섹션 확인
+3. 롤백 대상 단계 확인
+```
+
+### 2. 상태 복구 수행
+```
+1. Gate 실패 원인 분석
+2. 백업 상태 확인
+3. 스냅샷 상태로 복구
+   - 완료 단계 롤백
+   - Gate 상태 초기화
+   - 진척도 조정
+4. WORK_IN_PROGRESS.md 업데이트
+```
+
+### 3. 복구 완료 확인
+```
+1. WORK_IN_PROGRESS.md 상태 확인
+2. 다음 단계 에이전트에게 알림
+3. 진행 계속
+```
+
+### 상태 복구 예시
+```
+Gate-2 실패 (3번 시도 후) → Design 단계로 롤백
+
+1. 백업 확인:
+   - [Gate-1 진입 전 백업: 2025-02-07 15:00]
+     - 완료 단계: (없음)
+     - 계획 요약: CSV 기능 추가
+     - 진척도: 0%
+
+2. 상태 복구:
+   - 완료 단계: Plan ✅
+   - Gate 상태: Gate-1 통과 ✅, Gate-2 실패 ❌
+   - 진척도: 10% → 10% (유지)
+
+3. WORK_IN_PROGRESS.md 업데이트:
+   - Gate-2 상태: 실패
+   - 완료 단계: Plan만 체크
+   - 다음 작업: @analyst → 계획 재검토
+```
+```
 
 #### 시나리오 1: 단계 실패 후 재시도
 
