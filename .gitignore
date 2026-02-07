@@ -46,6 +46,3 @@ ExternalTestData/*.txt
 *.log
 settings.json
 *.zip
-
-# WIP Files
-.wips/
