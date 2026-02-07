@@ -31,6 +31,7 @@ ExcelBinder 프로젝트의 코드를 작성하고 수정하는 개발자
 - PROJECT_SUMMARY.md
 - .guides/CODE_STYLE.md
 - .guides/TECHNICAL_RULES.md
+- .wips/templates/WIP-Code-YYYYMMDD-NN.md (템플릿 파일 - 읽기 전용)
 
 ## Workflow
 
@@ -41,7 +42,11 @@ ExcelBinder 프로젝트의 코드를 작성하고 수정하는 개발자
 - 지시 문서 또는 구체적 설명 확인
 
 #### 0.2. 독립 WIP 생성
-- `.wips/WIP-Code-YYYYMMDD-NN.md` 파일 생성
+- 템플릿 파일 읽기: `.wips/templates/WIP-Code-YYYYMMDD-NN.md`
+- WorkID 확인 (이미 @analyst가 생성)
+- 독립 WIP 작성: `.wips/active/Code/WIP-Code-YYYYMMDD-NN.md`
+   - 템플릿 내용 복사
+   - WorkID, 코드 구현 내용 등 필수 항목 작성
 - 지시 내용 기반으로 WIP 기본 정보 작성:
   - WorkID (지시자가 제공)
   - 스테이지: Code
@@ -70,7 +75,7 @@ ExcelBinder 프로젝트의 코드를 작성하고 수정하는 개발자
   - WORK_IN_PROGRESS.md에 다음 내용 업데이트:
     - WorkID 등록
     - Code 단계 상태: 준비
-    - 독립 WIP 링크 추가: `.wips/WIP-Code-YYYYMMDD-NN.md`
+    - 독립 WIP 링크 추가: `.wips/active/Code/WIP-Code-YYYYMMDD-NN.md`
     - 지시 내용 요약 기록
   - 전체 WIP 기록 완료 후 에이전트에게 작업 시작 지시 전달
 
@@ -258,6 +263,21 @@ ExcelBinder 프로젝트의 코드를 작성하고 수정하는 개발자
 - 빌드 결과 확인
 - 아키텍처 설계 준수 확인
 - 다음 단계 (QA 단계) 준비 완료
+
+---
+
+### 최종 작업
+
+**완료 시:**
+- 독립 WIP 완료 상태로 업데이트
+- 독립 WIP 파일을 `.wips/archive/Code/` 폴더로 이동
+- 지시자(코디네이터/사용자)에게 완료 보고
+
+**취소 시:**
+- 취소 사유 기록
+- 독립 WIP 취소 상태로 업데이트
+- 독립 WIP 파일을 `.wips/archive/Code/` 폴더로 이동
+- 지시자(코디네이터/사용자)에게 취소 보고
 
 ---
 

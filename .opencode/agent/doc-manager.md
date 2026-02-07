@@ -33,6 +33,7 @@ WORK_IN_PROGRESS.md를 관리하고 보고서를 생성하는 문서 관리자
 - WORKFLOW_PLANNING.md
 - QUICK_REFERENCE.md
 - .guides/CODE_STYLE.md (XML 주석 가이드)
+- .wips/templates/WIP-Docs-YYYYMMDD-NN.md (템플릿 파일 - 읽기 전용)
 
 ## Workflow (Docs 단계 - 3단계 프로세스)
 
@@ -160,6 +161,23 @@ WORK_IN_PROGRESS.md를 관리하고 보고서를 생성하는 문서 관리자
       - Gate-5 통과 기록 추가
       - 진행 상황 업데이트 (70% → 80%)
 - **@coordinator에게 보고**: "Docs 단계 완료, Gate-5 통과, API 문서 X개 생성"
+
+---
+
+### 최종 작업
+
+**완료 시:**
+- 독립 WIP 완료 상태로 업데이트
+- 독립 WIP 파일을 `.wips/archive/Docs/` 폴더로 이동
+- 지시자(코디네이터/사용자)에게 완료 보고
+
+**취소 시:**
+- 취소 사유 기록
+- 독립 WIP 취소 상태로 업데이트
+- 독립 WIP 파일을 `.wips/archive/Docs/` 폴더로 이동
+- 지시자(코디네이터/사용자)에게 취소 보고
+
+---
 
 ## Examples
 

@@ -30,6 +30,7 @@
 - AGENTS.md
 - .guides/CODE_STYLE.md
 - .guides/TECHNICAL_RULES.md
+- .wips/templates/WIP-QA-YYYYMMDD-NN.md (템플릿 파일 - 읽기 전용)
 
 ## Workflow
 
@@ -256,6 +257,21 @@
 - WORK_IN_PROGRESS.md에서 QA 단계 완료 체크박스 체크
 - QA 단계 상세 내용 기록
 - 다음 단계 (@coordinator)로 전달
+
+---
+
+### 최종 작업
+
+**완료 시:**
+- 독립 WIP 완료 상태로 업데이트
+- 독립 WIP 파일을 `.wips/archive/QA/` 폴더로 이동
+- 지시자(코디네이터/사용자)에게 완료 보고
+
+**취소 시:**
+- 취소 사유 기록
+- 독립 WIP 취소 상태로 업데이트
+- 독립 WIP 파일을 `.wips/archive/QA/` 폴더로 이동
+- 지시자(코디네이터/사용자)에게 취소 보고
 
 ---
 

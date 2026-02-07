@@ -30,6 +30,7 @@
 - PROJECT_SUMMARY.md
 - WORKFLOW_PLANNING.md
 - .guides/PLANNING_TEMPLATE.md
+- .wips/templates/WIP-Plan-YYYYMMDD-NN.md (템플릿 파일 - 읽기 전용)
 
 ## Workflow
 
@@ -40,7 +41,11 @@
 - 지시 문서 또는 구체적 설명 확인
 
 #### 0.2. 독립 WIP 생성
-- `.wips/active/Plan/WIP-Plan-YYYYMMDD-NN.md` 파일 생성
+- 템플릿 파일 읽기: `.wips/templates/WIP-Plan-YYYYMMDD-NN.md`
+- WorkID 생성 (예: WIP-20250208-001)
+- 독립 WIP 작성: `.wips/active/Plan/WIP-Plan-YYYYMMDD-NN.md`
+   - 템플릿 내용 복사
+   - WorkID, 날짜, 지시 정보 등 필수 항목 작성
 - 지시 내용 기반으로 WIP 기본 정보 작성:
   - WorkID (지시자가 제공)
   - 스테이지: Plan
@@ -69,7 +74,7 @@
   - WORK_IN_PROGRESS.md에 다음 내용 업데이트:
     - WorkID 등록
     - Plan 단계 상태: 준비
-    - 독립 WIP 링크 추가: `.wips/WIP-Plan-YYYYMMDD-NN.md`
+    - 독립 WIP 링크 추가: `.wips/active/Plan/WIP-Plan-YYYYMMDD-NN.md`
     - 지시 내용 요약 기록
   - 전체 WIP 기록 완료 후 에이전트에게 작업 시작 지시 전달
 

@@ -33,6 +33,7 @@
 - .guides/BUILD_GUIDE.md
 - .guides/CODE_STYLE.md
 - .guides/TEST_GUIDE.md
+- .wips/templates/WIP-Test-YYYYMMDD-NN.md (템플릿 파일 - 읽기 전용)
 
 ## Workflow
 
@@ -250,6 +251,21 @@
 - WORK_IN_PROGRESS.md에서 테스트 결과 확인
 - 버그 리포트 확인
 - 다음 단계 (Docs 단계) 준비 완료
+
+---
+
+### 최종 작업
+
+**완료 시:**
+- 독립 WIP 완료 상태로 업데이트
+- 독립 WIP 파일을 `.wips/archive/Test/` 폴더로 이동
+- 지시자(코디네이터/사용자)에게 완료 보고
+
+**취소 시:**
+- 취소 사유 기록
+- 독립 WIP 취소 상태로 업데이트
+- 독립 WIP 파일을 `.wips/archive/Test/` 폴더로 이동
+- 지시자(코디네이터/사용자)에게 취소 보고
 
 ---
 
