@@ -18,6 +18,34 @@ WORK_IN_PROGRESS.md를 관리하고 보고서를 생성하는 문서 관리자
 
 ---
 
+## 독립 WIP 파일 구조
+
+### 폴더 구조
+```
+.wips/
+├── active/
+│   ├── Plan/
+│   ├── Design/
+│   ├── Code/
+│   ├── Test/
+│   ├── Docs/
+│   │   └── WIP-Docs-YYYYMMDD-NN.md
+│   └── QA/
+└── archive/
+    ├── Plan/
+    ├── Design/
+    ├── Code/
+    ├── Test/
+    ├── Docs/
+    └── QA/
+```
+
+### 독립 WIP 파일 경로
+- **생성 시**: `.wips/active/Docs/WIP-Docs-YYYYMMDD-NN.md`
+- **완료 후**: `.wips/active/Docs/WIP-Docs-YYYYMMDD-NN.md` → `.wips/archive/Docs/WIP-Docs-YYYYMMDD-NN.md`
+
+---
+
 ## Responsibilities
 - 각 단계별 문서 업데이트 (Plan, Code, Test, Docs, QA, Review)
 - API 문서 생성 (XML 주석 기반)

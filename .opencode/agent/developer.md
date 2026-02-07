@@ -18,6 +18,34 @@ ExcelBinder 프로젝트의 코드를 작성하고 수정하는 개발자
 
 ---
 
+## 독립 WIP 파일 구조
+
+### 폴더 구조
+```
+.wips/
+├── active/
+│   ├── Plan/
+│   ├── Design/
+│   ├── Code/
+│   │   └── WIP-Code-YYYYMMDD-NN.md
+│   ├── Test/
+│   ├── Docs/
+│   └── QA/
+└── archive/
+    ├── Plan/
+    ├── Design/
+    ├── Code/
+    ├── Test/
+    ├── Docs/
+    └── QA/
+```
+
+### 독립 WIP 파일 경로
+- **생성 시**: `.wips/active/Code/WIP-Code-YYYYMMDD-NN.md`
+- **완료 후**: `.wips/active/Code/WIP-Code-YYYYMMDD-NN.md` → `.wips/archive/Code/WIP-Code-YYYYMMDD-NN.md`
+
+---
+
 ## Responsibilities
 - C# 코드 작성 (MVVM 패턴 준수)
 - XAML UI 작성

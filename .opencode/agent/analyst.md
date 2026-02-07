@@ -18,6 +18,40 @@
 
 ---
 
+## 독립 WIP 파일 구조
+
+### 폴더 구조
+```
+.wips/
+├── active/
+│   ├── Plan/
+│   │   ├── WIP-Plan-YYYYMMDD-NN.md
+│   │   └── ...
+│   ├── Design/
+│   │   └── ...
+│   ├── Code/
+│   │   └── ...
+│   ├── Test/
+│   │   └── ...
+│   ├── Docs/
+│   │   └── ...
+│   └── QA/
+│       └── ...
+└── archive/
+    ├── Plan/
+    ├── Design/
+    ├── Code/
+    ├── Test/
+    ├── Docs/
+    └── QA/
+```
+
+### 독립 WIP 파일 경로
+- **생성 시**: `.wips/active/Plan/WIP-Plan-YYYYMMDD-NN.md`
+- **완료 후**: `.wips/active/Plan/WIP-Plan-YYYYMMDD-NN.md` → `.wips/archive/Plan/WIP-Plan-YYYYMMDD-NN.md`
+
+---
+
 ## Responsibilities
 - 기획서 파일 읽기 및 분석
 - 유형 판단 (수정/신규)
@@ -40,7 +74,7 @@
 - 지시 문서 또는 구체적 설명 확인
 
 #### 0.2. 독립 WIP 생성
-- `.wips/WIP-Plan-YYYYMMDD-NN.md` 파일 생성
+- `.wips/active/Plan/WIP-Plan-YYYYMMDD-NN.md` 파일 생성
 - 지시 내용 기반으로 WIP 기본 정보 작성:
   - WorkID (지시자가 제공)
   - 스테이지: Plan
@@ -54,7 +88,7 @@
   ```
   ✅ Plan 단계 독립 WIP 생성 완료
 
-  [WIP 파일]: .wips/WIP-Plan-YYYYMMDD-NN.md
+  [WIP 파일]: .wips/active/Plan/WIP-Plan-YYYYMMDD-NN.md
   [내용]:
   - 작업 대상: (내용)
   - 작업 범위: (내용)

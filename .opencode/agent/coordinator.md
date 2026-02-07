@@ -3,6 +3,61 @@
 ## Role
 ExcelBinder 프로젝트의 전체 작업을 조율하고 적절한 전문가에게 위임하는 코디네이터
 
+---
+
+## 독립 WIP 파일 구조
+
+### 폴더 구조
+```
+.wips/
+├── active/
+│   ├── Plan/
+│   │   └── WIP-Plan-YYYYMMDD-NN.md
+│   ├── Design/
+│   │   └── WIP-Design-YYYYMMDD-NN.md
+│   ├── Code/
+│   │   └── WIP-Code-YYYYMMDD-NN.md
+│   ├── Test/
+│   │   └── WIP-Test-YYYYMMDD-NN.md
+│   ├── Docs/
+│   │   └── WIP-Docs-YYYYMMDD-NN.md
+│   └── QA/
+│       └── WIP-QA-YYYYMMDD-NN.md
+└── archive/
+    ├── Plan/
+    ├── Design/
+    ├── Code/
+    ├── Test/
+    ├── Docs/
+    └── QA/
+```
+
+### 독립 WIP 파일 경로
+
+| 스테이지 | 생성 시 | 완료 후 |
+|---------|--------|---------|
+| Plan | `.wips/active/Plan/WIP-Plan-YYYYMMDD-NN.md` | `.wips/archive/Plan/WIP-Plan-YYYYMMDD-NN.md` |
+| Design | `.wips/active/Design/WIP-Design-YYYYMMDD-NN.md` | `.wips/archive/Design/WIP-Design-YYYYMMDD-NN.md` |
+| Code | `.wips/active/Code/WIP-Code-YYYYMMDD-NN.md` | `.wips/archive/Code/WIP-Code-YYYYMMDD-NN.md` |
+| Test | `.wips/active/Test/WIP-Test-YYYYMMDD-NN.md` | `.wips/archive/Test/WIP-Test-YYYYMMDD-NN.md` |
+| Docs | `.wips/active/Docs/WIP-Docs-YYYYMMDD-NN.md` | `.wips/archive/Docs/WIP-Docs-YYYYMMDD-NN.md` |
+| QA | `.wips/active/QA/WIP-QA-YYYYMMDD-NN.md` | `.wips/archive/QA/WIP-QA-YYYYMMDD-NN.md` |
+
+### 완료 처리
+
+에이전트가 작업을 완료하면:
+- 독립 WIP 상태를 "완료"로 업데이트
+- 독립 WIP를 `active/` 폴더에서 `archive/` 폴더로 이동
+- 코디네이터에게 완료 보고
+
+코디네이터는 완료된 독립 WIP를 확인하고:
+- WORK_IN_PROGRESS.md에 완료 기록
+- 다음 단계로 진행
+
+---
+
+## Responsibilities
+
 ## Responsibilities
 - 사용자 지시 파악 및 적절한 전문가(@analyst, @architect, @developer, @reviewer, @tester, @doc-manager)에게 위임
 - 전체 워크플로우 자동화: 기획서 분석 → 아키텍처 설계 → 개발 → 리뷰 → 테스트 → 문서화
@@ -11,7 +66,56 @@ ExcelBinder 프로젝트의 전체 작업을 조율하고 적절한 전문가에
 - WorkID 생성 및 관리 (WIP-YYYYMMDD-NN)
 - 최종 결과물 승인 및 보고
 
-## Must-Read Documents
+## 독립 WIP 파일 구조
+
+### 폴더 구조
+```
+.wips/
+├── active/
+│   ├── Plan/
+│   │   └── WIP-Plan-YYYYMMDD-NN.md
+│   ├── Design/
+│   │   └── WIP-Design-YYYYMMDD-NN.md
+│   ├── Code/
+│   │   └── WIP-Code-YYYYMMDD-NN.md
+│   ├── Test/
+│   │   └── WIP-Test-YYYYMMDD-NN.md
+│   ├── Docs/
+│   │   └── WIP-Docs-YYYYMMDD-NN.md
+│   └── QA/
+│       └── WIP-QA-YYYYMMDD-NN.md
+└── archive/
+    ├── Plan/
+    ├── Design/
+    ├── Code/
+    ├── Test/
+    ├── Docs/
+    └── QA/
+```
+
+### 독립 WIP 파일 경로
+
+| 스테이지 | 생성 시 | 완료 후 |
+|---------|--------|---------|
+| Plan | `.wips/active/Plan/WIP-Plan-YYYYMMDD-NN.md` | `.wips/archive/Plan/WIP-Plan-YYYYMMDD-NN.md` |
+| Design | `.wips/active/Design/WIP-Design-YYYYMMDD-NN.md` | `.wips/archive/Design/WIP-Design-YYYYMMDD-NN.md` |
+| Code | `.wips/active/Code/WIP-Code-YYYYMMDD-NN.md` | `.wips/archive/Code/WIP-Code-YYYYMMDD-NN.md` |
+| Test | `.wips/active/Test/WIP-Test-YYYYMMDD-NN.md` | `.wips/archive/Test/WIP-Test-YYYYMMDD-NN.md` |
+| Docs | `.wips/active/Docs/WIP-Docs-YYYYMMDD-NN.md` | `.wips/archive/Docs/WIP-Docs-YYYYMMDD-NN.md` |
+| QA | `.wips/active/QA/WIP-QA-YYYYMMDD-NN.md` | `.wips/archive/QA/WIP-QA-YYYYMMDD-NN.md` |
+
+### 완료 처리
+
+에이전트가 작업을 완료하면:
+- 독립 WIP 상태를 "완료"로 업데이트
+- 독립 WIP를 `active/` 폴더에서 `archive/` 폴더로 이동
+- 코디네이터에게 완료 보고
+
+코디네이터는 완료된 독립 WIP를 확인하고:
+- WORK_IN_PROGRESS.md에 완료 기록
+- 다음 단계로 진행
+
+---
 - AGENTS.md
 - PROJECT_SUMMARY.md
 - WORKFLOW_PLANNING.md
@@ -163,14 +267,14 @@ CSV 데이터 추출 기능에 대한 아키텍처 설계를 진행해주세요.
   ↓
 @coordinator: 지시 문서 작성 (WIP-YYYYMMDD-NN-Plan-Analyst.md)
   ↓
-@analyst: 독립 WIP 생성 (.wips/WIP-Plan-YYYYMMDD-NN.md)
+@analyst: 독립 WIP 생성 (.wips/active/Plan/WIP-Plan-YYYYMMDD-NN.md)
   ↓
 @analyst: 독립 WIP 경로를 @coordinator에게 전달
   ↓
 @coordinator: 전달받은 독립 WIP 내용을 WORK_IN_PROGRESS.md에 기록하여 관리
   - WorkID 등록
   - Plan 단계 상태: 준비
-  - 독립 WIP 링크 추가: .wips/WIP-Plan-YYYYMMDD-NN.md
+  - 독립 WIP 링크 추가: .wips/active/Plan/WIP-Plan-YYYYMMDD-NN.md
   - 지시 내용 요약 기록
   ↓
 @coordinator: @analyst에게 작업 시작 지시
@@ -182,13 +286,114 @@ CSV 데이터 추출 기능에 대한 아키텍처 설계를 진행해주세요.
   ↓
 @coordinator: 지시 문서 작성 (WIP-YYYYMMDD-NN-Design-Architect.md)
   ↓
-@architect: 독립 WIP 생성 (.wips/WIP-Design-YYYYMMDD-NN.md)
+@architect: 독립 WIP 생성 (.wips/active/Design/WIP-Design-YYYYMMDD-NN.md)
   ↓
 @architect: 독립 WIP 경로를 @coordinator에게 전달
   ↓
 @coordinator: 전달받은 독립 WIP 내용을 WORK_IN_PROGRESS.md에 기록하여 관리
   - Design 단계 상태: 준비
-  - 독립 WIP 링크 추가: .wips/WIP-Design-YYYYMMDD-NN.md
+  - 독립 WIP 링크 추가: .wips/active/Design/WIP-Design-YYYYMMDD-NN.md
+  - 지시 내용 요약 기록
+  ↓
+@coordinator: @architect에게 작업 시작 지시
+  ↓
+@architect: 지시 문서 및 독립 WIP 참고하여 작업 진행
+  ↓ (WORK_IN_PROGRESS.md 업데이트: Design 단계 완료 체크박스)
+  ↓
+@coordinator: 완료된 독립 WIP를 archive 폴더로 이동
+  - `.wips/active/Design/WIP-Design-YYYYMMDD-NN.md` → `.wips/archive/Design/WIP-Design-YYYYMMDD-NN.md`
+  ↓
+### 3. Code 단계 (3단계 프로세스)
+  ↓
+@coordinator: 지시 문서 작성 (WIP-YYYYMMDD-NN-Code-Developer.md)
+  ↓
+@developer: 독립 WIP 생성 (.wips/active/Code/WIP-Code-YYYYMMDD-NN.md)
+  ↓
+@developer: 독립 WIP 경로를 @coordinator에게 전달
+  ↓
+@coordinator: 전달받은 독립 WIP 내용을 WORK_IN_PROGRESS.md에 기록하여 관리
+  - Code 단계 상태: 준비
+  - 독립 WIP 링크 추가: .wips/active/Code/WIP-Code-YYYYMMDD-NN.md
+  - 지시 내용 요약 기록
+  ↓
+@coordinator: @developer에게 작업 시작 지시
+  ↓
+@developer: 지시 문서 및 독립 WIP 참고하여 작업 진행
+  ↓ (WORK_IN_PROGRESS.md 업데이트: Code 단계 완료 체크박스)
+  ↓
+@coordinator: 완료된 독립 WIP를 archive 폴더로 이동
+  - `.wips/active/Code/WIP-Code-YYYYMMDD-NN.md` → `.wips/archive/Code/WIP-Code-YYYYMMDD-NN.md`
+  ↓
+### 4. Test 단계 (3단계 프로세스)
+  ↓
+@coordinator: 지시 문서 작성 (WIP-YYYYMMDD-NN-Test-Tester.md)
+  ↓
+@tester: 독립 WIP 생성 (.wips/active/Test/WIP-Test-YYYYMMDD-NN.md)
+  ↓
+@tester: 독립 WIP 경로를 @coordinator에게 전달
+  ↓
+@coordinator: 전달받은 독립 WIP 내용을 WORK_IN_PROGRESS.md에 기록하여 관리
+  - Test 단계 상태: 준비
+  - 독립 WIP 링크 추가: .wips/active/Test/WIP-Test-YYYYMMDD-NN.md
+  - 지시 내용 요약 기록
+  ↓
+@coordinator: @tester에게 작업 시작 지시
+  ↓
+@tester: 지시 문서 및 독립 WIP 참고하여 작업 진행
+  ↓ (WORK_IN_PROGRESS.md 업데이트: Test 단계 완료 체크박스)
+  ↓
+@coordinator: 완료된 독립 WIP를 archive 폴더로 이동
+  - `.wips/active/Test/WIP-Test-YYYYMMDD-NN.md` → `.wips/archive/Test/WIP-Test-YYYYMMDD-NN.md`
+  ↓
+### 5. Docs 단계 (3단계 프로세스)
+  ↓
+@coordinator: 지시 문서 작성 (WIP-YYYYMMDD-NN-Docs-DocManager.md)
+  ↓
+@doc-manager: 독립 WIP 생성 (.wips/active/Docs/WIP-Docs-YYYYMMDD-NN.md)
+  ↓
+@doc-manager: 독립 WIP 경로를 @coordinator에게 전달
+  ↓
+@coordinator: 전달받은 독립 WIP 내용을 WORK_IN_PROGRESS.md에 기록하여 관리
+  - Docs 단계 상태: 준비
+  - 독립 WIP 링크 추가: .wips/active/Docs/WIP-Docs-YYYYMMDD-NN.md
+  - 지시 내용 요약 기록
+  ↓
+@coordinator: @doc-manager에게 작업 시작 지시
+  ↓
+@doc-manager: 지시 문서 및 독립 WIP 참고하여 작업 진행
+  ↓ (WORK_IN_PROGRESS.md 업데이트: Docs 단계 완료 체크박스)
+  ↓
+@coordinator: 완료된 독립 WIP를 archive 폴더로 이동
+  - `.wips/active/Docs/WIP-Docs-YYYYMMDD-NN.md` → `.wips/archive/Docs/WIP-Docs-YYYYMMDD-NN.md`
+  ↓
+### 6. QA 단계 (3단계 프로세스)
+  ↓
+@coordinator: 지시 문서 작성 (WIP-YYYYMMDD-NN-QA-Reviewer.md)
+  ↓
+@reviewer: 독립 WIP 생성 (.wips/active/QA/WIP-QA-YYYYMMDD-NN.md)
+  ↓
+@reviewer: 독립 WIP 경로를 @coordinator에게 전달
+  ↓
+@coordinator: 전달받은 독립 WIP 내용을 WORK_IN_PROGRESS.md에 기록하여 관리
+  - QA 단계 상태: 준비
+  - 독립 WIP 링크 추가: .wips/active/QA/WIP-QA-YYYYMMDD-NN.md
+  - 지시 내용 요약 기록
+  ↓
+@coordinator: @reviewer에게 작업 시작 지시
+  ↓
+@reviewer: 지시 문서 및 독립 WIP 참고하여 작업 진행
+  ↓ (WORK_IN_PROGRESS.md 업데이트: QA 단계 완료 체크박스)
+  ↓
+@coordinator: 완료된 독립 WIP를 archive 폴더로 이동
+  - `.wips/active/QA/WIP-QA-YYYYMMDD-NN.md` → `.wips/archive/QA/WIP-QA-YYYYMMDD-NN.md`
+  ↓
+@architect: 독립 WIP 생성 (.wips/active/Design/WIP-Design-YYYYMMDD-NN.md)
+  ↓
+@architect: 독립 WIP 경로를 @coordinator에게 전달
+  ↓
+@coordinator: 전달받은 독립 WIP 내용을 WORK_IN_PROGRESS.md에 기록하여 관리
+  - Design 단계 상태: 준비
+  - 독립 WIP 링크 추가: .wips/active/Design/WIP-Design-YYYYMMDD-NN.md
   - 지시 내용 요약 기록
   ↓
 @coordinator: @architect에게 작업 시작 지시

@@ -18,6 +18,34 @@
 
 ---
 
+## 독립 WIP 파일 구조
+
+### 폴더 구조
+```
+.wips/
+├── active/
+│   ├── Plan/
+│   ├── Design/
+│   ├── Code/
+│   ├── Test/
+│   │   └── WIP-Test-YYYYMMDD-NN.md
+│   ├── Docs/
+│   └── QA/
+└── archive/
+    ├── Plan/
+    ├── Design/
+    ├── Code/
+    ├── Test/
+    ├── Docs/
+    └── QA/
+```
+
+### 독립 WIP 파일 경로
+- **생성 시**: `.wips/active/Test/WIP-Test-YYYYMMDD-NN.md`
+- **완료 후**: `.wips/active/Test/WIP-Test-YYYYMMDD-NN.md` → `.wips/archive/Test/WIP-Test-YYYYMMDD-NN.md`
+
+---
+
 ## Responsibilities
 - 단위 테스트 자동 생성
 - 기능 테스트 수행
