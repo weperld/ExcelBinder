@@ -1,14 +1,6 @@
-﻿using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows;
 
+using ExcelBinder.Services;
 using ExcelBinder.ViewModels;
 using ExcelBinder.Views;
 
@@ -17,16 +9,21 @@ namespace ExcelBinder;
 /// <summary>
 /// Interaction logic for MainWindow.xaml
 /// </summary>
-public partial class MainWindow : Window
+public partial class MainWindow : Window, INavigationService
 {
     private MainViewModel _viewModel;
 
     public MainWindow()
     {
         InitializeComponent();
+
+        // Register services before creating ViewModel
+        AppServices.Navigation = this;
+        AppServices.Dialog = new DialogService();
+
         _viewModel = new MainViewModel();
         DataContext = _viewModel;
-        
+
         // Initial Navigation
         NavigateToDashboard();
     }
@@ -41,13 +38,13 @@ public partial class MainWindow : Window
         MainFrame.Navigate(new ExecutionView { DataContext = _viewModel });
     }
 
-    public void NavigateToFeatureBuilder(FeatureBuilderViewModel builderViewModel)
+    public void NavigateToFeatureBuilder(object viewModel)
     {
-        MainFrame.Navigate(new FeatureBuilderView { DataContext = builderViewModel });
+        MainFrame.Navigate(new FeatureBuilderView { DataContext = viewModel });
     }
 
-    public void NavigateToSchemaEditor(SchemaEditorViewModel editorViewModel)
+    public void NavigateToSchemaEditor(object viewModel)
     {
-        MainFrame.Navigate(new SchemaEditorView { DataContext = editorViewModel });
+        MainFrame.Navigate(new SchemaEditorView { DataContext = viewModel });
     }
 }

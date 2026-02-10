@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -72,7 +73,7 @@ namespace ExcelBinder.ViewModels
                 foreach (var file in files)
                 {
                     var fileItem = new FileItemViewModel { FileName = Path.GetFileName(file), FullPath = file };
-                    
+
                     try
                     {
                         var sheetNames = _excelService.GetSheetNames(file);
@@ -85,9 +86,9 @@ namespace ExcelBinder.ViewModels
                             bool found = File.Exists(schemaFile);
                             bool canSelect = IsSheetSelectable(found);
 
-                            fileItem.Sheets.Add(new SheetItemViewModel 
-                            { 
-                                SheetName = sheetName, 
+                            fileItem.Sheets.Add(new SheetItemViewModel
+                            {
+                                SheetName = sheetName,
                                 IsSchemaFound = found,
                                 SchemaPath = found ? schemaFile : ProjectConstants.Defaults.NotFound,
                                 CanBeSelected = canSelect,
@@ -95,7 +96,7 @@ namespace ExcelBinder.ViewModels
                             });
                         }
                     }
-                    catch { /* Skip error files */ }
+                    catch (Exception ex) { LogService.Instance.Warning($"Error reading sheets from {file}: {ex.Message}"); }
 
                     ExcelFiles.Add(fileItem);
                 }
@@ -110,7 +111,7 @@ namespace ExcelBinder.ViewModels
 
         private void ExecuteSelectAll()
         {
-            foreach (var f in ExcelFiles) 
+            foreach (var f in ExcelFiles)
             {
                 f.IsSelected = true;
                 foreach (var s in f.Sheets) s.IsSelected = true;
@@ -119,7 +120,7 @@ namespace ExcelBinder.ViewModels
 
         private void ExecuteDeselectAll()
         {
-            foreach (var f in ExcelFiles) 
+            foreach (var f in ExcelFiles)
             {
                 f.IsSelected = false;
                 foreach (var s in f.Sheets) s.IsSelected = false;
@@ -128,20 +129,17 @@ namespace ExcelBinder.ViewModels
 
         private void ExecuteNavigateToDashboard()
         {
-            if (System.Windows.Application.Current.MainWindow is ExcelBinder.MainWindow mainWindow)
-            {
-                mainWindow.NavigateToDashboard();
-            }
+            AppServices.Navigation.NavigateToDashboard();
         }
 
         public string GetSchemaPath(string excelFullPath, string sheetName)
         {
             string excelName = Path.GetFileNameWithoutExtension(excelFullPath);
-            
+
             // Try [ExcelName]_[SheetName]_Schema.json
             string path1 = Path.Combine(_feature.SchemaPath, $"{excelName}_{sheetName}_Schema{ProjectConstants.Extensions.Json}");
             if (File.Exists(path1)) return path1;
-            
+
             // Try [ExcelName]_Schema.json
             string path2 = Path.Combine(_feature.SchemaPath, $"{excelName}_Schema{ProjectConstants.Extensions.Json}");
             if (File.Exists(path2)) return path2;
@@ -180,11 +178,7 @@ namespace ExcelBinder.ViewModels
 
         public void ShowLogs()
         {
-            if (System.Windows.Application.Current.MainWindow is ExcelBinder.MainWindow mainWindow)
-            {
-                var logWin = new Views.LogWindow { Owner = mainWindow };
-                logWin.ShowDialog();
-            }
+            AppServices.Dialog.ShowLogWindow();
         }
     }
 }

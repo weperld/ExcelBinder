@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Windows;
 using ExcelBinder.Models;
 using ExcelBinder.ViewModels;
 
@@ -48,9 +47,9 @@ namespace ExcelBinder.Services.Processors
                     vm.RefreshFiles();
                     vm.ShowLogs();
                 }
-                (Application.Current.MainWindow as MainWindow)?.NavigateToExecution();
+                AppServices.Navigation.NavigateToExecution();
             };
-            (Application.Current.MainWindow as MainWindow)?.NavigateToSchemaEditor(editorVm);
+            AppServices.Navigation.NavigateToSchemaEditor(editorVm);
             
             return System.Threading.Tasks.Task.CompletedTask;
         }

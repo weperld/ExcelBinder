@@ -111,7 +111,7 @@ namespace ExcelBinder.ViewModels
             AddDefaultMappingsCommand = new RelayCommand(ExecuteAddDefaultMappings);
             RemoveMappingCommand = new RelayCommand<TypeMappingItem>(item => TypeMappings.Remove(item));
             CancelCommand = new RelayCommand(() => OnComplete?.Invoke());
-            
+
             BrowseExcelPathCommand = new RelayCommand(() => BrowseFolder(p => Feature.ExcelPath = p));
             BrowseSchemaPathCommand = new RelayCommand(() => BrowseFolder(p => Feature.SchemaPath = p));
             BrowseExportPathCommand = new RelayCommand(() => BrowseFolder(p => Feature.ExportPath = p));
@@ -123,7 +123,6 @@ namespace ExcelBinder.ViewModels
         private void ExecuteOpenAIAssistant()
         {
             // We need settings to get API key.
-            // FeatureService can provide it.
             var service = new FeatureService();
             var settings = service.LoadSettings();
 
@@ -132,72 +131,53 @@ namespace ExcelBinder.ViewModels
             if (string.IsNullOrEmpty(apiKey))
             {
                 string provider = settings.AiModel.StartsWith(ProjectConstants.AI.ClaudePrefix) ? ProjectConstants.AI.ClaudeProvider : ProjectConstants.AI.OpenAIProvider;
-                MessageBox.Show($"Settings에서 {provider} API Key를 먼저 설정해 주세요.", "AI Assistant", MessageBoxButton.OK, MessageBoxImage.Warning);
+                AppServices.Dialog.ShowMessage($"Settings에서 {provider} API Key를 먼저 설정해 주세요.", "AI Assistant", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             var aiVm = new AIAssistantViewModel(Feature, settings);
-            var aiWin = new Views.AIAssistantWindow { DataContext = aiVm };
-            aiWin.Owner = Application.Current.Windows.OfType<Window>().FirstOrDefault(w => w.IsActive);
-            
+            Action? closeDialog = null;
+
             aiVm.OnTemplateApplied += template =>
             {
                 // Save template to a file
                 string templatePath = Feature.Templates.DataClass;
                 if (string.IsNullOrEmpty(templatePath))
                 {
-                    var dialog = new Microsoft.Win32.SaveFileDialog
-                    {
-                        Filter = ProjectConstants.Extensions.LiquidFilter,
-                        FileName = $"{Feature.Id}_Template{ProjectConstants.Extensions.Liquid}",
-                        Title = "AI가 생성한 템플릿을 저장할 위치를 선택하세요"
-                    };
-                    if (dialog.ShowDialog() == true)
-                    {
-                        templatePath = dialog.FileName;
-                        Feature.Templates.DataClass = templatePath;
-                    }
-                    else return;
+                    string? savePath = AppServices.Dialog.BrowseSaveFile(
+                        ProjectConstants.Extensions.LiquidFilter,
+                        $"{Feature.Id}_Template{ProjectConstants.Extensions.Liquid}",
+                        "AI가 생성한 템플릿을 저장할 위치를 선택하세요");
+                    if (savePath == null) return;
+                    templatePath = savePath;
+                    Feature.Templates.DataClass = templatePath;
                 }
 
                 try
                 {
                     File.WriteAllText(templatePath, template);
-                    MessageBox.Show(ProjectConstants.UI.MsgTemplateApplied, ProjectConstants.AI.ClaudeProvider.Contains("AI") ? "AI Assistant" : "AI Assistant"); // Keep existing if complex, but let's simplify
-                    aiWin.Close();
+                    AppServices.Dialog.ShowMessage(ProjectConstants.UI.MsgTemplateApplied, "AI Assistant");
+                    closeDialog?.Invoke();
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"템플릿 저장 중 오류가 발생했습니다: {ex.Message}");
+                    AppServices.Dialog.ShowMessage($"템플릿 저장 중 오류가 발생했습니다: {ex.Message}");
                 }
             };
 
-            aiWin.ShowDialog();
+            AppServices.Dialog.ShowAIAssistantDialog(aiVm, close => closeDialog = close);
         }
 
         private void BrowseFolder(Action<string> setter)
         {
-            var dialog = new Microsoft.Win32.OpenFolderDialog
-            {
-                Title = ProjectConstants.UI.TitleSelectFolder
-            };
-            if (dialog.ShowDialog() == true)
-            {
-                setter(dialog.FolderName);
-            }
+            string? path = AppServices.Dialog.BrowseFolder(ProjectConstants.UI.TitleSelectFolder);
+            if (path != null) setter(path);
         }
 
         private void BrowseFile(string filter, Action<string> setter)
         {
-            var dialog = new Microsoft.Win32.OpenFileDialog
-            {
-                Filter = filter,
-                Title = ProjectConstants.UI.TitleSelectFile
-            };
-            if (dialog.ShowDialog() == true)
-            {
-                setter(dialog.FileName);
-            }
+            string? path = AppServices.Dialog.BrowseOpenFile(filter, ProjectConstants.UI.TitleSelectFile);
+            if (path != null) setter(path);
         }
 
         private void ExecuteAddDefaultMappings()
@@ -215,7 +195,7 @@ namespace ExcelBinder.ViewModels
         {
             if (string.IsNullOrWhiteSpace(Feature.Id) || string.IsNullOrWhiteSpace(Feature.Name))
             {
-                MessageBox.Show(ProjectConstants.UI.MsgRequiredIdName, ProjectConstants.UI.TitleWarning, MessageBoxButton.OK, MessageBoxImage.Warning);
+                AppServices.Dialog.ShowMessage(ProjectConstants.UI.MsgRequiredIdName, ProjectConstants.UI.TitleWarning, MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
@@ -224,30 +204,25 @@ namespace ExcelBinder.ViewModels
                 .ToDictionary(m => m.Key, m => m.Value);
 
             string json = JsonConvert.SerializeObject(Feature, Formatting.Indented);
-            
+
             if (string.IsNullOrEmpty(FilePath))
             {
-                var dialog = new Microsoft.Win32.SaveFileDialog
-                {
-                    Filter = ProjectConstants.Extensions.JsonFilter,
-                    FileName = $"{Feature.Id}{ProjectConstants.Extensions.Json}"
-                };
-                if (dialog.ShowDialog() == true)
-                {
-                    FilePath = dialog.FileName;
-                }
-                else return;
+                string? path = AppServices.Dialog.BrowseSaveFile(
+                    ProjectConstants.Extensions.JsonFilter,
+                    $"{Feature.Id}{ProjectConstants.Extensions.Json}");
+                if (path == null) return;
+                FilePath = path;
             }
 
             try
             {
                 File.WriteAllText(FilePath, json);
-                MessageBox.Show(ProjectConstants.UI.MsgFeatureSaved, ProjectConstants.UI.TitleInfo);
+                AppServices.Dialog.ShowMessage(ProjectConstants.UI.MsgFeatureSaved, ProjectConstants.UI.TitleInfo);
                 OnComplete?.Invoke();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"{ProjectConstants.UI.MsgSaveError}{ex.Message}", ProjectConstants.UI.TitleError);
+                AppServices.Dialog.ShowMessage($"{ProjectConstants.UI.MsgSaveError}{ex.Message}", ProjectConstants.UI.TitleError);
             }
         }
     }

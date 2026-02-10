@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using ExcelBinder.Services;
 using ExcelBinder.Models;
 using Newtonsoft.Json;
-using System.Windows;
-using Microsoft.Win32;
 
 namespace ExcelBinder.ViewModels
 {
@@ -33,7 +31,7 @@ namespace ExcelBinder.ViewModels
         public FeatureDefinition? SelectedFeature
         {
             get => _selectedFeature;
-            set 
+            set
             {
                 if (SetProperty(ref _selectedFeature, value))
                 {
@@ -61,15 +59,12 @@ namespace ExcelBinder.ViewModels
         public ICommand EditFeatureCommand { get; }
 
         private readonly FeatureService _featureService = new();
-        private readonly ExcelService _excelService = new();
-        private readonly ExportService _exportService = new();
-        private readonly CodeGeneratorService _codeGenService = new();
 
         public MainViewModel()
         {
             RefreshFeaturesCommand = new RelayCommand(RefreshFeatures);
             SelectFeatureCommand = new RelayCommand<FeatureDefinition>(ExecuteSelectFeature);
-            NavigateToDashboardCommand = new RelayCommand(() => (Application.Current.MainWindow as MainWindow)?.NavigateToDashboard());
+            NavigateToDashboardCommand = new RelayCommand(() => AppServices.Navigation.NavigateToDashboard());
             NavigateToSettingsCommand = new RelayCommand(ExecuteNavigateToSettings);
             SaveSettingsCommand = new RelayCommand<Window>(ExecuteSaveSettings);
             BrowseFeatureDefinitionsPathCommand = new RelayCommand(ExecuteBrowseFeatureDefinitionsPath);
@@ -80,7 +75,7 @@ namespace ExcelBinder.ViewModels
             EditFeatureCommand = new RelayCommand<FeatureDefinition>(ExecuteEditFeature);
 
             _settings = _featureService.LoadSettings();
-            
+
             // Subscribe to settings changes for live preview
             _settings.PropertyChanged += (s, e) => { if (e.PropertyName == nameof(AppSettings.FeatureDefinitionsPath)) RefreshFeatures(); };
             _settings.BoundFeatures.CollectionChanged += (s, e) => RefreshFeatures();
@@ -100,7 +95,7 @@ namespace ExcelBinder.ViewModels
         private void RefreshFeatures()
         {
             Features.Clear();
-            
+
             // Load from directory
             if (Directory.Exists(Settings.FeatureDefinitionsPath))
             {
@@ -136,7 +131,7 @@ namespace ExcelBinder.ViewModels
             try
             {
                 SelectedFeature = feature;
-                
+
                 // Create appropriate Execution ViewModel
                 CurrentExecutionViewModel = feature.Category switch
                 {
@@ -148,7 +143,7 @@ namespace ExcelBinder.ViewModels
                     _ => null
                 };
 
-                (Application.Current.MainWindow as MainWindow)?.NavigateToExecution();
+                AppServices.Navigation.NavigateToExecution();
             }
             catch (Exception ex)
             {
@@ -160,19 +155,15 @@ namespace ExcelBinder.ViewModels
 
         private void ExecuteNavigateToSettings()
         {
-            var settingsWin = new Views.SettingsWindow { DataContext = this };
-            settingsWin.Owner = Application.Current.MainWindow;
-            settingsWin.ApiKeyBox.Password = Settings.OpenAiApiKey;
-            settingsWin.ClaudeApiKeyBox.Password = Settings.ClaudeApiKey;
-            settingsWin.ShowDialog();
+            AppServices.Dialog.ShowSettingsDialog(this, Settings.OpenAiApiKey, Settings.ClaudeApiKey);
         }
 
         private void ExecuteSaveSettings(Window window)
         {
-            if (window is Views.SettingsWindow settingsWin)
+            if (window is IPasswordProvider passwordProvider)
             {
-                Settings.OpenAiApiKey = settingsWin.ApiKeyBox.Password;
-                Settings.ClaudeApiKey = settingsWin.ClaudeApiKeyBox.Password;
+                Settings.OpenAiApiKey = passwordProvider.OpenAiApiKey;
+                Settings.ClaudeApiKey = passwordProvider.ClaudeApiKey;
             }
             _featureService.SaveSettings(Settings);
             RefreshFeatures();
@@ -181,47 +172,28 @@ namespace ExcelBinder.ViewModels
 
         private void ExecuteBrowseFeatureDefinitionsPath()
         {
-            var dialog = new Microsoft.Win32.OpenFolderDialog
+            string? path = AppServices.Dialog.BrowseFolder(ProjectConstants.UI.TitleSelectFolder);
+            if (path != null)
             {
-                Title = ProjectConstants.UI.TitleSelectFolder
-            };
-
-            if (dialog.ShowDialog() == true)
-            {
-                Settings.FeatureDefinitionsPath = dialog.FolderName;
+                Settings.FeatureDefinitionsPath = path;
             }
         }
 
         private void ExecuteBindFeature()
         {
-            var dialog = new Microsoft.Win32.OpenFileDialog
+            string? path = AppServices.Dialog.BrowseOpenFile(ProjectConstants.Extensions.JsonFilter, ProjectConstants.UI.TitleSelectFile);
+            if (path != null && !Settings.BoundFeatures.Contains(path))
             {
-                Filter = ProjectConstants.Extensions.JsonFilter,
-                Title = ProjectConstants.UI.TitleSelectFile
-            };
-
-            if (dialog.ShowDialog() == true)
-            {
-                if (!Settings.BoundFeatures.Contains(dialog.FileName))
-                {
-                    Settings.BoundFeatures.Add(dialog.FileName);
-                }
+                Settings.BoundFeatures.Add(path);
             }
         }
 
         private void ExecuteBindFeatureFolder()
         {
-            var dialog = new Microsoft.Win32.OpenFolderDialog
+            string? path = AppServices.Dialog.BrowseFolder(ProjectConstants.UI.TitleSelectFolder);
+            if (path != null && !Settings.BoundFeatures.Contains(path))
             {
-                Title = ProjectConstants.UI.TitleSelectFolder
-            };
-
-            if (dialog.ShowDialog() == true)
-            {
-                if (!Settings.BoundFeatures.Contains(dialog.FolderName))
-                {
-                    Settings.BoundFeatures.Add(dialog.FolderName);
-                }
+                Settings.BoundFeatures.Add(path);
             }
         }
 
@@ -236,9 +208,9 @@ namespace ExcelBinder.ViewModels
             builderVm.OnComplete += () =>
             {
                 RefreshFeatures();
-                (Application.Current.MainWindow as MainWindow)?.NavigateToDashboard();
+                AppServices.Navigation.NavigateToDashboard();
             };
-            (Application.Current.MainWindow as MainWindow)?.NavigateToFeatureBuilder(builderVm);
+            AppServices.Navigation.NavigateToFeatureBuilder(builderVm);
         }
 
         private void ExecuteEditFeature(FeatureDefinition feature)
@@ -248,18 +220,14 @@ namespace ExcelBinder.ViewModels
             builderVm.OnComplete += () =>
             {
                 RefreshFeatures();
-                (Application.Current.MainWindow as MainWindow)?.NavigateToDashboard();
+                AppServices.Navigation.NavigateToDashboard();
             };
-            (Application.Current.MainWindow as MainWindow)?.NavigateToFeatureBuilder(builderVm);
+            AppServices.Navigation.NavigateToFeatureBuilder(builderVm);
         }
 
         public void ShowLogs()
         {
-            if (Application.Current.MainWindow != null)
-            {
-                var logWin = new Views.LogWindow { Owner = Application.Current.MainWindow };
-                logWin.ShowDialog();
-            }
+            AppServices.Dialog.ShowLogWindow();
         }
     }
 }
