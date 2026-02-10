@@ -51,6 +51,8 @@ namespace ExcelBinder.Models
             set => SetProperty(ref _isJsonChecked, value);
         }
 
+        // TODO: API 키가 settings.json에 평문으로 저장됩니다.
+        // 향후 Windows DPAPI(ProtectedData)를 사용한 암호화 저장으로 전환을 권장합니다.
         [JsonProperty("aiApiKey")]
         public string OpenAiApiKey
         {

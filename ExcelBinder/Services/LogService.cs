@@ -28,7 +28,7 @@ namespace ExcelBinder.Services
 
         public void Clear()
         {
-            App.Current.Dispatcher.Invoke(() => Logs.Clear());
+            App.Current?.Dispatcher?.Invoke(() => Logs.Clear());
         }
 
         public void SaveToFile(string filePath)

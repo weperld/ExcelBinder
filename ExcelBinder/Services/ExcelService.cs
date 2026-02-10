@@ -19,12 +19,19 @@ namespace ExcelBinder.Services
                 ".xls" => new HSSFWorkbook(stream),
                 _ => throw new NotSupportedException("Unsupported excel format")
             };
-            var names = new List<string>();
-            for (int i = 0; i < workbook.NumberOfSheets; i++)
+            try
             {
-                names.Add(workbook.GetSheetName(i));
+                var names = new List<string>();
+                for (int i = 0; i < workbook.NumberOfSheets; i++)
+                {
+                    names.Add(workbook.GetSheetName(i));
+                }
+                return names;
             }
-            return names;
+            finally
+            {
+                (workbook as IDisposable)?.Dispose();
+            }
         }
 
         public IEnumerable<string[]> ReadExcel(string filePath, string sheetName = "")
@@ -37,21 +44,28 @@ namespace ExcelBinder.Services
                 _ => throw new NotSupportedException("Unsupported excel format")
             };
 
-            ISheet sheet = string.IsNullOrEmpty(sheetName) ? workbook.GetSheetAt(0) : workbook.GetSheet(sheetName);
-            if (sheet == null) yield break;
-
-            for (int i = 0; i <= sheet.LastRowNum; i++)
+            try
             {
-                IRow row = sheet.GetRow(i);
-                if (row == null) continue;
+                ISheet sheet = string.IsNullOrEmpty(sheetName) ? workbook.GetSheetAt(0) : workbook.GetSheet(sheetName);
+                if (sheet == null) yield break;
 
-                string[] cellValues = new string[row.LastCellNum];
-                for (int j = 0; j < row.LastCellNum; j++)
+                for (int i = 0; i <= sheet.LastRowNum; i++)
                 {
-                    ICell cell = row.GetCell(j);
-                    cellValues[j] = cell?.ToString() ?? string.Empty;
+                    IRow row = sheet.GetRow(i);
+                    if (row == null) continue;
+
+                    string[] cellValues = new string[row.LastCellNum];
+                    for (int j = 0; j < row.LastCellNum; j++)
+                    {
+                        ICell cell = row.GetCell(j);
+                        cellValues[j] = cell?.ToString() ?? string.Empty;
+                    }
+                    yield return cellValues;
                 }
-                yield return cellValues;
+            }
+            finally
+            {
+                (workbook as IDisposable)?.Dispose();
             }
         }
 
