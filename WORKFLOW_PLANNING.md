@@ -17,77 +17,77 @@
 7. Review (최종검토): 전체 결과물 종합 검토
 ```
 
-### 커스텀 에이전트 워크플로우
+### 개발 워크플로우
 
 #### 방식 1: 자동화 모드 (코디네이터 주도)
 ```
-사용자: "@coordinator CSV 기능 추가"
+사용자: "coordinator CSV 기능 추가"
   ↓
-@coordinator: 작업 시작 → WorkID 생성
+coordinator: 작업 시작 → WorkID 생성
   ↓
-1. Plan: @analyst (기획서 분석 → 유형 판단 → 계획 수립)
+1. Plan: analyst (기획서 분석 → 유형 판단 → 계획 수립)
   ↓
-2. Design: @architect (아키텍처 설계 → 기술적 검증)
+2. Design: architect (아키텍처 설계 → 기술적 검증)
   ↓
-3. Code: @developer (구현 → 빌드 확인)
+3. Code: developer (구현 → 빌드 확인)
   ↓
-4. Test: @tester (단위 테스트 자동 생성 → 기능 테스트 → 빌드 테스트)
+4. Test: tester (단위 테스트 자동 생성 → 기능 테스트 → 빌드 테스트)
   ↓
-5. Docs: @doc-manager (각 단계별 문서 업데이트 → API 문서 생성)
+5. Docs: doc-manager (각 단계별 문서 업데이트 → API 문서 생성)
   ↓
-6. QA: @reviewer (코드 품질, 스타일, 아키텍처 준수 검토)
+6. QA: reviewer (코드 품질, 스타일, 아키텍처 준수 검토)
   ↓
-7. Review: @coordinator (전체 결과물 종합 검토 → 최종 승인)
+7. Review: coordinator (전체 결과물 종합 검토 → 최종 승인)
 ```
 
 #### 방식 2: 수동 모드 (사용자 직접 호출)
 ```
-사용자: "@analyst 이 기획서 분석해줘"
+사용자: "analyst 이 기획서 분석해줘"
   ↓
-1. Plan: @analyst만 실행 → 보고
+1. Plan: analyst만 실행 → 보고
   ↓
-사용자: "@developer 이 계획으로 구현해줘"
+사용자: "developer 이 계획으로 구현해줘"
   ↓
-2. Code: @developer만 실행 → 보고
+2. Code: developer만 실행 → 보고
   ↓
-사용자: "@tester 단위 테스트 자동 생성하고 테스트해줘"
+사용자: "tester 단위 테스트 자동 생성하고 테스트해줘"
   ↓
-3. Test: @tester만 실행 → 보고
+3. Test: tester만 실행 → 보고
   ↓
-사용자: "@doc-manager 각 단계별 문서 업데이트해줘"
+사용자: "doc-manager 각 단계별 문서 업데이트해줘"
   ↓
-4. Docs: @doc-manager만 실행 → 보고
+4. Docs: doc-manager만 실행 → 보고
   ↓
-사용자: "@reviewer 코드 품질 검토해줘"
+사용자: "reviewer 코드 품질 검토해줘"
   ↓
-5. QA: @reviewer만 실행 → 보고
+5. QA: reviewer만 실행 → 보고
   ↓
-사용자: "@coordinator 전체 결과물 종합 검토해줘"
+사용자: "coordinator 전체 결과물 종합 검토해줘"
   ↓
-6. Review: @coordinator만 실행 → 보고
+6. Review: coordinator만 실행 → 보고
 ```
 
 #### 방식 3: 혼합 모드 (부분 자동화)
 ```
-사용자: "@coordinator Plan부터 Code까지만 자동화해줘"
+사용자: "coordinator Plan부터 Code까지만 자동화해줘"
   ↓
-@coordinator: @analyst → @developer까지만 조율
+coordinator: analyst → developer까지만 조율
   ↓
-사용자: "@tester 단위 테스트 자동 생성하고 테스트해줘"
+사용자: "tester 단위 테스트 자동 생성하고 테스트해줘"
   ↓
-3. Test: @tester만 실행 → 보고
+3. Test: tester만 실행 → 보고
   ↓
-사용자: "@doc-manager 각 단계별 문서 업데이트해줘"
+사용자: "doc-manager 각 단계별 문서 업데이트해줘"
   ↓
-4. Docs: @doc-manager만 실행 → 보고
+4. Docs: doc-manager만 실행 → 보고
   ↓
-사용자: "@reviewer 코드 품질 검토해줘"
+사용자: "reviewer 코드 품질 검토해줘"
   ↓
-5. QA: @reviewer만 실행 → 보고
+5. QA: reviewer만 실행 → 보고
   ↓
-사용자: "@coordinator 최종 검토해줘"
+사용자: "coordinator 최종 검토해줘"
   ↓
-6. Review: @coordinator만 실행 → 보고
+6. Review: coordinator만 실행 → 보고
 ```
 
 ---
@@ -151,13 +151,13 @@ Plan  → [Gate-1] → Design  → [Gate-2] → Code    → [Gate-3] → Test   
 
 | 게이트 | 검증 대상 | 자체 더블체크 | 크로스체크 에이전트 | 실패 시 롤백 |
 |--------|----------|---------------|---------------------|--------------|
-| Gate-1 | Plan → Design | @analyst 2회 | @architect 1회 | Plan 재계획 |
-| Gate-2 | Design → Code | @architect 2회 | @developer 1회 | Plan 재계획 |
-| Gate-3 | Code → Test | @developer 2회 | @reviewer 1회 | Design 재설계 |
-| Gate-4 | Test → Docs | @tester 2회 | @developer 1회 | Code 재구현 |
-| Gate-5 | Docs → QA | @doc-manager 2회 | @reviewer 1회 | Test 재수행 |
-| Gate-6 | QA → Review | @reviewer 2회 | @architect 1회 | Code 재구현 |
-| Gate-7 | Review → 완료 | @coordinator 최종 | - | 적절 단계로 롤백 |
+| Gate-1 | Plan → Design | analyst 2회 | architect 1회 | Plan 재계획 |
+| Gate-2 | Design → Code | architect 2회 | developer 1회 | Plan 재계획 |
+| Gate-3 | Code → Test | developer 2회 | reviewer 1회 | Design 재설계 |
+| Gate-4 | Test → Docs | tester 2회 | developer 1회 | Code 재구현 |
+| Gate-5 | Docs → QA | doc-manager 2회 | reviewer 1회 | Test 재수행 |
+| Gate-6 | QA → Review | reviewer 2회 | architect 1회 | Code 재구현 |
+| Gate-7 | Review → 완료 | coordinator 최종 | - | 적절 단계로 롤백 |
 
 #### 게이트 통과 조건
 
@@ -166,9 +166,9 @@ Plan  → [Gate-1] → Design  → [Gate-2] → Code    → [Gate-3] → Test   
 - ✅ 영향 파일 완전성 검증
 - ✅ 위험 요소 식별 완료
 - ✅ 사용자 승인 완료
-- ✅ @analyst 1차 검증
-- ✅ @analyst 2차 검증
-- ✅ @architect 크로스체크
+- ✅ analyst 1차 검증
+- ✅ analyst 2차 검증
+- ✅ architect 크로스체크
 
 **Gate-2 (Design → Code)**
 - ✅ 순환 참조 없음
@@ -179,9 +179,9 @@ Plan  → [Gate-1] → Design  → [Gate-2] → Code    → [Gate-3] → Test   
 - ✅ 데이터 무결성 준수
 - ✅ UI 프리징 방지
 - ✅ 아키텍처 준수
-- ✅ @architect 1차 검증
-- ✅ @architect 2차 검증
-- ✅ @developer 크로스체크
+- ✅ architect 1차 검증
+- ✅ architect 2차 검증
+- ✅ developer 크로스체크
 
 **Gate-3 (Code → Test)**
 - ✅ 빌드 성공 (Exit Code 0)
@@ -190,27 +190,27 @@ Plan  → [Gate-1] → Design  → [Gate-2] → Code    → [Gate-3] → Test   
 - ✅ 참조 에러 0개
 - ✅ 코드 스타일 준수
 - ✅ 기술 규칙 준수
-- ✅ @developer 1차 빌드
-- ✅ @developer 2차 빌드
-- ✅ @reviewer 크로스 빌드
+- ✅ developer 1차 빌드
+- ✅ developer 2차 빌드
+- ✅ reviewer 크로스 빌드
 
 **Gate-4 (Test → Docs)**
 - ✅ 빌드 테스트 통과
 - ✅ 단위 테스트 통과율 100%
 - ✅ 기능 테스트 통과
 - ✅ 버그 0개 (또는 문서화된 버그만 존재)
-- ✅ @tester 1차 테스트
-- ✅ @tester 2차 테스트
-- ✅ @developer 재테스트
+- ✅ tester 1차 테스트
+- ✅ tester 2차 테스트
+- ✅ developer 재테스트
 
 **Gate-5 (Docs → QA)**
 - ✅ XML 주석 완비 (public API)
 - ✅ API 문서 생성 완료
 - ✅ 사용자 가이드 완성
 - ✅ 변경 로그 작성
-- ✅ @doc-manager 1차 검증
-- ✅ @doc-manager 2차 검증
-- ✅ @reviewer 크로스체크
+- ✅ doc-manager 1차 검증
+- ✅ doc-manager 2차 검증
+- ✅ reviewer 크로스체크
 
 **Gate-6 (QA → Review)**
 - ✅ 코드 스타일 완벽 준수
@@ -218,15 +218,15 @@ Plan  → [Gate-1] → Design  → [Gate-2] → Code    → [Gate-3] → Test   
 - ✅ 잠재적 버그 0개
 - ✅ 성능 기준 충족
 - ✅ 보안 취약점 0개
-- ✅ @reviewer 1차 리뷰
-- ✅ @reviewer 2차 리뷰
-- ✅ @architect 크로스 리뷰
+- ✅ reviewer 1차 리뷰
+- ✅ reviewer 2차 리뷰
+- ✅ architect 크로스 리뷰
 
 **Gate-7 (Review → 완료)**
 - ✅ 모든 게이트 통과
 - ✅ 모든 체크박스 완료
 - ✅ 사용자 승인
-- ✅ @coordinator 최종 검증
+- ✅ coordinator 최종 검증
 
 ---
 
@@ -254,7 +254,7 @@ Plan  → [Gate-1] → Design  → [Gate-2] → Code    → [Gate-3] → Test   
 
 ### 검증 계획
 - **더블체크 계획**: 1차 검증 후 2차 검증
-- **크로스체크 에이전트**: @architect
+- **크로스체크 에이전트**: architect
 
 ### 예상 소요 시간
 ...
@@ -305,7 +305,7 @@ Plan  → [Gate-1] → Design  → [Gate-2] → Code    → [Gate-3] → Test   
 
 ### 검증 계획
 - **더블체크 계획**: 각 단계별 1차, 2차 검증
-- **크로스체크 에이전트**: @architect (Gate-2), @reviewer (Gate-3), @developer (Gate-4)
+- **크로스체크 에이전트**: architect (Gate-2), reviewer (Gate-3), developer (Gate-4)
 
 ### 예상 소요 시간
 ...
@@ -616,50 +616,50 @@ stateDiagram-v2
 
 | 데이터 | 저장 위치 | 읽기 권한 | 쓰기 권한 |
 |--------|-----------|-----------|-----------|
-| WorkID | WORK_IN_PROGRESS.md | 모든 에이전트 | @coordinator, @doc-manager |
+| WorkID | WORK_IN_PROGRESS.md | 모든 에이전트 | coordinator, doc-manager |
 | 현재 단계 | WORK_IN_PROGRESS.md | 모든 에이전트 | 해당 에이전트 |
 | 진행 상황 | WORK_IN_PROGRESS.md | 모든 에이전트 | 해당 에이전트 |
 | 에러 메시지 | WORK_IN_PROGRESS.md | 모든 에이전트 | 해당 에이전트 |
-| 파일 목록 | WORK_IN_PROGRESS.md | 모든 에이전트 | @developer, @analyst |
+| 파일 목록 | WORK_IN_PROGRESS.md | 모든 에이전트 | developer, analyst |
 
 ### 통신 흐름 예시
 
 #### 정상 흐름 (Gate 통과)
 ```
-@analyst
+analyst
   ↓ (WORK_IN_PROGRESS.md 업데이트: WorkID 생성)
   ↓
-@architect (WORK_IN_PROGRESS.md 읽기)
+architect (WORK_IN_PROGRESS.md 읽기)
   ↓ (WORK_IN_PROGRESS.md 업데이트: Design 단계 완료)
   ↓
-@developer (WORK_IN_PROGRESS.md 읽기)
+developer (WORK_IN_PROGRESS.md 읽기)
   ↓ (WORK_IN_PROGRESS.md 업데이트: Code 단계 완료)
   ↓
-@tester (WORK_IN_PROGRESS.md 읽기)
+tester (WORK_IN_PROGRESS.md 읽기)
   ↓ (WORK_IN_PROGRESS.md 업데이트: Test 단계 완료)
   ↓
-@doc-manager (WORK_IN_PROGRESS.md 읽기)
+doc-manager (WORK_IN_PROGRESS.md 읽기)
   ↓ (WORK_IN_PROGRESS.md 업데이트: Docs 단계 완료)
   ↓
-@reviewer (WORK_IN_PROGRESS.md 읽기)
+reviewer (WORK_IN_PROGRESS.md 읽기)
   ↓ (WORK_IN_PROGRESS.md 업데이트: QA 단계 완료)
   ↓
-@coordinator (WORK_IN_PROGRESS.md 읽기)
+coordinator (WORK_IN_PROGRESS.md 읽기)
   ↓ (WORK_IN_PROGRESS.md 업데이트: Review 단계 완료)
 ```
 
 #### 오류 흐름 (Gate 실패)
 ```
-@developer: Code 단계 진행 중...
+developer: Code 단계 진행 중...
   ↓ (WORK_IN_PROGRESS.md 업데이트: 빌드 에러)
   ↓
-@reviewer (WORK_IN_PROGRESS.md 읽기: 빌드 에러 확인)
+reviewer (WORK_IN_PROGRESS.md 읽기: 빌드 에러 확인)
   ↓ (WORK_IN_PROGRESS.md 업데이트: 수정 요청)
   ↓
-@developer (WORK_IN_PROGRESS.md 읽기: 수정 요청 확인)
+developer (WORK_IN_PROGRESS.md 읽기: 수정 요청 확인)
   ↓ (WORK_IN_PROGRESS.md 업데이트: 수정 완료)
   ↓
-@reviewer (WORK_IN_PROGRESS.md 읽기: 재검증)
+reviewer (WORK_IN_PROGRESS.md 읽기: 재검증)
   ↓ (WORK_IN_PROGRESS.md 업데이트: 통과)
 ```
 ```
@@ -1008,28 +1008,28 @@ WORK_IN_PROGRESS.md 업데이트 (자동):
 #### 통신 흐름
 
 ```
-@coordinator
+coordinator
   ↓ (WORK_IN_PROGRESS.md 업데이트: WorkID 생성)
   ↓
-@analyst (WORK_IN_PROGRESS.md 읽기)
+analyst (WORK_IN_PROGRESS.md 읽기)
   ↓ (WORK_IN_PROGRESS.md 업데이트: Plan 단계 완료)
   ↓
-@architect (WORK_IN_PROGRESS.md 읽기)
+architect (WORK_IN_PROGRESS.md 읽기)
   ↓ (WORK_IN_PROGRESS.md 업데이트: Design 단계 완료)
   ↓
-@developer (WORK_IN_PROGRESS.md 읽기)
+developer (WORK_IN_PROGRESS.md 읽기)
   ↓ (WORK_IN_PROGRESS.md 업데이트: Code 단계 완료)
   ↓
-@tester (WORK_IN_PROGRESS.md 읽기)
+tester (WORK_IN_PROGRESS.md 읽기)
   ↓ (WORK_IN_PROGRESS.md 업데이트: Test 단계 완료)
   ↓
-@doc-manager (WORK_IN_PROGRESS.md 읽기)
+doc-manager (WORK_IN_PROGRESS.md 읽기)
   ↓ (WORK_IN_PROGRESS.md 업데이트: Docs 단계 완료)
   ↓
-@reviewer (WORK_IN_PROGRESS.md 읽기)
+reviewer (WORK_IN_PROGRESS.md 읽기)
   ↓ (WORK_IN_PROGRESS.md 업데이트: QA 단계 완료)
   ↓
-@coordinator (WORK_IN_PROGRESS.md 읽기)
+coordinator (WORK_IN_PROGRESS.md 읽기)
   ↓ (WORK_IN_PROGRESS.md 업데이트: Review 단계 완료)
 ```
 
@@ -1044,11 +1044,11 @@ WORK_IN_PROGRESS.md 업데이트 (자동):
 
 | 데이터 | 저장 위치 | 읽기 권한 | 쓰기 권한 |
 |--------|-----------|-----------|-----------|
-| WorkID | WORK_IN_PROGRESS.md | 모든 에이전트 | @coordinator, @doc-manager |
+| WorkID | WORK_IN_PROGRESS.md | 모든 에이전트 | coordinator, doc-manager |
 | 현재 단계 | WORK_IN_PROGRESS.md | 모든 에이전트 | 해당 에이전트 |
 | 진행 상황 | WORK_IN_PROGRESS.md | 모든 에이전트 | 해당 에이전트 |
 | 에러 메시지 | WORK_IN_PROGRESS.md | 모든 에이전트 | 해당 에이전트 |
-| 파일 목록 | WORK_IN_PROGRESS.md | 모든 에이전트 | @developer, @analyst |
+| 파일 목록 | WORK_IN_PROGRESS.md | 모든 에이전트 | developer, analyst |
 
 ---
 
@@ -1182,7 +1182,7 @@ WORK_IN_PROGRESS.md 업데이트 (자동):
 
 **처리 프로세스:**
 ```markdown
-@analyst:
+analyst:
 ❌ Plan 단계 실패
 
 [에러]
@@ -1217,7 +1217,7 @@ WORK_IN_PROGRESS.md 업데이트 (자동):
 
 **처리 프로세스:**
 ```markdown
-@developer:
+developer:
 ❌ Code 단계 실패
 
 [에러]
@@ -1228,7 +1228,7 @@ WORK_IN_PROGRESS.md 업데이트 (자동):
 1. WORK_IN_PROGRESS.md 업데이트: 에러 기록
 2. 에러 원인 분석
 3. 수정 시도
-4. 3번 시도 후 실패 시 @coordinator에게 보고
+4. 3번 시도 후 실패 시 coordinator에게 보고
 ```
 
 **WORK_IN_PROGRESS.md 업데이트:**
@@ -1247,7 +1247,7 @@ WORK_IN_PROGRESS.md 업데이트 (자동):
 [2025-02-05 11:40] Code 단계 실패 (3차 시도)
 에러: CS8602 NullReferenceException
 위치: Services/Processors/CSVProcessor.cs:45
-메시지: 3번 시도 후 실패 → @coordinator에 보고
+메시지: 3번 시도 후 실패 → coordinator에 보고
 ```
 
 ---
@@ -1261,7 +1261,7 @@ WORK_IN_PROGRESS.md 업데이트 (자동):
 
 **처리 프로세스:**
 ```markdown
-@tester:
+tester:
 ❌ Test 단계 실패
 
 [에러]
@@ -1272,9 +1272,9 @@ WORK_IN_PROGRESS.md 업데이트 (자동):
 [대응]
 1. WORK_IN_PROGRESS.md 업데이트: 에러 기록
 2. 버그 재현 단계 기록
-3. @developer에게 버그 수정 요청
-4. @developer 수정 후 @reviewer에게 리뷰 요청
-5. @reviewer 리뷰 후 재테스트
+3. developer에게 버그 수정 요청
+4. developer 수정 후 reviewer에게 리뷰 요청
+5. reviewer 리뷰 후 재테스트
 ```
 
 **WORK_IN_PROGRESS.md 업데이트:**
@@ -1292,9 +1292,9 @@ WORK_IN_PROGRESS.md 업데이트 (자동):
 3. NullReferenceException 발생
 
 [다음 단계]
-→ @developer에게 버그 수정 요청
-→ @developer 수정 후 @reviewer 리뷰
-→ @reviewer 리뷰 후 재테스트
+→ developer에게 버그 수정 요청
+→ developer 수정 후 reviewer 리뷰
+→ reviewer 리뷰 후 재테스트
 ```
 
 ---
@@ -1308,7 +1308,7 @@ WORK_IN_PROGRESS.md 업데이트 (자동):
 
 **처리 프로세스:**
 ```markdown
-@doc-manager:
+doc-manager:
 ❌ Docs 단계 실패
 
 [에러]
@@ -1316,7 +1316,7 @@ WORK_IN_PROGRESS.md 업데이트 (자동):
 
 [대응]
 1. WORK_IN_PROGRESS.md 쓰기 재시도 (최대 3번)
-2. 3번 시도 후 실패 시 @coordinator에게 보고
+2. 3번 시도 후 실패 시 coordinator에게 보고
 3. 사용자에게 수동 업데이트 요청
 ```
 
@@ -1331,7 +1331,7 @@ WORK_IN_PROGRESS.md 업데이트 (자동):
 
 **처리 프로세스:**
 ```markdown
-@reviewer:
+reviewer:
 ❌ QA 단계 실패
 
 [에러]
@@ -1340,8 +1340,8 @@ WORK_IN_PROGRESS.md 업데이트 (자동):
 
 [대응]
 1. WORK_IN_PROGRESS.md 업데이트: 에러 기록
-2. @developer에게 수정 요청
-3. @developer 수정 후 재리뷰
+2. developer에게 수정 요청
+3. developer 수정 후 재리뷰
 4. 재리뷰 통과 시 다음 단계
 ```
 
@@ -1426,26 +1426,26 @@ Gate-2 실패 (3번 시도 후) → Design 단계로 롤백
 3. WORK_IN_PROGRESS.md 업데이트:
    - Gate-2 상태: 실패
    - 완료 단계: Plan만 체크
-   - 다음 작업: @analyst → 계획 재검토
+   - 다음 작업: analyst → 계획 재검토
 ```
 ```
 
 #### 시나리오 1: 단계 실패 후 재시도
 
 ```
-@tester: Test 단계 실패 (버그 발견)
+tester: Test 단계 실패 (버그 발견)
   ↓
 WORK_IN_PROGRESS.md 업데이트 (에러 기록)
   ↓
-@developer: 버그 수정
+developer: 버그 수정
   ↓
 WORK_IN_PROGRESS.md 업데이트 (수정 완료)
   ↓
-@reviewer: 수정 리뷰
+reviewer: 수정 리뷰
   ↓
 WORK_IN_PROGRESS.md 업데이트 (리뷰 통과)
   ↓
-@tester: 재테스트
+tester: 재테스트
   ↓
 WORK_IN_PROGRESS.md 업데이트 (테스트 통과)
   ↓
@@ -1455,23 +1455,23 @@ WORK_IN_PROGRESS.md 업데이트 (테스트 통과)
 #### 시나리오 2: 다중 단계 실패 후 롤백
 
 ```
-@tester: Test 단계 실패 (버그 발견)
+tester: Test 단계 실패 (버그 발견)
   ↓
-@developer: 버그 수정 시도
+developer: 버그 수정 시도
   ↓
-@developer: 수정 실패 (더 깊은 문제 발견)
+developer: 수정 실패 (더 깊은 문제 발견)
   ↓
-@coordinator: 이전 단계로 롤백 결정
+coordinator: 이전 단계로 롤백 결정
   ↓
 WORK_IN_PROGRESS.md 업데이트 (Code 단계로 롤백)
   ↓
-@analyst: 계획 재검토
+analyst: 계획 재검토
   ↓
-@developer: 재구현
+developer: 재구현
   ↓
-@reviewer: 재리뷰
+reviewer: 재리뷰
   ↓
-@tester: 재테스트
+tester: 재테스트
   ↓
 성공 ✅
 ```
@@ -1480,29 +1480,29 @@ WORK_IN_PROGRESS.md 업데이트 (Code 단계로 롤백)
 
 ```
 [상황: WIP-20250205-001 진행 중]
-@developer: Code 단계 진행 중...
+developer: Code 단계 진행 중...
   ↓
 사용자: "🚨 ExportService.cs:45 NullReferenceException"
   ↓
-@coordinator: 긴급 대응 모드 시작
+coordinator: 긴급 대응 모드 시작
   ↓
 WIP-20250205-001 일시 정지 (상태: ⏸️ 일시 정지)
   ↓
 [새 WorkID 생성: WIP-20250205-999 (긴급)]
   ↓
-@analyst: 오류 분석
+analyst: 오류 분석
   ↓
-@developer: 즉시 수정
+developer: 즉시 수정
   ↓
-@tester: 수정 검증
+tester: 수정 검증
   ↓
-@reviewer: 수정 검토
+reviewer: 수정 검토
   ↓
 WIP-20250205-999 완료 ✅
   ↓
 WIP-20250205-001 재개 (상태: ⏸️ 진행 중)
   ↓
-@developer: 원래 작업 계속
+developer: 원래 작업 계속
 ```
 
 ---
@@ -1511,7 +1511,7 @@ WIP-20250205-001 재개 (상태: ⏸️ 진행 중)
 
 #### 결정 요청 형식
 ```markdown
-@coordinator:
+coordinator:
 ⚠️ 단계 실패: 사용자 결정 요청
 
 [WorkID]: WIP-20250205-001
@@ -1520,8 +1520,8 @@ WIP-20250205-001 재개 (상태: ⏸️ 진행 중)
 [위치]: Services/Processors/CSVProcessor.cs:45
 
 [옵션]
-1. 재시도: @developer가 에러 수정을 다시 시도합니다.
-2. 수정: @developer에게 구체적인 수정 방법을 지정합니다.
+1. 재시도: developer가 에러 수정을 다시 시도합니다.
+2. 수정: developer에게 구체적인 수정 방법을 지정합니다.
 3. 롤백: 이전 단계로 롤백하여 다시 시작합니다.
 4. 취소: 작업을 취소합니다.
 
@@ -1533,14 +1533,14 @@ WIP-20250205-001 재개 (상태: ⏸️ 진행 중)
 ```markdown
 사용자: "옵션2: CSVProcessor.cs:45에 if (data == null) throw new Exception(...) 추가해줘"
 
-@developer:
+developer:
 ✅ 사용자 지시대로 수정 완료
 
 [수정 내용]
 - CSVProcessor.cs:45에 null 체크 추가
 - 빌드 성공 ✅
 
-@reviewer에게 리뷰를 요청합니다...
+reviewer에게 리뷰를 요청합니다...
 ```
 
 ---

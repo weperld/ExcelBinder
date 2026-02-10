@@ -40,7 +40,7 @@
 **역할:** 모든 에이전트의 상세 역할 및 책임
 
 **포함 내용:**
-- 6개 커스텀 에이전트의 상세 정의
+- 7개 역할 기반 워크플로우 정의
 - 각 에이전트의 Role, Responsibilities, Workflow
 - 에이전트 간 협업 시나리오
 
@@ -295,7 +295,6 @@ AGENTS.md와 AGENT_ROLES.md에서 에러 처리 예시 제거
 | 문서 | 역할 |
 |------|------|
 | OPENCODE_INTEGRATION.md | OpenCode 플러그인 연동 |
-| .opencode/agent/*.md | 각 에이전트의 내부 로직 |
 | .guides/BUILD_GUIDE.md | 빌드 및 개발 가이드 |
 | .guides/TEST_GUIDE.md | 테스트 가이드 |
 

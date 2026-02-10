@@ -7,7 +7,7 @@
 
 ## 🔒 절대 규칙 (모든 에이전트 공통)
 
-> **중요**: 이 절대 규칙은 모든 에이전트(@coordinator, @analyst, @architect, @developer, @reviewer, @doc-manager, @tester)가 반드시 99% 이상 준수해야 합니다.
+> **중요**: 이 절대 규칙은 모든 에이전트(coordinator, analyst, architect, developer, reviewer, doc-manager, tester)가 반드시 99% 이상 준수해야 합니다.
 >
 > **위반 시**: 작업 중단, 사용자 알림, 재시도 요청
 
@@ -39,17 +39,17 @@
 
 > **기본 원칙**: 모든 에이전트는 절대 규칙(Hard Blocks)을 위반하는 행동을 금지함
 
-#### @coordinator (코디네이터)
+#### coordinator (코디네이터)
 
 **금지 행동**:
-1. **모호한 지시 전달 금지**: "@architect Design 진행해줘" 처럼 구체적 정보 없이 위임
+1. **모호한 지시 전달 금지**: "architect Design 진행해줘" 처럼 구체적 정보 없이 위임
 2. **WorkID 누락 금지**: 작업 시작 시 WorkID 생성 누락
 3. **WORK_IN_PROGRESS.md 업데이트 누락 금지**: 단계 완료 시 업데이트 누락
 4. **절대 규칙 위반 통과 금지**: 하위 에이전트의 절대 규칙 위반을 통과시키는 행위
 
 ---
 
-#### @analyst (분석가)
+#### analyst (분석가)
 
 **금지 행동**:
 1. **추측해서 작업 금지**: 기획서 내용을 추측해서 분석
@@ -58,7 +58,7 @@
 
 ---
 
-#### @architect (아키텍트)
+#### architect (아키텍트)
 
 **금지 행동**:
 1. **데이터 무결성 위반 설계 금지**: 기본값 대신 예외 발생 설계 누락
@@ -67,7 +67,7 @@
 
 ---
 
-#### @developer (개발자)
+#### developer (개발자)
 
 **금지 행동**:
 1. **데이터 무결성 위반 금지**: 기본값 대신 예외 발생
@@ -76,7 +76,7 @@
 
 ---
 
-#### @tester (테스터)
+#### tester (테스터)
 
 **금지 행동**:
 1. **버그 은폐 금지**: 발견한 버그를 보고하지 않고 은폐
@@ -84,7 +84,7 @@
 
 ---
 
-#### @reviewer (리뷰어)
+#### reviewer (리뷰어)
 
 **금지 행동**:
 1. **절대 규칙(Hard Blocks) 위반 코드 통과 금지**: 모든 절대 규칙을 위반한 코드 리뷰 통과
@@ -97,7 +97,7 @@
 
 ---
 
-#### @doc-manager (문서 관리자)
+#### doc-manager (문서 관리자)
 
 **금지 행동**:
 1. **WORK_IN_PROGRESS.md 업데이트 누락 금지**: 단계 완료 시 업데이트 누락
@@ -156,26 +156,26 @@
 
 ## 🔒 Cross-Stage Review Chain (강제 검증 - 검증 항목 세분화)
 
-각 단계에서 다음 단계로 넘어갈 때 **@reviewer**가 강제 검증을 수행합니다:
+각 단계에서 다음 단계로 넘어갈 때 **reviewer**가 강제 검증을 수행합니다:
 
 | 단계 전이 | 검증 담당자 | 검증 항목 (세분화) |
 |---------|------------|-------------------|
-| | Plan → Design | @reviewer | **기획 관련 전문 검증 항목**:<br/>- 기획 명확성<br/>- 영향 파일 완전성<br/>- 위험 요소 식별<br/>- **기획의 현실성 검증**<br/>- **기획의 일관성 검증**<br/>- **기획의 타당성 검증**<br/>- 절대 규칙 준수 |
-| | Design → Code | @reviewer | **아키텍처 관련 전문 검증 항목**:<br/>- 아키텍처 실현 가능성<br/>- 의존성 구현 가능성<br/>- **디자인 패턴 준수 여부**<br/>- **확장성 검증**<br/>- **스케일러빌리티 검증**<br/>- **성능 고려 여부**<br/>- 절대 규칙 준수 |
-| | Code → Test | @reviewer | **코드 관련 전문 검증 항목**:<br/>- 빌드 성공<br/>- 코드 스타일<br/>- 기술 규칙 준수<br/>- **코드 복잡도**<br/>- **코드 효율성**<br/>- **코드 가독성**<br/>- 절대 규칙 준수 |
-| | Test → Docs | @reviewer | **테스트 관련 전문 검증 항목**:<br/>- 테스트 가능성<br/>- 버그 0개<br/>- **테스트 커버리지**<br/>- **테스트 품질**<br/>- **테스트 유지보수성**<br/>- 절대 규칙 준수 |
-| | Docs → QA | @reviewer | **문서 관련 전문 검증 항목**:<br/>- 문서 완전성<br/>- 코드 일치성<br/>- **문서 명확성**<br/>- **문서 품질**<br/>- **문서 최신성**<br/>- 절대 규칙 준수 |
-| | QA → Review | @reviewer | **QA 관련 전문 검증 항목**:<br/>- 절대 규칙 100% 준수<br/>- 코드 품질<br/>- 버그 0개<br/>- **성능 지표**<br/>- **보안 지표**<br/>- 절대 규칙 준수 |
+| | Plan → Design | reviewer | **기획 관련 전문 검증 항목**:<br/>- 기획 명확성<br/>- 영향 파일 완전성<br/>- 위험 요소 식별<br/>- **기획의 현실성 검증**<br/>- **기획의 일관성 검증**<br/>- **기획의 타당성 검증**<br/>- 절대 규칙 준수 |
+| | Design → Code | reviewer | **아키텍처 관련 전문 검증 항목**:<br/>- 아키텍처 실현 가능성<br/>- 의존성 구현 가능성<br/>- **디자인 패턴 준수 여부**<br/>- **확장성 검증**<br/>- **스케일러빌리티 검증**<br/>- **성능 고려 여부**<br/>- 절대 규칙 준수 |
+| | Code → Test | reviewer | **코드 관련 전문 검증 항목**:<br/>- 빌드 성공<br/>- 코드 스타일<br/>- 기술 규칙 준수<br/>- **코드 복잡도**<br/>- **코드 효율성**<br/>- **코드 가독성**<br/>- 절대 규칙 준수 |
+| | Test → Docs | reviewer | **테스트 관련 전문 검증 항목**:<br/>- 테스트 가능성<br/>- 버그 0개<br/>- **테스트 커버리지**<br/>- **테스트 품질**<br/>- **테스트 유지보수성**<br/>- 절대 규칙 준수 |
+| | Docs → QA | reviewer | **문서 관련 전문 검증 항목**:<br/>- 문서 완전성<br/>- 코드 일치성<br/>- **문서 명확성**<br/>- **문서 품질**<br/>- **문서 최신성**<br/>- 절대 규칙 준수 |
+| | QA → Review | reviewer | **QA 관련 전문 검증 항목**:<br/>- 절대 규칙 100% 준수<br/>- 코드 품질<br/>- 버그 0개<br/>- **성능 지표**<br/>- **보안 지표**<br/>- 절대 규칙 준수 |
 
-> **중요**: 검증 담당자는 항상 **@reviewer**입니다. 표의 "검증 항목 (세분화)"은 해당 전이 시점에 집중해야 할 검증 포인트입니다.
+> **중요**: 검증 담당자는 항상 **reviewer**입니다. 표의 "검증 항목 (세분화)"은 해당 전이 시점에 집중해야 할 검증 포인트입니다.
 
 > **전문 검증 항목 세분화**: 각 단계별로 전문 검증 항목을 세분화하여 검증 품질 향상
 
 **절대 규칙 검증 포함**:
-- @reviewer는 각 단계에서 **절대 규칙 준수 여부**를 반드시 검증해야 합니다.
+- reviewer는 각 단계에서 **절대 규칙 준수 여부**를 반드시 검증해야 합니다.
 - 절대 규칙 위반 시 **즉시 해당 단계로 롤백**하고 **수정 요청**해야 합니다.
 
-> **강제 사항**: 각 단계 전이 시 @reviewer가 검증을 완료하고 WORK_IN_PROGRESS.md에
+> **강제 사항**: 각 단계 전이 시 reviewer가 검증을 완료하고 WORK_IN_PROGRESS.md에
 > "크로스체크 통과 완료"를 기록하지 않은 경우, 다음 단계로 넘어갈 수 없습니다.
 
 ---
@@ -194,10 +194,9 @@
 > **강제 사항**: 에이전트는 필독 순서를 준수했음을 WORK_IN_PROGRESS.md에 기록해야 하며,
 > 기록되지 않은 경우 작업을 시작할 수 없습니다.
 
-**커스텀 에이전트 사용:**
-- `@coordinator`, `@analyst`, `@architect`, `@developer`, `@reviewer`, `@doc-manager`, `@tester`로 직접 호출 가능
-- 자동화 모드: `@coordinator [지시]`로 전체 워크플로우 자동화
-- 수동 모드: 각 에이전트를 직접 호출하여 세밀한 컨트롤 가능
+**작업 수행 방법:**
+- 커스텀 명령어 사용: `/project:신규 [기능 설명]`, `/project:수정 [문제 설명]` 등
+- 워크플로우 단계별로 coordinator, analyst, architect, developer, reviewer, doc-manager, tester 역할이 순차적으로 수행됨
 
 **원칙:**
 - 모든 단계에서 **WORK_IN_PROGRESS.md를 자동으로 업데이트**하세요
@@ -248,7 +247,7 @@
 - "규칙 위반하지 않음, 결과 만족" 선택: 다음 단계 진행
 
 #### 6단계: Cross-Stage Review Chain 검증
-- @reviewer가 검증 수행
+- reviewer가 검증 수행
 - 검증 결과를 WORK_IN_PROGRESS.md에 기록
 - 다음 단계로 진행
 
@@ -331,37 +330,33 @@
 
 ## 🎯 토큰 절약용 지시 템플릿
 
-### 커스텀 에이전트 직접 호출
+### 커스텀 명령어로 작업 시작
 ```
-@coordinator [지시]
-@analyst [지시]
-@architect [지시]
-@developer [지시]
-@reviewer [지시]
-@doc-manager [지시]
-@tester [지시]
+/project:신규 [기능 설명]
+/project:수정 [문제 설명]
+/project:커밋
+/project:전송
+/project:상태 전체
 ```
-→ 해당 에이전트를 직접 호출하여 작업 수행
+→ 커스텀 명령어를 통해 전체 워크플로우가 자동으로 실행됩니다
 
 **⚠️ 금지 예시 (절대 하지 마세요):**
 ```
-@analyst 기획서 분석해줘
-@architect 아키텍처 설계해줘
-@developer 코드 작성해줘
+기획서 분석해줘
+아키텍처 설계해줘
+코드 작성해줘
 ```
 → 이런 식의 모호한 지시는 받아들이지 말고 구체적 정보를 요구하세요
 
 **✅ 올바른 예시:**
 ```
-@coordinator CSV 기능 추가해줘
-→ 코디네이터가 WorkID 생성 후 각 에이전트에게 구체적인 지시 문서 작성
+/project:신규 CSV 기능 추가
+→ 워크플로우가 자동으로 WorkID 생성 후 Plan → Design → Code → Test → Docs → QA → Review 순서로 진행
 
-@analyst
 다음 기획서 내용을 분석해주세요:
 [문서 경로: ./docs/planning/feature_001.md]
 [요구사항: CSV 데이터 추출 기능 추가, 엑셀에서 CSV로 내보내기]
 
-@architect
 CSV 추출 기능에 대한 아키텍처 설계가 필요합니다.
 [작업 대상]: ExportService 확장
 [작업 범위]: CSV 파일 로드, 파싱, 매핑
@@ -514,8 +509,6 @@ CONTINUE: WIP-20250202-001
 | 🆕 | **작업 추적** | [WORK_IN_PROGRESS.md](./WORK_IN_PROGRESS.md) |
 | 🆕 | **빠른 참조** | [QUICK_REFERENCE.md](./QUICK_REFERENCE.md) |
 | 🆕 | **구조화된 컨텍스트** | [CONTEXT.json](./CONTEXT.json) |
-| 🆕 | **아키텍처 설계** | [architect.md](./.opencode/agent/architect.md) |
-| 🆕 | **커스텀 에이전트** | [.opencode/agent/](./.opencode/agent/) |
 | 1️⃣ | **빌드 및 개발** | [BUILD_GUIDE.md](./.guides/BUILD_GUIDE.md) |
 | 2️⃣ | **작업 워크플로우** | [WORKFLOW_GUIDE.md](./.guides/WORKFLOW_GUIDE.md) |
 | 3️⃣ | **코드 스타일** | [CODE_STYLE.md](./.guides/CODE_STYLE.md) |
@@ -547,27 +540,25 @@ WIP-YYYYMMDD-NN
 ### 에이전트 지시 규칙 (코디네이터 & 사용자 공통)
 
 **필수 원칙**:
-에이전트에게 지시할 때는 **반드시 구체적인 지시 문서** 또는 **구체적인 설명**을 포함해야 합니다.
+작업 지시 시 **반드시 구체적인 지시 문서** 또는 **구체적인 설명**을 포함해야 합니다.
 
 ### 금지 사항
 ❌ **절대 하지 말아야 할 지시**:
-- "@architect Design 진행해줘"
-- "@developer 이거 구현해줘"
-- 아무 내용 없이 에이전트를 호출하는 경우
+- "Design 진행해줘"
+- "이거 구현해줘"
+- 아무 내용 없이 모호한 지시를 하는 경우
 
 ### 지시 필수 구성 요소
 
 **형식 1: 문서 기반 지시** (권장)
 ```
-@architect
 작업에 대한 구체적 지시 사항이 담긴 문서를 작성했습니다.
-문서: ./docs/instructions/architect-design-001.md
+문서: ./docs/instructions/design-001.md
 해당 문서를 참고하여 작업을 진행해주세요.
 ```
 
 **형식 2: 구체적 설명 포함 지시**
 ```
-@architect
 CSV 데이터 추출 기능에 대한 아키텍처 설계를 진행해주세요.
 
 [작업 대상]
@@ -594,10 +585,10 @@ CSV 데이터 추출 기능에 대한 아키텍처 설계를 진행해주세요.
 ```
 
 ### 사용자 지시 부족 시 대응
-사용자가 "@architect Design 진행해줘"처럼 애매하게 지시한 경우:
-- 에이전트는 **즉시 사용자에게 구체적 정보를 요구**해야 함
+사용자가 "Design 진행해줘"처럼 애매하게 지시한 경우:
+- **즉시 사용자에게 구체적 정보를 요구**해야 함
 - "어떤 기능에 대한 디자인인지, 작업 범위, 요구사항 등 구체적인 정보를 알려주세요"
-- 에이전트는 추측해서 작업하지 말고 반드시 정보 요구
+- 추측해서 작업하지 말고 반드시 정보 요구
 
 ---
 
@@ -657,13 +648,13 @@ CSV 데이터 추출 기능에 대한 아키텍처 설계를 진행해주세요.
 
 | 에이전트 | 담당 스테이지 | 템플릿 파일 | 작성 폴더 | 템플릿 경로 | 작성 경로 |
 |---------|-------------|-----------|-----------|-----------|----------|
-| **@analyst** | Plan | `WIP-Plan-YYYYMMDD-NN.md` | `.wips/active/Plan/` | `.wips/templates/WIP-Plan-YYYYMMDD-NN.md` | `.wips/active/Plan/WIP-Plan-YYYYMMDD-NN.md` |
-| **@architect** | Design | `WIP-Design-YYYYMMDD-NN.md` | `.wips/active/Design/` | `.wips/templates/WIP-Design-YYYYMMDD-NN.md` | `.wips/active/Design/WIP-Design-YYYYMMDD-NN.md` |
-| **@developer** | Code | `WIP-Code-YYYYMMDD-NN.md` | `.wips/active/Code/` | `.wips/templates/WIP-Code-YYYYMMDD-NN.md` | `.wips/active/Code/WIP-Code-YYYYMMDD-NN.md` |
-| **@tester** | Test | `WIP-Test-YYYYMMDD-NN.md` | `.wips/active/Test/` | `.wips/templates/WIP-Test-YYYYMMDD-NN.md` | `.wips/active/Test/WIP-Test-YYYYMMDD-NN.md` |
-| **@doc-manager** | Docs | `WIP-Docs-YYYYMMDD-NN.md` | `.wips/active/Docs/` | `.wips/templates/WIP-Docs-YYYYMMDD-NN.md` | `.wips/active/Docs/WIP-Docs-YYYYMMDD-NN.md` |
-| **@reviewer** | QA | `WIP-QA-YYYYMMDD-NN.md` | `.wips/active/QA/` | `.wips/templates/WIP-QA-YYYYMMDD-NN.md` | `.wips/active/QA/WIP-QA-YYYYMMDD-NN.md` |
-| **@coordinator** | Review | (전체 관리) | (해당 없음) | - | - |
+| **analyst** | Plan | `WIP-Plan-YYYYMMDD-NN.md` | `.wips/active/Plan/` | `.wips/templates/WIP-Plan-YYYYMMDD-NN.md` | `.wips/active/Plan/WIP-Plan-YYYYMMDD-NN.md` |
+| **architect** | Design | `WIP-Design-YYYYMMDD-NN.md` | `.wips/active/Design/` | `.wips/templates/WIP-Design-YYYYMMDD-NN.md` | `.wips/active/Design/WIP-Design-YYYYMMDD-NN.md` |
+| **developer** | Code | `WIP-Code-YYYYMMDD-NN.md` | `.wips/active/Code/` | `.wips/templates/WIP-Code-YYYYMMDD-NN.md` | `.wips/active/Code/WIP-Code-YYYYMMDD-NN.md` |
+| **tester** | Test | `WIP-Test-YYYYMMDD-NN.md` | `.wips/active/Test/` | `.wips/templates/WIP-Test-YYYYMMDD-NN.md` | `.wips/active/Test/WIP-Test-YYYYMMDD-NN.md` |
+| **doc-manager** | Docs | `WIP-Docs-YYYYMMDD-NN.md` | `.wips/active/Docs/` | `.wips/templates/WIP-Docs-YYYYMMDD-NN.md` | `.wips/active/Docs/WIP-Docs-YYYYMMDD-NN.md` |
+| **reviewer** | QA | `WIP-QA-YYYYMMDD-NN.md` | `.wips/active/QA/` | `.wips/templates/WIP-QA-YYYYMMDD-NN.md` | `.wips/active/QA/WIP-QA-YYYYMMDD-NN.md` |
+| **coordinator** | Review | (전체 관리) | (해당 없음) | - | - |
 
 ### 절대 규칙
 
@@ -818,7 +809,7 @@ CSV 데이터 추출 기능에 대한 아키텍처 설계를 진행해주세요.
 ## 기본 정보
 - **WorkID**: WIP-20250208-001  ← 변경
 - **스테이지**: Plan
-- **담당 에이전트**: @analyst
+- **담당 에이전트**: analyst
 - **생성일**: 2025-02-08  ← 변경
 - **상태**: 준비  ← 진행 중으로 변경
 

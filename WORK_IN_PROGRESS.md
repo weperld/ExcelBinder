@@ -81,44 +81,44 @@
 
 #### 🚪 Validation Gates (검증 게이트)
 - [ ] **Gate-1**: Plan → Design
-  - [x] 1차 자체 검증 (@analyst)
-  - [x] 2차 자체 검증 (@analyst)
-  - [x] 크로스체크 (@architect)
+  - [x] 1차 자체 검증 (analyst)
+  - [x] 2차 자체 검증 (analyst)
+  - [x] 크로스체크 (architect)
   - 통과: ✅
 
 - [ ] **Gate-2**: Design → Code
-  - [ ] 1차 자체 검증 (@architect)
-  - [ ] 2차 자체 검증 (@architect)
-  - [ ] 크로스체크 (@developer)
+  - [ ] 1차 자체 검증 (architect)
+  - [ ] 2차 자체 검증 (architect)
+  - [ ] 크로스체크 (developer)
   - 상태: 대기 중
 
 - [ ] **Gate-3**: Code → Test
-  - [ ] 1차 빌드 검증 (@developer)
-  - [ ] 2차 빌드 검증 (@developer)
-  - [ ] 크로스 빌드 검증 (@reviewer)
+  - [ ] 1차 빌드 검증 (developer)
+  - [ ] 2차 빌드 검증 (developer)
+  - [ ] 크로스 빌드 검증 (reviewer)
   - 상태: 대기 중
 
 - [ ] **Gate-4**: Test → Docs
-  - [ ] 1차 테스트 (@tester)
-  - [ ] 2차 테스트 (@tester)
-  - [ ] 크로스 테스트 (@developer)
+  - [ ] 1차 테스트 (tester)
+  - [ ] 2차 테스트 (tester)
+  - [ ] 크로스 테스트 (developer)
   - 상태: 대기 중
 
 - [ ] **Gate-5**: Docs → QA
-  - [ ] 1차 검증 (@doc-manager)
-  - [ ] 2차 검증 (@doc-manager)
-  - [ ] 크로스체크 (@reviewer)
+  - [ ] 1차 검증 (doc-manager)
+  - [ ] 2차 검증 (doc-manager)
+  - [ ] 크로스체크 (reviewer)
   - 상태: 대기 중
 
 - [ ] **Gate-6**: QA → Review
-  - [ ] 1차 검증 (@reviewer)
-  - [ ] 2차 검증 (@reviewer)
-  - [ ] 크로스 검증 (@architect)
+  - [ ] 1차 검증 (reviewer)
+  - [ ] 2차 검증 (reviewer)
+  - [ ] 크로스 검증 (architect)
   - 상태: 대기 중
 
 - [ ] **Gate-7**: Review → 완료
-  - [ ] 1차 최종 검증 (@coordinator)
-  - [ ] 2차 최종 검증 (@coordinator)
+  - [ ] 1차 최종 검증 (coordinator)
+  - [ ] 2차 최종 검증 (coordinator)
   - [ ] 사용자 승인
   - 상태: 대기 중
 

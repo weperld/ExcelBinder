@@ -200,7 +200,7 @@ public async Task ExportAsync_ValidFile_FirstItemNameIsTest()
 
 ### 자동 생성 규칙
 
-새로운 기능이 추가될 때, @tester는 다음 규칙에 따라 단위 테스트를 자동으로 생성해야 합니다:
+새로운 기능이 추가될 때, tester는 다음 규칙에 따라 단위 테스트를 자동으로 생성해야 합니다:
 
 1. **Processor 클래스** → `{ProcessorName}Tests.cs` 생성
 2. **ViewModel 클래스** → `{ViewModelName}Tests.cs` 생성
