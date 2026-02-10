@@ -46,3 +46,9 @@ ExternalTestData/*.txt
 *.log
 settings.json
 *.zip
+
+# Claude Code - 로컬 전용
+.claude/settings.local.json
+
+# OMC 플러그인 - 로컬 런타임 데이터
+.omc/
