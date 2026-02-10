@@ -21,7 +21,7 @@ namespace ExcelBinder.Services
             {
                 return processor;
             }
-            return _processors[ProjectConstants.Categories.StaticData];
+            throw new System.ArgumentException($"Unknown feature category: '{category}'. Valid categories: {string.Join(", ", _processors.Keys)}", nameof(category));
         }
     }
 }

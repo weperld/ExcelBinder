@@ -60,8 +60,9 @@ namespace ExcelBinder.Services
                 }
                 return feature;
             }
-            catch
+            catch (Exception ex)
             {
+                LogService.Instance.Warning($"Failed to load feature from {filePath}: {ex.Message}");
                 return null;
             }
         }

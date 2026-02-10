@@ -110,9 +110,9 @@ namespace ExcelBinder.ViewModels
                     string json = File.ReadAllText(savePath);
                     existingSchema = JsonConvert.DeserializeObject<SchemaDefinition>(json);
                 }
-                catch
+                catch (Exception ex)
                 {
-                    // Ignore errors, fallback to default
+                    LogService.Instance.Warning($"Failed to load existing schema from {savePath}: {ex.Message}");
                 }
             }
 
