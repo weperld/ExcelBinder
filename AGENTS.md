@@ -15,20 +15,20 @@
 
 | 규칙 | 위반 시 조치 |
 |------|------------|
-| **타입 에러 억제 금지** | C#: 무조건 캐스팅(`(Type)cast`) 남용 금지, `dynamic` 사용 최소화. TS(사용 시): `as any`, `@ts-ignore`, `@ts-expect-error` 사용 금지 |
+| **타입 에러 억제 금지** | 무조건 캐스팅(`(Type)cast`) 남용 금지, `dynamic` 사용 최소화 |
 | **빈 catch 블록 금지** | `catch(e) {}` 빈 블록 금지 |
 | **테스트 삭제 금지** | 실패한 테스트를 삭제하여 "통과"로 만드는 행위 금지 |
 | **커밋 없이 파일 수정 금지** | 사용자의 명시적 요청 없이 커밋 금지 |
 | **추측 금지** | 코드를 읽지 않고 추측해서 작업 금지 |
 | **코드 파괴 금지** | 개발 파이프라인의 지침을 파괴하는 행위 금지 |
 
-> **참고**: 현재 프로젝트는 .NET/C# 기반이지만, TypeScript 관련 작업 시에도 동일한 타입 안전 원칙 적용
+> **참고**: 현재 프로젝트는 .NET/C# 기반입니다
 
 ### Anti-Patterns (BLOCKING violations)
 
 | 범주 | 금지 행동 | 예시 |
 |------|----------|------|
-| **Type Safety** | 타입 에러 억제 | C#: `(Type)cast` 남용, `dynamic` 과다 사용. TS: `as any`, `@ts-ignore` 사용 |
+| **Type Safety** | 타입 에러 억제 | `(Type)cast` 남용, `dynamic` 과다 사용 |
 | **Error Handling** | 빈 catch 블록 | `catch(e) {}` |
 | **Testing** | 테스트 삭제 | 실패한 테스트 삭제 |
 | **Git** | 무단 커밋 | 커밋 명령 실행 |
@@ -72,7 +72,7 @@
 **금지 행동**:
 1. **데이터 무결성 위반 금지**: 기본값 대신 예외 발생
 2. **비동기 패턴 위반 금지**: try-finally로 IsBusy 상태 보장
-3. **타입 에러 억제 코드 작성 금지**: `as any`, `@ts-ignore` 사용 코드 작성
+3. **타입 에러 억제 코드 작성 금지**: 무조건 캐스팅(`(Type)cast`) 남용, `dynamic` 과다 사용
 
 ---
 
@@ -88,7 +88,7 @@
 
 **금지 행동**:
 1. **절대 규칙(Hard Blocks) 위반 코드 통과 금지**: 모든 절대 규칙을 위반한 코드 리뷰 통과
-   - 타입 에러 억제 (C# cast, TS `as any`, `@ts-ignore`, `@ts-expect-error`)
+   - 타입 에러 억제 (무조건 캐스팅 남용, `dynamic` 과다 사용)
    - 빈 catch 블록
    - 테스트 삭제
    - 커밋 없이 파일 수정
@@ -117,11 +117,8 @@
 ## 🔒 작업 완료 전 필수 체크리스트
 
 ### Type Safety
-- [ ] `as any` 사용하지 않음 (TypeScript)
-- [ ] `@ts-ignore` 사용하지 않음 (TypeScript)
-- [ ] `@ts-expect-error` 사용하지 않음 (TypeScript)
-- [ ] 무조건 캐스팅(`(Type)cast`) 남용하지 않음 (C#)
-- [ ] 불필요한 `dynamic` 사용하지 않음 (C#)
+- [ ] 무조건 캐스팅(`(Type)cast`) 남용하지 않음
+- [ ] 불필요한 `dynamic` 사용하지 않음
 
 ### Error Handling
 - [ ] 빈 catch 블록 없음
@@ -508,7 +505,6 @@ CONTINUE: WIP-20250202-001
 | 🆕 | **기획서 워크플로우** | [WORKFLOW_PLANNING.md](./WORKFLOW_PLANNING.md) |
 | 🆕 | **작업 추적** | [WORK_IN_PROGRESS.md](./WORK_IN_PROGRESS.md) |
 | 🆕 | **빠른 참조** | [QUICK_REFERENCE.md](./QUICK_REFERENCE.md) |
-| 🆕 | **구조화된 컨텍스트** | [CONTEXT.json](./CONTEXT.json) |
 | 1️⃣ | **빌드 및 개발** | [BUILD_GUIDE.md](./.guides/BUILD_GUIDE.md) |
 | 2️⃣ | **작업 워크플로우** | [WORKFLOW_GUIDE.md](./.guides/WORKFLOW_GUIDE.md) |
 | 3️⃣ | **코드 스타일** | [CODE_STYLE.md](./.guides/CODE_STYLE.md) |

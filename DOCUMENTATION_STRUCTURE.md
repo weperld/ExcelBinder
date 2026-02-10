@@ -68,7 +68,7 @@
 **역할:** 기획서 처리 및 워크플로우의 단일 소스
 
 **포함 내용:**
-- 6단계 개발 파이프라인 (상세)
+- 7단계 개발 파이프라인 (상세)
 - 기획서 유형 분석 (상세)
 - 에이전트 간 통신 프로토콜
 - WorkID 자동 생성 로직
@@ -294,7 +294,6 @@ AGENTS.md와 AGENT_ROLES.md에서 에러 처리 예시 제거
 
 | 문서 | 역할 |
 |------|------|
-| OPENCODE_INTEGRATION.md | OpenCode 플러그인 연동 |
 | .guides/BUILD_GUIDE.md | 빌드 및 개발 가이드 |
 | .guides/TEST_GUIDE.md | 테스트 가이드 |
 
