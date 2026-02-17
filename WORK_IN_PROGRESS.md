@@ -1,4 +1,4 @@
-# 작업 추적 및 재개 시스템
+﻿# 작업 추적 및 재개 시스템
 
 > 작업 중단 시 이 파일을 사용하여 상태를 저장하고, 새 대화에서 재개합니다.
 
@@ -8,9 +8,9 @@
 
 ### 새 대화에서 재개 시
 ```
-1. 사용자: "재개: WIP-YYYYMMDD-NN"
+1. 사용자: "재개: WIP-YYYYMMDD-NNN"
    또는
-   사용자: "CONTINUE: WIP-YYYYMMDD-NN"
+   사용자: "CONTINUE: WIP-YYYYMMDD-NNN"
 
 2. 에이전트:
    - WORK_IN_PROGRESS.md 읽기
@@ -20,7 +20,7 @@
    - 즉시 재개
 
 3. 재개 완료 후:
-   - "🔄 WIP-YYYYMMDD-NN 작업이 재개되었습니다"
+   - "🔄 WIP-YYYYMMDD-NNN 작업이 재개되었습니다"
    - "현재 단계: [완료된 단계]"
    - "다음 작업: [다음 작업]"
 ```
@@ -49,14 +49,14 @@
 
 ## 📝 작업 상세
 
-### WIP-YYYYMMDD-NN: [작업 제목]
+### WIP-YYYYMMDD-NNN: [작업 제목]
 
 #### 📋 계획 요약
 - **유형**: (수정/신규)
 - **파일**: ...
 - **변경 내용**: ...
-- **시작일**: 2025-02-02
-- **예상 완료일**: 2025-02-02
+- **시작일**: YYYY-MM-DD
+- **예상 완료일**: YYYY-MM-DD
 
 #### 💾 상태 스냅샷
 - **마지막 업데이트**: [타임스탬프]
@@ -64,7 +64,7 @@
 
 #### 📸 상태 백업
 ```
-[Gate-1 진입 전 백업: 2025-02-07 15:00]
+[Gate-1 진입 전 백업: YYYY-MM-DD HH:MM]
 - 완료 단계: (없음)
 - 계획 요약: [계획 내용]
 - 진척도: 0%
@@ -81,10 +81,10 @@
 
 #### 🚪 Validation Gates (검증 게이트)
 - [ ] **Gate-1**: Plan → Design
-  - [x] 1차 자체 검증 (analyst)
-  - [x] 2차 자체 검증 (analyst)
-  - [x] 크로스체크 (architect)
-  - 통과: ✅
+  - [ ] 1차 자체 검증 (analyst)
+  - [ ] 2차 자체 검증 (analyst)
+  - [ ] 크로스체크 (architect)
+  - 상태: 대기 중
 
 - [ ] **Gate-2**: Design → Code
   - [ ] 1차 자체 검증 (architect)
@@ -93,32 +93,32 @@
   - 상태: 대기 중
 
 - [ ] **Gate-3**: Code → Test
-  - [ ] 1차 빌드 검증 (developer)
-  - [ ] 2차 빌드 검증 (developer)
-  - [ ] 크로스 빌드 검증 (reviewer)
+  - [ ] 1차 자체 검증 (developer)
+  - [ ] 2차 자체 검증 (developer)
+  - [ ] 크로스체크 (tester)
   - 상태: 대기 중
 
 - [ ] **Gate-4**: Test → Docs
-  - [ ] 1차 테스트 (tester)
-  - [ ] 2차 테스트 (tester)
-  - [ ] 크로스 테스트 (developer)
+  - [ ] 1차 자체 검증 (tester)
+  - [ ] 2차 자체 검증 (tester)
+  - [ ] 크로스체크 (developer)
   - 상태: 대기 중
 
 - [ ] **Gate-5**: Docs → QA
-  - [ ] 1차 검증 (doc-manager)
-  - [ ] 2차 검증 (doc-manager)
+  - [ ] 1차 자체 검증 (doc-manager)
+  - [ ] 2차 자체 검증 (doc-manager)
   - [ ] 크로스체크 (reviewer)
   - 상태: 대기 중
 
 - [ ] **Gate-6**: QA → Review
-  - [ ] 1차 검증 (reviewer)
-  - [ ] 2차 검증 (reviewer)
-  - [ ] 크로스 검증 (architect)
+  - [ ] 1차 자체 검증 (reviewer)
+  - [ ] 2차 자체 검증 (reviewer)
+  - [ ] 크로스체크 (architect)
   - 상태: 대기 중
 
 - [ ] **Gate-7**: Review → 완료
-  - [ ] 1차 최종 검증 (coordinator)
-  - [ ] 2차 최종 검증 (coordinator)
+  - [ ] 1차 자체 검증 (coordinator)
+  - [ ] 2차 자체 검증 (coordinator)
   - [ ] 사용자 승인
   - 상태: 대기 중
 
@@ -128,9 +128,7 @@
 ```
 
 #### 🔗 관련 파일
-- Services/ExportService.cs
-- ViewModels/MainViewModel.cs
-- CODE_STYLE.md (에러 처리 섹션)
+- (파일 목록)
 
 #### 💬 사용자 메모
 ```
@@ -141,12 +139,12 @@
 
 ## 🎯 WorkID 형식
 
-### 추천 형식: **WIP-YYYYMMDD-NN**
+### 추천 형식: **WIP-YYYYMMDD-NNN**
 
 **구조:**
 - `WIP`: Work In Progress (고정 접두사)
 - `YYYYMMDD`: 날짜 (예: 20250202)
-- `NN`: 같은 날짜 내 순서 (01, 02, 03...)
+- `NNN`: 같은 날짜 내 순서, 3자리 0패딩 (001, 002, 003...)
 
 **예시:**
 ```
@@ -167,21 +165,21 @@ WIP-20250203-001  # 다음 날 첫 번째 작업
 
 ### 작업 재개
 ```
-재개: WIP-YYYYMMDD-NN
+재개: WIP-YYYYMMDD-NNN
 또는
-CONTINUE: WIP-YYYYMMDD-NN
+CONTINUE: WIP-YYYYMMDD-NNN
 ```
 
 ### 작업 완료
 ```
-완료: WIP-YYYYMMDD-NN
+완료: WIP-YYYYMMDD-NNN
 ```
 → 완료 단계 모두 체크
 → 완료 작업으로 이동
 
 ### 작업 취소
 ```
-취소: WIP-YYYYMMDD-NN [사유]
+취소: WIP-YYYYMMDD-NNN [사유]
 ```
 → 활성 작업에서 제거
 → 취소 작업으로 이동
@@ -189,7 +187,7 @@ CONTINUE: WIP-YYYYMMDD-NN
 
 ### 상태 확인
 ```
-상태: WIP-YYYYMMDD-NN
+상태: WIP-YYYYMMDD-NNN
 또는
 상태: 전체
 ```
@@ -212,9 +210,9 @@ CONTINUE: WIP-YYYYMMDD-NN
 
 ### 2. 정보 수집
 ```markdown
-완료일: 2025-02-02 16:30
-소요 시간: 6.5시간
-커밋 메시지: [fix] ExportService null 체크 추가
+완료일: YYYY-MM-DD HH:MM
+소요 시간: X시간
+커밋 메시지: [태그] 요약
 커밋 해시: abc123def456
 ```
 
@@ -223,7 +221,7 @@ CONTINUE: WIP-YYYYMMDD-NN
 ### 완료 작업 (히스토리)
 | WorkID | 완료일 | 유형 | 제목 | 소요시간 |
 |--------|--------|------|------|----------|
-| WIP-20250202-001 | 2025-02-02 | 수정 | ExportService null 체크 | 6.5h |
+| WIP-YYYYMMDD-NNN | YYYY-MM-DD | 수정 | 작업 제목 | Xh |
 ```
 
 ### 4. 활성 작업에서 제거
@@ -238,10 +236,10 @@ CONTINUE: WIP-YYYYMMDD-NN
 ```markdown
 ### 완료된 작업 상세
 
-#### WIP-20250202-001: ExportService null 체크 추가
+#### WIP-YYYYMMDD-NNN: 작업 제목
 
-**완료일:** 2025-02-02 16:30
-**소요 시간:** 6.5시간
+**완료일:** YYYY-MM-DD HH:MM
+**소요 시간:** X시간
 **커밋:** abc123def456
 
 [전체 내용 보존...]
@@ -253,7 +251,7 @@ CONTINUE: WIP-YYYYMMDD-NN
 
 ### 1. 취소 사유 기록
 ```
-사용자: "취소: WIP-20250202-001 우선순위 조정으로 인해"
+사용자: "취소: WIP-YYYYMMDD-NNN 우선순위 조정으로 인해"
 ```
 
 ### 2. 활성 작업에서 제거
@@ -269,7 +267,7 @@ CONTINUE: WIP-YYYYMMDD-NN
 ### 취소된 작업 (취소 히스토리)
 | WorkID | 취소일 | 유형 | 제목 | 사유 |
 |--------|--------|------|------|------|
-| WIP-20250202-001 | 2025-02-02 15:00 | 수정 | ExportService null 체크 | 우선순위 조정 |
+| WIP-YYYYMMDD-NNN | YYYY-MM-DD HH:MM | 수정 | 작업 제목 | 우선순위 조정 |
 ```
 
 ---
@@ -278,7 +276,7 @@ CONTINUE: WIP-YYYYMMDD-NN
 
 ### 특정 작업 상태
 ```
-상태: WIP-20250202-001
+상태: WIP-YYYYMMDD-NNN
 ```
 → 해당 WorkID의 상세 상태 출력
 
@@ -295,127 +293,19 @@ CONTINUE: WIP-YYYYMMDD-NN
 ### 시나리오 1: 새 대화에서 작업 재개
 
 ```
-사용자: "재개: WIP-20250202-001"
+사용자: "재개: WIP-YYYYMMDD-NNN"
 
 에이전트:
-🔄 WIP-20250202-001 작업이 재개되었습니다.
+🔄 WIP-YYYYMMDD-NNN 작업이 재개되었습니다.
 
 현재 단계: 구현 단계2 (완료)
 다음 작업: 빌드 테스트
 
 관련 파일:
-- Services/ExportService.cs
-- ViewModels/MainViewModel.cs
+- Service.cs
+- ViewModel.cs
 
 진행하시겠습니까? (y/n)
-```
-
----
-
-### 시나리오 2: 작업 완료
-
-```
-사용자: "완료: WIP-20250202-001"
-
-에이전트:
-✅ WIP-20250202-001 작업이 완료되었습니다.
-
-[완료 요약]
-- 완료일: 2025-02-02 16:30
-- 소요 시간: 6.5시간
-- 커밋: [fix] ExportService null 체크 추가
-
-[다음 단계]
-- WORK_IN_PROGRESS.md 업데이트 (완료 작업으로 이동)
-- 필요 시 보고서 생성
-```
-
----
-
-### 시나리오 3: 작업 취소
-
-```
-사용자: "취소: WIP-20250202-001 우선순위 조정으로 인해"
-
-에이전트:
-⚠️ WIP-20250202-001 작업이 취소되었습니다.
-
-[취소 정보]
-- 사유: 우선순위 조정으로 인해
-- 진척도: 구현 단계2 완료
-- 소요 시간: 5.0시간
-
-[정보 보존]
-- 상세 정보는 취소 작업 히스토리에 보존됨
-```
-
----
-
-## 🔄 WorkID 충돌 방지 시스템
-
-### 쓰기 전 읽기 (Read-Before-Write)
-```
-1. WORK_IN_PROGRESS.md 전체 읽기
-2. 마지막 WorkID 확인
-3. 새 WorkID 생성
-4. WORK_IN_PROGRESS.md 다시 읽기 (중간에 다른 에이전트가 썼는지 확인)
-5. 마지막 WorkID가 변경되었으면 2부터 다시 시작
-6. 변경되지 않았으면 쓰기
-```
-
-### 재시도 로직
-```
-최대 3번 재시도:
-- 1차 시도: WorkID 생성 시도
-- 2차 시도: 충돌 시 다시 WorkID 생성
-- 3차 시도: 또 충돌 시 다시 WorkID 생성
-- 3차 시도 후 실패: 사용자에게 수동 요청
-```
-
-### 충돌 발생 시 처리
-```markdown
-에이전트:
-⚠️ WorkID 생성 실패: 3번 시도 후 충돌 발생
-
-[상황]
-- 시도한 WorkID: WIP-20250207-003
-- 마지막 WorkID: WIP-20250207-003 (다른 에이전트가 생성)
-
-[요청]
-사용자가 직접 WorkID를 지정하거나, 나중에 다시 시도해주세요.
-
-[옵션]
-1. 사용자: "WorkID는 WIP-20250207-004로 지정해줘"
-2. 사용자: "나중에 다시 시도해줘"
-```
-
----
-
-## 🔄 롤백 시 상태 복구
-
-### 백업 확인
-```
-1. WORK_IN_PROGRESS.md에서 Gate 진입 전 백업 섹션 확인
-2. 스냅샷 섹션 확인
-3. 롤백 대상 단계 확인
-```
-
-### 상태 복구 수행
-```
-1. Gate 실패 원인 분석
-2. 백업 상태 확인
-3. 스냅샷 상태로 복구
-   - 완료 단계 롤백
-   - Gate 상태 초기화
-   - 진척도 조정
-4. WORK_IN_PROGRESS.md 업데이트
-```
-
-### 복구 완료 확인
-```
-1. WORK_IN_PROGRESS.md 상태 확인
-2. 다음 단계 에이전트에게 알림
-3. 진행 계속
 ```
 
 ---
@@ -423,7 +313,7 @@ CONTINUE: WIP-YYYYMMDD-NN
 ## 🎯 에이전트 동작 가이드
 
 ### 작업 시작 시
-1. 새로운 WorkID 생성: `WIP-YYYYMMDD-NN` (최대 3번 재시도로 충돌 방지)
+1. 새로운 WorkID 생성: `WIP-YYYYMMDD-NNN` (최대 3번 재시도로 충돌 방지)
 2. 활성 작업에 추가
 3. 상세 정보 기록
 
@@ -457,6 +347,6 @@ CONTINUE: WIP-YYYYMMDD-NN
 
 ## 📚 관련 문서
 
-- [기획서 워크플로우](WORKFLOW_PLANNING.md)
+- [기획서 워크플로우](WORKFLOW_PLANNING/INDEX.md)
 - [빠른 참조](QUICK_REFERENCE.md)
 - [프로젝트 요약](PROJECT_SUMMARY.md)

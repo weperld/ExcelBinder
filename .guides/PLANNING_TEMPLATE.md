@@ -1,4 +1,4 @@
-# 기획서 템플릿
+﻿# 기획서 템플릿
 
 > ExcelBinder 기능 개발을 위한 표준 기획서 포맷
 
@@ -63,51 +63,56 @@
 ## 6. 데이터 모델 변경
 
 ### 새로운 모델
-```csharp
-public class NewModel
-{
-    // ...
-}
+```
+ExcelBinder/
+├── Models/          # 데이터 모델
+├── ViewModels/      # MVVM ViewModel
+├── Views/           # XAML UI
+├── Services/        # 비즈니스 로직
+│   └── Processors/  # 데이터 처리기
+└── ...
 ```
 
 ### 기존 모델 수정
-- [ ] Models/FeatureDefinition.cs 수정
-- [ ] Models/SchemaDefinition.cs 수정
+- [ ] 모델 파일 수정
+- [ ] 스키마 정의 수정
 
 ---
 
 ## 7. API 변경
 
 ### 새로운 API
-```csharp
-public interface INewFeatureProcessor : IFeatureProcessor
-{
-    // ...
-}
+```
+ExcelBinder/
+├── Models/          # 데이터 모델
+├── ViewModels/      # MVVM ViewModel
+├── Views/           # XAML UI
+├── Services/        # 비즈니스 로직
+│   └── Processors/  # 데이터 처리기
+└── ...
 ```
 
 ### 기존 API 수정
-- [ ] Services/ExportService.cs 수정
+- [ ] Service 파일 수정
 - [ ] ...
 
 ---
 
-## 8. FDF (Feature Definition File) 설정
+## 8. 설정 파일
 
 ### 필요한 경로 설정
 ```json
 {
   "paths": {
-    "excelPath": "...",
-    "schemaPath": "...",
+    "dataPath": "...",
     "exportPath": "...",
-    "scriptsPath": "..."
+    "configPath": "..."
   }
 }
 ```
 
 ### 필요한 템플릿
-- [ ] `.liquid` 템플릿 파일 경로
+- [ ] 템플릿 파일 경로
 - [ ] 템플릿 변수: ...
 
 ---
@@ -118,7 +123,7 @@ public interface INewFeatureProcessor : IFeatureProcessor
 2. [ ] Processor 구현
 3. [ ] ViewModel 생성
 4. [ ] View 생성
-5. [ ] FeatureBuilder 통합
+5. [ ] 통합
 6. [ ] 테스트
 
 ---

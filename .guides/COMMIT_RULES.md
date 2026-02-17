@@ -1,6 +1,6 @@
 # 커밋 규칙 (Commit Rules)
 
-> ExcelBinder 프로젝트의 Git 커밋 메시지 표준과 워크플로우를 정의합니다.
+> 프로젝트의 Git 커밋 메시지 표준과 워크플로우를 정의합니다.
 
 ---
 
@@ -11,7 +11,7 @@
 
 본문 (선택사항)
 
-WorkID: WIP-YYYYMMDD-NN
+WorkID: WIP-YYYYMMDD-NNN
 ```
 
 ### 필수 요소
@@ -74,7 +74,7 @@ WorkID: WIP-20250208-001
 ```
 
 ### WorkID 형식
-- `WIP-YYYYMMDD-NN`
+- `WIP-YYYYMMDD-NNN`
 - 예: `WIP-20250208-001`
 
 ---

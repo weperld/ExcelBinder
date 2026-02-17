@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ExcelBinder WorkID 자동 생성 스크립트
+WorkID 자동 생성 스크립트
 새로운 WorkID를 생성하여 WORK_IN_PROGRESS.md에 추가합니다.
 """
 
@@ -19,7 +19,7 @@ def get_last_workid(work_in_progress_path: str) -> tuple[str, int]:
         with open(work_in_progress_path, 'r', encoding='utf-8') as f:
             content = f.read()
 
-        # WIP-YYYYMMDD-NN 형식 찾기
+        # WIP-YYYYMMDD-NNN 형식 찾기
         pattern = r'WIP-(\d{8})-(\d{3})'
         matches = re.findall(pattern, content)
 
@@ -62,7 +62,7 @@ def generate_workid(work_in_progress_path: str) -> str:
 def main():
     """메인 함수"""
     # 현재 디렉토리에서 WORK_IN_PROGRESS.md 찾기
-    work_in_progress_path = Path(__file__).parent.parent / "WORK_IN_PROGRESS.md"
+    work_in_progress_path = Path(__file__).parent.parent.parent / "WORK_IN_PROGRESS.md"
 
     if not work_in_progress_path.exists():
         print(f"Error: WORK_IN_PROGRESS.md not found at {work_in_progress_path}")

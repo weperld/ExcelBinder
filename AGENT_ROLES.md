@@ -1,12 +1,12 @@
 # 에이전트 역할 정의 및 활용 가이드
 
-> ExcelBinder 프로젝트에서 에이전트 역할을 분리하여 명확한 책임과 협업 체계를 정의합니다.
+> 프로젝트에서 에이전트 역할을 분리하여 명확한 책임과 협업 체계를 정의합니다.
 
 ---
 
 ## 📚 문서 개요
 
-이 문서는 ExcelBinder 프로젝트에서 **다중 에이전트 시스템**을 구축하기 위한 가이드입니다.
+이 문서는 프로젝트에서 **다중 에이전트 시스템**을 구축하기 위한 가이드입니다.
 
 **목적:**
 - 역할별 명확한 책임 정의
@@ -20,7 +20,7 @@
 
 ### 기본 원칙
 
-**역할 수:** 6개 기본 역할
+**역할 수:** 7개 기본 역할
 - 각 역할은 **독립적인 책임**을 가짐
 - 필요시 **역할 병합** 가능 (예: 개발자 + UI 에이전트)
 - **명확한 협업 프로세스**로 혼선 방지
@@ -48,7 +48,7 @@
 
 **활용 예시:**
 ```
-사용자: "CSV 기능 추가해줘"
+사용자: "[기능명] 기능 추가해줘"
 
 코디네이터:
 → 분석가에게: "기획서 분석 및 유형 판단"
@@ -88,18 +88,54 @@
 
 [유형]: 새로운 기능
 [필요 파일]:
-  - Services/Processors/CSVProcessor.cs
-  - ViewModels/CSVExecutionViewModel.cs
-  - Views/ExecutionItems/CSVExecutionView.xaml
+  - [경로1]
+  - [경로2]
+  - [경로3]
 
 [위험 요소]:
-  - 기존 StaticDataProcessor와 호환성: 중간
-  - 대응책: 별도 프로세서로 구현
+  - 기존 시스템과 호환성: 중간
+  - 대응책: 별도 모듈로 구현
 ```
 
 ---
 
-### 3. 개발 에이전트 (Development Agent)
+### 3. 설계 에이전트 (Architecture Agent)
+
+**영어 명칭:** `아키텍트`
+**약어 지시:** `아키텍트:` 또는 `설계:`
+
+**주요 책임:**
+- 아키텍처 설계 및 기술적 검증
+- 인터페이스 정의
+- 순환 참조, 성능, 스레드 안전성 등 기술적 위험 분석
+- 설계 문서 작성
+
+**핵심 역할:**
+- 기존 아키텍처 분석
+- 기술적 제약사항 파악
+- 컴포넌트/모듈 간 인터페이스 설계
+- 설계 리뷰 및 수렴 분석
+
+**활용 예시:**
+```
+코디네이터: "아키텍처 설계해줘"
+
+아키텍트:
+✅ 설계 완료
+
+[아키텍처]:
+  - 순환 참조 없음 ✅
+  - 성능 O(n) 이하 ✅
+  - 스레드 안전성 보장 ✅
+
+[인터페이스]:
+  - [인터페이스1]: 정의 완료
+  - [인터페이스2]: 정의 완료
+```
+
+---
+
+### 4. 개발 에이전트 (Development Agent)
 
 **영어 명칭:** `개발자`
 **약어 지시:** `개발자:` 또는 `개발:`
@@ -112,9 +148,9 @@
 - CODE_STYLE.md 준수
 
 **핵심 역할:**
-- C# 코드 작성 (MVVM 패턴 준수)
-- XAML UI 작성
-- 비동기 패턴 구현 (try-finally)
+- 코드 작성 (아키텍처 패턴 준수)
+- UI 작성
+- 비동기 패턴 구현
 - 에러 처리 (데이터 무결성 우선)
 - 빌드 성공 확인
 
@@ -123,20 +159,20 @@
 코디네이터: "구현 시작"
 
 개발자:
-✅ CSVProcessor.cs 생성 완료 (150줄)
-✅ CSVExecutionViewModel.cs 생성 완료 (80줄)
-✅ CSVExecutionView.xaml 생성 완료 (120줄)
+✅ [파일1] 생성 완료 (150줄)
+✅ [파일2] 생성 완료 (80줄)
+✅ [파일3] 생성 완료 (120줄)
 ✅ 빌드 성공
 
 [수정 내용]:
-- Services/Processors/CSVProcessor.cs: 새 파일
-- ViewModels/CSVExecutionViewModel.cs: 새 파일
-- Views/ExecutionItems/CSVExecutionView.xaml: 새 파일
+- [파일1]: 새 파일
+- [파일2]: 새 파일
+- [파일3]: 새 파일
 ```
 
 ---
 
-### 4. 리뷰 에이전트 (Review Agent)
+### 5. 리뷰 에이전트 (Review Agent)
 
 **영어 명칭:** `리뷰어`
 **약어 지시:** `리뷰어:` 또는 `리뷰:`
@@ -163,22 +199,22 @@
 ✅ 코드 리뷰 완료
 
 [분석]:
-- CSVProcessor.cs: 데이터 무결성 준수 ✅
+- [파일1]: 데이터 무결성 준수 ✅
 - 비동기 패턴: try-finally 사용 ✅
-- 명명 규칙: PascalCase, _camelCase 준수 ✅
+- 명명 규칙: 준수 ✅
 
 [문제점]:
-- CSVProcessor.cs:45 → null 가능성 존재
-- CSVExecutionViewModel.cs:120 → 불필요한 변수 존재
+- [파일1]:[라인] → null 가능성 존재
+- [파일2]:[라인] → 불필요한 변수 존재
 
 [개선 사항]:
-- CSVProcessor.cs:45에 null 체크 추가 권장
-- CSVExecutionViewModel.cs:120 제거 권장
+- [파일1]:[라인]에 null 체크 추가 권장
+- [파일2]:[라인] 제거 권장
 ```
 
 ---
 
-### 5. 문서 관리자 (Documentation Manager)
+### 6. 문서 관리자 (Documentation Manager)
 
 **영어 명칭:** `문서가` 또는 `문서 관리자`
 **약어 지시:** `문서가:` 또는 `문서:`
@@ -215,7 +251,7 @@
 
 ---
 
-### 6. 테스터 (Test Agent)
+### 7. 테스터 (Test Agent)
 
 **영어 명칭:** `테스터`
 **약어 지시:** `테스터:` 또는 `테스트:`
@@ -249,20 +285,20 @@
 - 발견된 버그: 없음
 
 [테스트 시나리오]:
-1. CSV 기능 선택
-2. Export 버튼 클릭
-3. 파일 경로 선택
-4. 데이터 추출 확인
+1. [단계1]
+2. [단계2]
+3. [단계3]
+4. [확인사항]
 ```
 
 ---
 
 ## 🔄 협업 워크플로우
 
-### 시나리오 1: 정상 흐름 (7단계 파이프라인)
+### 시나리오 1: 정상 흐름 (개발 파이프라인)
 
 ```
-사용자: "coordinator CSV 기능 추가"
+사용자: "coordinator [기능명] 기능 추가"
     ↓
 코디네이터: 작업 시작 → WorkID 생성
     ↓
@@ -284,7 +320,7 @@
 ### 시나리오 2: 긴급 버그 수정
 
 ```
-사용자: "🚨 ExportService.cs:45 NullReferenceException"
+사용자: "🚨 [파일명]:[라인] [예외타입]"
     ↓
 코디네이터: 즉시 대응
     ↓
@@ -328,10 +364,11 @@
 |------|------------|------------|----------|
 | 1 | 프로젝트 코디네이터 | Project Coordinator | `코디네이터:` 또는 `PC:` |
 | 2 | 분석가 | Analysis Agent | `분석가:` 또는 `분석:` |
-| 3 | 개발자 | Development Agent | `개발자:` 또는 `개발:` |
-| 4 | 리뷰어 | Review Agent | `리뷰어:` 또는 `리뷰:` |
-| 5 | 문서 관리자 | Documentation Manager | `문서가:` 또는 `문서:` |
-| 6 | 테스터 | Test Agent | `테스터:` 또는 `테스트:` |
+| 3 | 아키텍트 | Architecture Agent | `아키텍트:` 또는 `설계:` |
+| 4 | 개발자 | Development Agent | `개발자:` 또는 `개발:` |
+| 5 | 리뷰어 | Review Agent | `리뷰어:` 또는 `리뷰:` |
+| 6 | 문서 관리자 | Documentation Manager | `문서가:` 또는 `문서:` |
+| 7 | 테스터 | Test Agent | `테스터:` 또는 `테스트:` |
 
 ---
 
@@ -355,7 +392,7 @@
 ```
 개발자: "구현을 시작해줘"
 개발자: "이 버그를 수정해줘"
-개발자: "새로운 프로세서를 생성해줘"
+개발자: "새로운 모듈을 생성해줘"
 ```
 
 **리뷰어에게:**
@@ -391,11 +428,11 @@
 코디네이터: 역할 분배
     ↓
 개발자 (비즈니스 로직):
-    - Services/Processors/CSVProcessor.cs
-    - ViewModels/CSVExecutionViewModel.cs
+    - [서비스 파일]
+    - [뷰모델 파일]
     ↓
-UI 에이전트 (XAML/뷰):
-    - Views/ExecutionItems/CSVExecutionView.xaml
+UI 에이전트 (뷰):
+    - [뷰 파일]
     - 스타일 적용
 ```
 
@@ -424,7 +461,7 @@ UI 에이전트 (XAML/뷰):
 ### 1. 프로젝트 코디네이터
 - [ ] AGENTS.md
 - [ ] PROJECT_SUMMARY.md
-- [ ] WORKFLOW_PLANNING.md
+- [ ] WORKFLOW_PLANNING/INDEX.md
 - [ ] WORK_IN_PROGRESS.md
 - [ ] 이 문서 (에이전트 역할 정의 및 활용 가이드)
 
@@ -433,27 +470,33 @@ UI 에이전트 (XAML/뷰):
 - [ ] PROJECT_SUMMARY.md
 - [ ] PLANNING_TEMPLATE.md
 
-### 3. 개발자
+### 3. 아키텍트
+- [ ] AGENTS.md
+- [ ] PROJECT_SUMMARY.md
+- [ ] TECHNICAL_RULES.md
+- [ ] WORKFLOW_PLANNING/INDEX.md
+
+### 4. 개발자
 - [ ] AGENTS.md
 - [ ] PROJECT_SUMMARY.md
 - [ ] CODE_STYLE.md
 - [ ] TECHNICAL_RULES.md
-- [ ] WORKFLOW_PLANNING.md
+- [ ] WORKFLOW_PLANNING/INDEX.md
 
-### 4. 리뷰어
+### 5. 리뷰어
 - [ ] AGENTS.md
 - [ ] CODE_STYLE.md
 - [ ] TECHNICAL_RULES.md
 - [ ] WORKFLOW_GUIDE.md
 
-### 5. 문서 관리자
+### 6. 문서 관리자
 - [ ] AGENTS.md
 - [ ] WORK_IN_PROGRESS.md
 - [ ] WORK_HISTORY.json
 - [ ] PLANNING_TEMPLATE.md
 - [ ] QUICK_REFERENCE.md
 
-### 6. 테스터
+### 7. 테스터
 - [ ] AGENTS.md
 - [ ] PROJECT_SUMMARY.md
 - [ ] BUILD_GUIDE.md
@@ -467,13 +510,13 @@ UI 에이전트 (XAML/뷰):
 
 **단일 에이전트 사용:**
 ```
-"신규: CSV 기능"
+"신규: [기능명] 기능"
 → 에이전트가 모든 역할을 수행
 ```
 
 **여러 에이전트 사용:**
 ```
-"코디네이터: CSV 기능 추가"
+"코디네이터: [기능명] 기능 추가"
 → 에이전트가 코디네이터 역할로 동작
 → 필요 시 다른 역할에게 위임
 ```
@@ -505,10 +548,11 @@ UI 에이전트 (XAML/뷰):
 |------|------|------|----------|
 | 1 | 프로젝트 코디네이터 | 전체 조율, 일정 관리, 최종 승인 | AGENTS, PROJECT_SUMMARY, WORKFLOW_PLANNING, WORK_IN_PROGRESS |
 | 2 | 분석가 | 기획서 분석, 유형 판단, 영향 분석 | AGENTS, PROJECT_SUMMARY, PLANNING_TEMPLATE |
-| 3 | 개발자 | 코드 작성, 파일 생성, 빌드 확인 | AGENTS, PROJECT_SUMMARY, CODE_STYLE, TECHNICAL_RULES |
-| 4 | 리뷰어 | 코드 리뷰, 품질 확인, 버그 탐지 | AGENTS, CODE_STYLE, TECHNICAL_RULES |
-| 5 | 문서 관리자 | WORK_IN_PROGRESS 업데이트, 보고서 생성 | AGENTS, WORK_IN_PROGRESS, WORK_HISTORY |
-| 6 | 테스터 | 기능 테스트, 빌드 테스트, 버그 리포트 | AGENTS, PROJECT_SUMMARY, BUILD_GUIDE |
+| 3 | 아키텍트 | 아키텍처 설계, 기술적 검증 | AGENTS, PROJECT_SUMMARY, TECHNICAL_RULES |
+| 4 | 개발자 | 코드 작성, 파일 생성, 빌드 확인 | AGENTS, PROJECT_SUMMARY, CODE_STYLE, TECHNICAL_RULES |
+| 5 | 리뷰어 | 코드 리뷰, 품질 확인, 버그 탐지 | AGENTS, CODE_STYLE, TECHNICAL_RULES |
+| 6 | 문서 관리자 | WORK_IN_PROGRESS 업데이트, 보고서 생성 | AGENTS, WORK_IN_PROGRESS, WORK_HISTORY |
+| 7 | 테스터 | 기능 테스트, 빌드 테스트, 버그 리포트 | AGENTS, PROJECT_SUMMARY, BUILD_GUIDE |
 
 ---
 
@@ -537,7 +581,7 @@ UI 에이전트 (XAML/뷰):
 ### 첫 번째 작업
 
 ```
-사용자: "코디네이터: CSV 기능 추가"
+사용자: "코디네이터: [기능명] 기능 추가"
 
 코디네이터:
 ✅ 작업이 시작되었습니다.
@@ -559,6 +603,6 @@ UI 에이전트 (XAML/뷰):
 
 - [메인 가이드](AGENTS.md)
 - [프로젝트 요약](PROJECT_SUMMARY.md)
-- [워크플로우](WORKFLOW_PLANNING.md)
+- [워크플로우](WORKFLOW_PLANNING/INDEX.md)
 - [작업 추적](WORK_IN_PROGRESS.md)
 - [빠른 참조](QUICK_REFERENCE.md)

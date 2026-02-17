@@ -1,4 +1,4 @@
-# Quick Reference
+﻿# Quick Reference
 
 > 자주 사용하는 명령어, 코드 패턴, 지시법을 요약한 빠른 참조용 문서입니다.
 
@@ -8,92 +8,32 @@
 
 ### 빌드
 ```bash
-cd ExcelBinder
-dotnet build                    # Debug 빌드 (../Build 폴더)
-dotnet build -c Release         # Release 빌드
-dotnet clean                    # Clean
+dotnet build ExcelBinder/
 ```
 
 ### 실행
 ```bash
-dotnet run                                          # GUI 실행
-dotnet run -- --feature [ID] --export --codegen    # CLI 실행
+dotnet run --project ExcelBinder/
 ```
 
 ### CLI 옵션
-| 옵션 | 설명 |
-|------|------|
-| `--feature [ID]` | 대상 Feature ID 지정 |
-| `--export` | 데이터 추출 (Binary/JSON) |
-| `--codegen` | 코드 생성 실행 |
-| `--both` | export + codegen 둘 다 실행 |
-| `--all` | 모든 파일 처리 |
+dotnet run --project ExcelBinder/ -- --feature [FeatureID] [옵션]
+# 옵션: --export, --codegen, --both, --all
 
 ---
 
 ## 💻 자주 쓰는 코드 패턴
 
-### 비동기 메서드 (필수)
-```csharp
-private async void ExecuteExport()
-{
-    if (IsBusy) return;
-    try
-    {
-        IsBusy = true;
-        await processor.ExecuteExportAsync(this);
-    }
-    finally
-    {
-        IsBusy = false;
-    }
-}
-```
 
-### 에러 처리 (데이터 무결성 우선)
-```csharp
-if (schema == null)
-    throw new FileNotFoundException("Schema not found");
-
-if (string.IsNullOrEmpty(apiKey))
-    throw new Exception("API Key가 설정되지 않았습니다.");
-```
-
-### 속성 (ViewModelBase 상속)
-```csharp
-private string _name;
-public string Name { get => _name; set => SetProperty(ref _name, value); }
-
-private bool _isBusy;
-public bool IsBusy { get => _isBusy; set => SetProperty(ref _isBusy, value); }
-```
-
-### 명령 (RelayCommand)
-```csharp
-public ICommand SaveCommand { get; }
-
-생성자에서:
-SaveCommand = new RelayCommand(ExecuteSave);
-```
-
-### 컬렉션 속성
-```csharp
-public ObservableCollection<FeatureDefinition> Features { get; } = new();
-```
 
 ---
 
 ## 📝 명명 규칙
 
-| 타입 | 규칙 | 예시 |
-|------|------|------|
-| 클래스 | PascalCase | FeatureService, ViewModelBase |
-| 메서드 | PascalCase | LoadSettings, ExportToBinary |
-| 속성 | PascalCase | IsBusy, SelectedFeature |
-| private 필드 | _camelCase | _feature, _isBusy, _httpClient |
-| 인터페이스 | IPascalCase | IFeatureProcessor |
-| 상수 (클래스 내) | PascalCase | HeaderRowIndex, CommentPrefix |
-| 상수 (전역) | ALL_CAPS | MAX_RETRY_COUNT |
+- **클래스/메서드/속성**: PascalCase
+- **private 필드**: _camelCase
+- **인터페이스**: IPascalCase
+- **파일명**: 클래스명과 동일
 
 ---
 
@@ -113,12 +53,12 @@ public ObservableCollection<FeatureDefinition> Features { get; } = new();
 또는
 기획: "기획서 내용"
 ```
-→ WORKFLOW_PLANNING.md 참고 → 분석 → 계획 → 확인
+→ WORKFLOW_PLANNING/INDEX.md 참고 → 분석 → 계획 → 확인
 
 **예시:**
 ```
 기획: ./docs/planning/feature_001.md
-기획: "엑셀 데이터 CSV로도 추출 가능하게 해줘"
+기획: "[기능 설명]"
 ```
 
 ---
@@ -133,8 +73,8 @@ public ObservableCollection<FeatureDefinition> Features { get; } = new();
 
 **예시:**
 ```
-수정: ExportService.cs:20 null 체크 추가
-수정: ExportService에서 null 참조 버그 수정
+수정: [파일명]:[라인] [문제 설명]
+수정: [서비스명]에서 [문제] 버그 수정
 ```
 
 ---
@@ -147,17 +87,31 @@ public ObservableCollection<FeatureDefinition> Features { get; } = new();
 
 **예시:**
 ```
-신규: CSV 데이터 추출 기능 추가
-신규: LogicProcessor 기능 추가
+신규: [기능명] 데이터 추출 기능 추가
+신규: [프로세서명] 기능 추가
+```
+
+---
+
+### 간편 작업
+```
+간편: [작업 설명]
+```
+→ 파이프라인 생략, 최소 검증만 수행
+
+**예시:**
+```
+간편: 버튼 텍스트 수정
+간편: 설정값 변경
 ```
 
 ---
 
 ### 작업 재개
 ```
-재개: WIP-YYYYMMDD-NN
+재개: WIP-YYYYMMDD-NNN
 또는
-CONTINUE: WIP-YYYYMMDD-NN
+CONTINUE: WIP-YYYYMMDD-NNN
 ```
 → WORK_IN_PROGRESS.md에서 상태 확인 → 재개
 
@@ -171,7 +125,7 @@ CONTINUE: WIP-20250202-001
 
 ### 작업 완료
 ```
-완료: WIP-YYYYMMDD-NN
+완료: WIP-YYYYMMDD-NNN
 ```
 → 완료 단계 모두 체크 → 완료 작업으로 이동
 
@@ -179,7 +133,7 @@ CONTINUE: WIP-20250202-001
 
 ### 작업 취소
 ```
-취소: WIP-YYYYMMDD-NN [사유]
+취소: WIP-YYYYMMDD-NNN [사유]
 ```
 → 활성 작업에서 제거 → 취소 작업으로 이동
 
@@ -192,7 +146,7 @@ CONTINUE: WIP-20250202-001
 
 ### 상태 확인
 ```
-상태: WIP-YYYYMMDD-NN
+상태: WIP-YYYYMMDD-NNN
 또는
 상태: 전체
 ```
@@ -223,8 +177,8 @@ CONTINUE: WIP-20250202-001
 
 **예시:**
 ```
-🚨 ExportService.cs:45 NullReferenceException 발생
-🚨 MainViewModel에서 빌드 오류
+🚨 [파일명]:[라인] [예외타입] 발생
+🚨 [뷰모델명]에서 빌드 오류
 ```
 
 ---
@@ -242,8 +196,8 @@ CONTINUE: WIP-20250202-001
 
 **예시:**
 ```
-커밋: CSV 데이터 추출 기능 추가
-푸시: CSV 기능 추가 및 버그 수정
+커밋: [기능명] 데이터 추출 기능 추가
+푸시: [기능명] 기능 추가 및 버그 수정
 ```
 
 ---
@@ -251,20 +205,22 @@ CONTINUE: WIP-20250202-001
 ## 🔍 에러 해결 체크리스트
 
 ### 빌드 오류
-- [ ] CS8602: null 가능 참조 역참조 → nullable 확인
-- [ ] CS8618: non-nullable 필드 초기화 → required 또는 nullable
-- [ ] CS8600: null 값 비-nullable로 변환 → 형식 확인
+- [ ] NuGet 패키지 복원 확인 (dotnet restore)
+- [ ] .NET SDK 버전 확인 (dotnet --version)
+- [ ] 프로젝트 참조 경로 확인
+- [ ] 누락된 using 문 확인
 
 ### 런타임 오류
-- [ ] NullReferenceException → null 체크 추가
-- [ ] FileNotFoundException → 파일 존재 확인
-- [ ] DirectoryNotFoundException → 폴더 존재 확인
+- [ ] null 참조 예외 발생 위치 확인
+- [ ] 파일 경로 존재 여부 확인
+- [ ] 권한 문제 확인
+- [ ] 설정 파일 로드 확인
 
 ---
 
 ## 📌 WorkID 형식
 
-### 추천 형식: **WIP-YYYYMMDD-NN**
+### 추천 형식: **WIP-YYYYMMDD-NNN**
 
 ```
 WIP-20250202-001  # 2025년 2월 2일 첫 번째 작업
@@ -282,7 +238,7 @@ WIP-20250203-001  # 다음 날 첫 번째 작업
 - [빠른 참조 (현재 문서)](QUICK_REFERENCE.md)
 
 ### 워크플로우
-- [기획서 워크플로우](WORKFLOW_PLANNING.md)
+- [기획서 워크플로우](WORKFLOW_PLANNING/INDEX.md)
 - [작업 추적](WORK_IN_PROGRESS.md)
 - [작업 히스토리](WORK_HISTORY.json)
 
@@ -307,31 +263,29 @@ WIP-20250203-001  # 다음 날 첫 번째 작업
 ### 작업 중단 시
 ```
 1. "상태: 전체"로 현재 작업 확인
-2. 다음 대화에서 "재개: WIP-XXX"로 작업 재개
+2. 다음 대화에서 "재개: WIP-XXXXXXXX-NNN"로 작업 재개
 ```
 
 ---
 
 ## 📊 파일 구조 요약
 
-```
 ExcelBinder/
 ├── Models/          # 데이터 모델
-├── ViewModels/      # ViewModelBase 상속
-├── Views/           # XAML Views
+├── ViewModels/      # MVVM ViewModel
+├── Views/           # XAML UI
 ├── Services/        # 비즈니스 로직
-├── .guides/        # 에이전트 가이드
-└── [가이드 문서들] # AGENTS.md, WORKFLOW_*, QUICK_REFERENCE 등
-```
+│   └── Processors/  # 데이터 처리기
+└── ...
 
 ---
 
 ## 💡 기술 원칙 (즉시 확인 필요)
 
-1. **데이터 무결성 우선**: 기본값 대신 예외 발생
-2. **비동기 작업**: try-finally로 IsBusy 상태 보장
-3. **커밋 메시지**: `[태그] 요약` 형식 (한글)
-4. **명명 규칙**: PascalCase / _camelCase
+- **MVVM 패턴 준수**: ViewModel에서 View 직접 참조 금지
+- **타입 안전성**: 무조건 캐스팅 (Type)cast 남용 금지
+- **데이터 무결성**: 원본 엑셀 데이터 변형 금지
+- **에러 처리**: 빈 catch 블록 사용 금지
 
 ---
 
@@ -341,7 +295,7 @@ ExcelBinder/
 ```
 1. AGENTS.md 읽기 (메뉴 확인)
 2. PROJECT_SUMMARY.md 읽기 (프로젝트 이해)
-3. WORKFLOW_PLANNING.md 읽기 (기획서 처리 방법)
+3. WORKFLOW_PLANNING/INDEX.md 읽기 (기획서 처리 방법)
 4. WORK_IN_PROGRESS.md 읽기 (현재 진행 중 작업 확인)
 5. 필요에 따라 상세 가이드 참조 (CODE_STYLE.md, TECHNICAL_RULES.md 등)
 ```
@@ -362,7 +316,7 @@ ExcelBinder/
 **더 상세한 내용이 필요하면:**
 - [코드 작성법](.guides/CODE_STYLE.md)
 - [기술 규칙](.guides/TECHNICAL_RULES.md)
-- [기획서 처리](WORKFLOW_PLANNING.md)
+- [기획서 처리](WORKFLOW_PLANNING/INDEX.md)
 - [작업 추적](WORK_IN_PROGRESS.md)
 
 ---
@@ -371,7 +325,7 @@ ExcelBinder/
 
 ### 보고서 명령어
 ```
-보고서: WIP-YYYYMMDD-NN
+보고서: WIP-YYYYMMDD-NNN
 ```
 → WORK_IN_PROGRESS.md의 완료 작업에서 보고서 생성
 
@@ -382,23 +336,23 @@ ExcelBinder/
 {
   "workId": "WIP-20250202-001",
   "type": "수정",
-  "title": "ExportService null 체크 추가",
+  "title": "[작업명]",
   "startDate": "2025-02-02T10:00:00",
   "endDate": "2025-02-02T16:30:00",
   "duration": "6.5h",
-  "files": ["Services/ExportService.cs"],
+  "files": ["[파일경로]"],
   "commit": "abc123"
 }
 ```
 
-#### 마크다운 (reports/WORK_REPORT_WIP-YYYYMMDD-NN.md)
+#### 마크다운 (reports/WORK_REPORT_WIP-YYYYMMDD-NNN.md)
 ```markdown
 # 작업 보고서
 
 ## 작업 정보
 - **WorkID**: WIP-20250202-001
 - **유형**: 기능 수정
-- **제목**: ExportService null 체크 추가
+- **제목**: [작업명]
 
 ## 기간
 - **시작**: 2025-02-02 10:00
@@ -406,8 +360,8 @@ ExcelBinder/
 - **소요 시간**: 6.5시간
 
 ## 구현 내용
-- Services/ExportService.cs
-  - 20번 라인: null 체크 추가
+- [파일경로]
+  - [라인번호]: [변경 내용]
 
 ## 테스트 결과
 - [x] 빌드 성공
