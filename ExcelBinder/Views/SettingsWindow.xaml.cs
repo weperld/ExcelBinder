@@ -1,16 +1,19 @@
+using System.Diagnostics;
 using System.Windows;
-using ExcelBinder.Services;
+using ExcelBinder.Models;
 
 namespace ExcelBinder.Views
 {
-    public partial class SettingsWindow : Window, IPasswordProvider
+    public partial class SettingsWindow : Window
     {
-        public string OpenAiApiKey => ApiKeyBox.Password;
-        public string ClaudeApiKey => ClaudeApiKeyBox.Password;
-
         public SettingsWindow()
         {
             InitializeComponent();
+        }
+
+        private void OnGitHubClick(object sender, RoutedEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo(ProjectConstants.Update.ReleasesPageUrl) { UseShellExecute = true });
         }
     }
 }

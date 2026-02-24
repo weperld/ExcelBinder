@@ -9,7 +9,11 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Global Settings" FontSize="24" FontWeight="Bold" Margin="0,0,0,25" Foreground="{StaticResource PrimaryBrush}"/>
+        <Grid>
+            <TextBlock Text="Global Settings" FontSize="24" FontWeight="Bold" Margin="0,0,0,25" Foreground="{StaticResource PrimaryBrush}"/>
+            <Button Content="GitHub Repository" Click="OnGitHubClick" Height="28" HorizontalAlignment="Right" VerticalAlignment="Top"
+                    Padding="15,0" Cursor="Hand" Background="Transparent" BorderBrush="{StaticResource PrimaryBrush}" Foreground="{StaticResource PrimaryBrush}"/>
+        </Grid>
 
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
             <Grid Margin="0,0,10,0">
@@ -49,7 +53,7 @@
                                                     <ColumnDefinition Width="Auto"/>
                                                 </Grid.ColumnDefinitions>
                                                 <TextBlock Text="{Binding}" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis"/>
-                                                <Button Grid.Column="1" Content="Remove" Command="{Binding DataContext.RemoveBoundFeatureCommand, RelativeSource={RelativeSource AncestorType=Window}}" 
+                                                <Button Grid.Column="1" Content="Remove" Command="{Binding DataContext.RemoveBoundFeatureCommand, RelativeSource={RelativeSource AncestorType=Window}}"
                                                         CommandParameter="{Binding}" Width="60" Height="22" FontSize="10" Margin="10,0,0,0" Foreground="{StaticResource DangerBrush}"/>
                                             </Grid>
                                         </Border>
@@ -62,9 +66,10 @@
                             </StackPanel>
                         </StackPanel>
                     </GroupBox>
+
                 </StackPanel>
 
-                <!-- Update & AI Settings -->
+                <!-- Update Settings -->
                 <StackPanel Grid.Column="1">
                     <GroupBox Header="Update Settings" Margin="0,10,0,10">
                         <StackPanel>
@@ -74,50 +79,27 @@
                         </StackPanel>
                     </GroupBox>
 
-                    <GroupBox Header="Live Preview (Loaded Features)" Height="200">
+                    <GroupBox Header="Live Preview (Loaded Features)" Height="260">
                         <ListBox ItemsSource="{Binding Features}" BorderThickness="0" Background="Transparent" VirtualizingPanel.ScrollUnit="Pixel">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1" Padding="0,5">
+                                    <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1" Padding="0,7">
                                         <StackPanel>
-                                            <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
-                                            <TextBlock Text="{Binding Id}" FontSize="10" Foreground="{StaticResource MutedTextBrush}"/>
+                                            <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="17"/>
+                                            <TextBlock Text="{Binding Id}" FontSize="13" Foreground="{StaticResource MutedTextBrush}"/>
                                         </StackPanel>
                                     </Border>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
                     </GroupBox>
-
-                    <GroupBox Header="AI Assistant Configuration" Margin="0,10,0,0">
-                        <StackPanel>
-                            <TextBlock Text="OpenAI API Key" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                            <PasswordBox x:Name="ApiKeyBox" PasswordChar="*" Margin="0,0,0,15"/>
-
-                            <TextBlock Text="Claude API Key" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                            <PasswordBox x:Name="ClaudeApiKeyBox" PasswordChar="*" Margin="0,0,0,15"/>
-
-                            <TextBlock Text="Model Selector" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                            <ComboBox SelectedValue="{Binding Settings.AiModel}" SelectedValuePath="Content" IsEditable="True">
-                                <ComboBoxItem Content="gpt-4o"/>
-                                <ComboBoxItem Content="gpt-4o-mini"/>
-                                <Separator/>
-                                <ComboBoxItem Content="claude-3-5-sonnet-latest"/>
-                                <ComboBoxItem Content="claude-3-5-haiku-latest"/>
-                                <Separator/>
-                                <ComboBoxItem Content="o3-mini"/>
-                                <ComboBoxItem Content="o1"/>
-                            </ComboBox>
-                            <TextBlock Text="API keys are saved locally in settings.json" FontSize="11" Foreground="{StaticResource MutedTextBrush}" Margin="0,10,0,0" FontStyle="Italic"/>
-                        </StackPanel>
-                    </GroupBox>
                 </StackPanel>
             </Grid>
         </ScrollViewer>
 
         <Border Grid.Row="2" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,1,0,0" Padding="0,20,0,0" Margin="0,10,0,0">
-            <Button Content="Save &amp; Apply Changes" Style="{StaticResource SecondaryButton}" 
-                    Command="{Binding SaveSettingsCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}" 
+            <Button Content="Save &amp; Apply Changes" Style="{StaticResource SecondaryButton}"
+                    Command="{Binding SaveSettingsCommand}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
                     Width="200" Height="40" HorizontalAlignment="Right"/>
         </Border>
     </Grid>
