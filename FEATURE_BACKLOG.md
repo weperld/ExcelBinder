@@ -21,9 +21,9 @@
 - 인앱 다운로드/자동 설치 없음 (브라우저에서 직접 다운로드)
 
 ### 사전 결정 필요 사항
-- [ ] GitHub 저장소 URL 확정
-- [ ] 업데이트 확인 시점 (앱 시작 시 / 수동 버튼 / 둘 다)
-- [ ] 프리릴리즈 버전 알림 포함 여부
+- [x] GitHub 저장소 URL 확정 → `weperld/ExcelBinder`
+- [x] 업데이트 확인 시점 (앱 시작 시 / 수동 버튼 / 둘 다) → 둘 다
+- [x] 프리릴리즈 버전 알림 포함 여부 → 제외 (정식 릴리즈만)
 
 ### 대략적 계획
 
@@ -190,15 +190,15 @@
 
 ## 할 일 목록 (TODO)
 
-### 기능 1: 릴리즈 버전 체크
-- [ ] GitHub 저장소 URL 확정
-- [ ] 업데이트 확인 시점 결정 (시작 시 / 수동 / 둘 다)
-- [ ] `VersionInfo` 모델 설계
-- [ ] `UpdateCheckService` 구현 (GitHub Releases API 호출)
-- [ ] `AppSettings` 확장 (시작 시 체크 설정)
-- [ ] Dashboard 알림 배너 + GitHub 릴리즈 링크 버튼 UI 추가
-- [ ] MainViewModel 시작 시 체크 로직 연동
-- [ ] 네트워크 오류 처리 및 테스트
+### 기능 1: 릴리즈 버전 체크 ✅ 구현 완료 (2026-02-24)
+- [x] GitHub 저장소 URL 확정 → `weperld/ExcelBinder`
+- [x] 업데이트 확인 시점 결정 → 둘 다 (시작 시 자동 + Settings 수동 버튼)
+- [x] `VersionInfo` 모델 설계 → `Models/VersionInfo.cs`
+- [x] `UpdateCheckService` 구현 → `Services/UpdateCheckService.cs`
+- [x] `AppSettings` 확장 → `CheckForUpdatesOnStartup` 속성 추가
+- [x] Dashboard 알림 배너 + GitHub 릴리즈 링크 버튼 UI 추가
+- [x] MainViewModel 시작 시 체크 로직 연동
+- [x] 네트워크 오류 처리 (타임아웃 10초, graceful 실패)
 
 ### 기능 2: 스키마 헤더 체크 박스
 - [ ] 제외 필드 저장 방식 결정 (ExcludedFields vs 필드 메타 플래그)

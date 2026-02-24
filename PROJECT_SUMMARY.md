@@ -60,6 +60,7 @@ ExcelBinder/
 │   ├── ExcelService.cs       # 엑셀 파싱 (NPOI)
 │   ├── ExportService.cs      # 데이터 추출
 │   ├── CodeGeneratorService.cs # 코드 생성 (Scriban)
+│   ├── UpdateCheckService.cs  # GitHub 릴리즈 버전 체크
 │   └── Processors/         # Feature별 프로세서
 │       ├── StaticDataProcessor.cs
 │       ├── LogicProcessor.cs
