@@ -12,6 +12,7 @@ namespace ExcelBinder.Models
         private ObservableCollection<string> _boundFeatures = new();
         private bool _isBinaryChecked = true;
         private bool _isJsonChecked = false;
+        private bool _checkForUpdatesOnStartup = true;
         private string _openAiApiKey = string.Empty;
         private string _claudeApiKey = string.Empty;
         private string _aiModel = ProjectConstants.AI.DefaultModel;
@@ -35,6 +36,13 @@ namespace ExcelBinder.Models
         { 
             get => _boundFeatures; 
             set => SetProperty(ref _boundFeatures, value); 
+        }
+
+        [JsonProperty("checkForUpdatesOnStartup")]
+        public bool CheckForUpdatesOnStartup
+        {
+            get => _checkForUpdatesOnStartup;
+            set => SetProperty(ref _checkForUpdatesOnStartup, value);
         }
 
         [JsonProperty("isBinaryChecked")]

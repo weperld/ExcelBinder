@@ -105,6 +105,22 @@ namespace ExcelBinder.Models
             }
         }
         
+        public static class Update
+        {
+            public const string GitHubOwner = "weperld";
+            public const string GitHubRepo = "ExcelBinder";
+            public const string ApiUrl = $"https://api.github.com/repos/{GitHubOwner}/{GitHubRepo}/releases/latest";
+            public const string ReleasesPageUrl = $"https://github.com/{GitHubOwner}/{GitHubRepo}/releases";
+            public const string UserAgent = "ExcelBinder-UpdateChecker";
+            public const int TimeoutSeconds = 10;
+
+            public const string MsgNewVersion = "새 버전 {0}이(가) 출시되었습니다!";
+            public const string MsgUpToDate = "현재 최신 버전입니다.";
+            public const string MsgCheckFailed = "업데이트 확인에 실패했습니다.";
+            public const string BtnDownload = "다운로드";
+            public const string BtnDismiss = "닫기";
+        }
+
         public static class Defaults
         {
             public const string Namespace = "GameData";

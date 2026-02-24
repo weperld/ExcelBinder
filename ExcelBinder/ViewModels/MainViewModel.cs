@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using ExcelBinder.Services;
@@ -15,12 +17,58 @@ namespace ExcelBinder.ViewModels
         private AppSettings _settings = new();
         private FeatureDefinition? _selectedFeature;
         private ExecutionViewModelBase? _currentExecutionViewModel;
+        private VersionInfo? _latestVersionInfo;
+        private bool _isUpdateBannerVisible;
 
         public ExecutionViewModelBase? CurrentExecutionViewModel
         {
             get => _currentExecutionViewModel;
             set => SetProperty(ref _currentExecutionViewModel, value);
         }
+
+        /// <summary>
+        /// 최신 버전 정보입니다. null이면 업데이트 없음 또는 확인 전 상태입니다.
+        /// </summary>
+        public VersionInfo? LatestVersionInfo
+        {
+            get => _latestVersionInfo;
+            set
+            {
+                if (SetProperty(ref _latestVersionInfo, value))
+                {
+                    IsUpdateBannerVisible = value != null;
+                    OnPropertyChanged(nameof(UpdateMessage));
+                    OnPropertyChanged(nameof(IsUpdateIndicatorVisible));
+                }
+            }
+        }
+
+        /// <summary>
+        /// 업데이트 알림 배너의 표시 여부입니다.
+        /// </summary>
+        public bool IsUpdateBannerVisible
+        {
+            get => _isUpdateBannerVisible;
+            set
+            {
+                if (SetProperty(ref _isUpdateBannerVisible, value))
+                {
+                    OnPropertyChanged(nameof(IsUpdateIndicatorVisible));
+                }
+            }
+        }
+
+        /// <summary>
+        /// 업데이트가 존재하지만 토스트가 닫혀 있을 때 인디케이터 버튼을 표시합니다.
+        /// </summary>
+        public bool IsUpdateIndicatorVisible => LatestVersionInfo != null && !IsUpdateBannerVisible;
+
+        /// <summary>
+        /// 업데이트 알림 배너에 표시할 메시지입니다.
+        /// </summary>
+        public string UpdateMessage => LatestVersionInfo != null
+            ? string.Format(ProjectConstants.Update.MsgNewVersion, LatestVersionInfo.VersionString)
+            : string.Empty;
 
         public AppSettings Settings
         {
@@ -57,8 +105,13 @@ namespace ExcelBinder.ViewModels
         public ICommand RemoveBoundFeatureCommand { get; }
         public ICommand CreateFeatureCommand { get; }
         public ICommand EditFeatureCommand { get; }
+        public ICommand OpenUpdatePageCommand { get; }
+        public ICommand CheckForUpdateCommand { get; }
+        public ICommand DismissUpdateBannerCommand { get; }
+        public ICommand ShowUpdateBannerCommand { get; }
 
         private readonly FeatureService _featureService = new();
+        private readonly UpdateCheckService _updateCheckService = new();
 
         public MainViewModel()
         {
@@ -73,6 +126,10 @@ namespace ExcelBinder.ViewModels
             RemoveBoundFeatureCommand = new RelayCommand<string>(ExecuteRemoveBoundFeature);
             CreateFeatureCommand = new RelayCommand(ExecuteCreateFeature);
             EditFeatureCommand = new RelayCommand<FeatureDefinition>(ExecuteEditFeature);
+            OpenUpdatePageCommand = new RelayCommand(ExecuteOpenUpdatePage);
+            CheckForUpdateCommand = new RelayCommand(ExecuteCheckForUpdate);
+            DismissUpdateBannerCommand = new RelayCommand(() => IsUpdateBannerVisible = false);
+            ShowUpdateBannerCommand = new RelayCommand(() => IsUpdateBannerVisible = true);
 
             _settings = _featureService.LoadSettings();
 
@@ -89,6 +146,11 @@ namespace ExcelBinder.ViewModels
                 {
                     SelectedFeature = lastFeature;
                 }
+            }
+
+            if (Settings.CheckForUpdatesOnStartup)
+            {
+                StartUpdateCheckOnStartup();
             }
         }
 
@@ -228,6 +290,64 @@ namespace ExcelBinder.ViewModels
         public void ShowLogs()
         {
             AppServices.Dialog.ShowLogWindow();
+        }
+
+        /// <summary>
+        /// 앱 시작 시 fire-and-forget으로 업데이트를 확인합니다.
+        /// async void는 생성자에서의 비동기 호출을 위한 의도적 사용입니다.
+        /// </summary>
+        private async void StartUpdateCheckOnStartup()
+        {
+            await CheckForUpdateAsync();
+        }
+
+        private async Task CheckForUpdateAsync()
+        {
+            try
+            {
+                var versionInfo = await _updateCheckService.CheckForUpdateAsync();
+                LatestVersionInfo = versionInfo;
+            }
+            catch (Exception ex)
+            {
+                LogService.Instance.Warning($"업데이트 확인 중 오류: {ex.Message}");
+            }
+        }
+
+        private void ExecuteOpenUpdatePage()
+        {
+            var url = LatestVersionInfo?.HtmlUrl ?? ProjectConstants.Update.ReleasesPageUrl;
+            try
+            {
+                Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                LogService.Instance.Error($"브라우저 열기 실패: {ex.Message}");
+            }
+        }
+
+        private async void ExecuteCheckForUpdate()
+        {
+            if (IsBusy) return;
+            try
+            {
+                IsBusy = true;
+                var versionInfo = await _updateCheckService.CheckForUpdateAsync();
+                LatestVersionInfo = versionInfo;
+                if (versionInfo == null)
+                {
+                    LogService.Instance.Info(ProjectConstants.Update.MsgUpToDate);
+                }
+            }
+            catch (Exception ex)
+            {
+                LogService.Instance.Error($"{ProjectConstants.Update.MsgCheckFailed}: {ex.Message}");
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
     }
 }

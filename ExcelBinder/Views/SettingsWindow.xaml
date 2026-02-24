@@ -64,8 +64,16 @@
                     </GroupBox>
                 </StackPanel>
 
-                <!-- AI Settings -->
+                <!-- Update & AI Settings -->
                 <StackPanel Grid.Column="1">
+                    <GroupBox Header="Update Settings" Margin="0,0,0,10">
+                        <StackPanel>
+                            <CheckBox Content="앱 시작 시 자동으로 업데이트 확인"
+                                      IsChecked="{Binding Settings.CheckForUpdatesOnStartup}" Margin="0,0,0,10"/>
+                            <Button Content="지금 업데이트 확인" Command="{Binding CheckForUpdateCommand}" Width="150" Height="30" HorizontalAlignment="Left"/>
+                        </StackPanel>
+                    </GroupBox>
+
                     <GroupBox Header="Live Preview (Loaded Features)" Height="200">
                         <ListBox ItemsSource="{Binding Features}" BorderThickness="0" Background="Transparent" VirtualizingPanel.ScrollUnit="Pixel">
                             <ListBox.ItemTemplate>
