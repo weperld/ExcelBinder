@@ -176,7 +176,45 @@
 
 ---
 
-## 4. 인앱 업데이트 다운로드 (고려 대상)
+## 4. 업데이트 알림에 릴리즈 노트 표시
+
+### 구현 가능성: HIGH
+
+### 현황 분석
+- `VersionInfo.Body`에 GitHub 릴리즈 노트가 이미 저장됨
+- 현재 토스트/팝업에는 버전 번호만 표시
+- GitHub API `/releases` 엔드포인트로 전체 릴리즈 목록 조회 가능 (페이지당 30건)
+
+### 사전 결정 필요 사항
+- [x] 표시 범위: 현재 버전~최신 버전 사이 모든 릴리즈 노트 표시 (B 방식)
+- [ ] 릴리즈 노트 포맷: Markdown 원본 그대로 vs 간소화 텍스트
+
+### 대략적 계획
+
+#### Phase 1: 서비스 확장
+- `UpdateCheckService`에 `/releases` API 호출 메서드 추가
+- 현재 버전 < release 버전 <= 최신 버전 범위 필터링
+- `List<VersionInfo>` 반환
+
+#### Phase 2: UI 반영
+- 토스트 배너에 릴리즈 노트 요약 영역 추가 (스크롤 가능)
+- Settings 업데이트 확인 팝업에도 릴리즈 노트 표시
+- 버전별 섹션 구분 (v2.3.0, v2.2.0 등)
+
+### 영향 범위
+| 파일 | 변경 유형 |
+|------|----------|
+| `Services/UpdateCheckService.cs` | 수정 (전체 릴리즈 조회 메서드 추가) |
+| `Models/ProjectConstants.cs` | 수정 (API URL 상수 추가) |
+| `ViewModels/MainViewModel.cs` | 수정 (릴리즈 노트 목록 바인딩) |
+| `MainWindow.xaml` | 수정 (토스트에 릴리즈 노트 영역) |
+| `Views/SettingsView.xaml` | 수정 (팝업에 릴리즈 노트 영역) |
+
+### 난이도: 소~중
+
+---
+
+## 5. 인앱 업데이트 다운로드 (고려 대상)
 
 ### 구현 가능성: HIGH
 
