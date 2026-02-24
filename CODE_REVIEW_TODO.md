@@ -3,19 +3,15 @@
 > 작성일: 2026-02-24
 > 리뷰 버전: v2.2.1
 > 총 이슈: 24건 (HIGH 6 / MEDIUM 11 / LOW 7)
+> AI Assistant 기능 제거로 H-01, H-02, L-07은 해당 없음 처리
 
 ---
 
 ## HIGH - 수정 필수
 
-- [x] **H-01** API 키 평문 저장 → DPAPI 암호화 적용 ✅
-  - `CryptoHelper.cs` 신규 생성, `AppSettings.cs` 암호화 프로퍼티 추가
-  - `System.Security.Cryptography.ProtectedData` NuGet 패키지 추가
-  - 기존 평문 settings.json 하위 호환 유지
+- [x] **H-01** ~~API 키 평문 저장 → DPAPI 암호화 적용~~ N/A (AI 기능 제거로 해당 없음)
 
-- [x] **H-02** `dynamic` 타입 사용 → 강타입 DTO 정의 ✅
-  - `AIService.cs`에 `OpenAiResponse`, `ClaudeResponse` DTO 클래스 정의
-  - `dynamic` 제거, `JsonConvert.DeserializeObject<T>()` 사용
+- [x] **H-02** ~~`dynamic` 타입 사용 → 강타입 DTO 정의~~ N/A (AI 기능 제거로 해당 없음)
 
 - [x] **H-03** `GetAwaiter().GetResult()` 데드락 위험 → `Task.Run` 래핑 ✅
   - `App.xaml.cs` CLI 실행 경로에 `Task.Run(async () => { ... })` 래핑 적용
@@ -106,6 +102,4 @@
   - `ExportService.cs:51-56`
   - nullable annotation 불일치 (CS8714)
 
-- [ ] **L-07** `ChatMessage`에서 View 종속성 제거
-  - `AIAssistantViewModel.cs:122-124`
-  - HorizontalAlignment, Brush → DataTrigger/Converter로 분리
+- [x] **L-07** ~~`ChatMessage`에서 View 종속성 제거~~ N/A (AI 기능 제거로 해당 없음)
