@@ -35,8 +35,10 @@ PYTHONIOENCODING=utf-8 python .search/ai-grep outline "file.cs"            # 파
 ### 핵심 흐름
 Excel Load → ExcelLoaderService.Parse() → ColumnFilter/RowFilter → Processor.Process() → ExportService.Export() (JSON/Binary/Code)
 
-### 엑셀 필터링 규칙
-- **열/행 필터링 접두어**: `#` (해당 열/행 무시)
+### 엑셀 필터링 규칙 (`#` 접두어)
+- **열 무시**: 헤더 행에서 `#`이 붙은 열은 스키마 생성에서 제외 (바이너리/JSON 출력도 제외)
+- **행 무시**: 데이터 행에서 첫 번째 유효 열의 값이 `#`으로 시작하면 해당 행 추출 제외
+- **시트 무시**: 시트명이 `#`으로 시작하면 해당 시트 무시
 - **헤더 행**: 1행, **데이터 시작 행**: 2행
 
 ### 도메인 용어
