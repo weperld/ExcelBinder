@@ -1,0 +1,8 @@
+{
+  "featureDefinitionsPath": "./features",
+  "lastFeatureId": "",
+  "boundFeatures": [],
+  "checkForUpdatesOnStartup": true,
+  "isBinaryChecked": true,
+  "isJsonChecked": false
+}
