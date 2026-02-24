@@ -8,6 +8,10 @@ namespace ExcelBinder.Services.Processors
 {
     public class LogicProcessor : IFeatureProcessor
     {
+        private readonly ExcelService _excelService = new();
+        private readonly LogicParserService _logicParserService = new();
+        private readonly CodeGeneratorService _codeGenService = new();
+
         public string CategoryName => ProjectConstants.Categories.Logic;
 
         public bool IsSchemaPathVisible => false;
@@ -49,20 +53,16 @@ namespace ExcelBinder.Services.Processors
             LogService.Instance.Clear();
             LogService.Instance.Info($"Starting Logic Generation for {selectedSheets.Count} sheets...");
 
-            var excelService = new ExcelService();
-            var logicParserService = new LogicParserService();
-            var codeGenService = new CodeGeneratorService();
-
             foreach (var item in selectedSheets)
             {
                 try
                 {
-                    var data = await System.Threading.Tasks.Task.Run(() => excelService.ReadExcel(item.File.FullPath, item.Sheet.SheetName).ToList());
+                    var data = await System.Threading.Tasks.Task.Run(() => _excelService.ReadExcel(item.File.FullPath, item.Sheet.SheetName).ToList());
                     if (data.Count < 1) continue; // 최소 1행 필요 (첫 행 헤더)
 
                     string className = item.Sheet.SheetName;
-                    var context = await System.Threading.Tasks.Task.Run(() => logicParserService.PrepareLogicContext(data, vm.SelectedFeature, vm.Namespace, className));
-                    string? code = await System.Threading.Tasks.Task.Run(() => codeGenService.GenerateLogicCode(context, vm.SelectedFeature));
+                    var context = await System.Threading.Tasks.Task.Run(() => _logicParserService.PrepareLogicContext(data, vm.SelectedFeature, vm.Namespace, className));
+                    string? code = await System.Threading.Tasks.Task.Run(() => _codeGenService.GenerateLogicCode(context, vm.SelectedFeature));
                     if (!string.IsNullOrEmpty(code))
                     {
                         await System.Threading.Tasks.Task.Run(() => File.WriteAllText(Path.Combine(vm.SelectedFeature.ScriptsPath, className + ProjectConstants.Extensions.CSharp), code));

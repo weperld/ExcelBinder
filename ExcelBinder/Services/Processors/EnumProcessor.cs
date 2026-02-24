@@ -11,6 +11,8 @@ namespace ExcelBinder.Services.Processors
 {
     public class EnumProcessor : IFeatureProcessor
     {
+        private readonly ExcelService _excelService = new();
+
         public string CategoryName => ProjectConstants.Categories.Enum;
 
         public bool IsSchemaPathVisible => false;
@@ -77,8 +79,7 @@ namespace ExcelBinder.Services.Processors
 
         private async Task ProcessFile(string filePath, IExecutionViewModel vm)
         {
-            var excelService = new ExcelService();
-            var sheetNames = excelService.GetSheetNames(filePath);
+            var sheetNames = _excelService.GetSheetNames(filePath);
 
             string definitionSheetName = sheetNames.FirstOrDefault(s => s.Equals("Definition", StringComparison.OrdinalIgnoreCase));
             if (definitionSheetName == null)
@@ -87,7 +88,7 @@ namespace ExcelBinder.Services.Processors
                 return;
             }
 
-            var rawData = excelService.ReadExcel(filePath, definitionSheetName).ToList();
+            var rawData = _excelService.ReadExcel(filePath, definitionSheetName).ToList();
             if (rawData.Count < 1)
             {
                 LogService.Instance.Warning($"'Definition' sheet in {Path.GetFileName(filePath)} is empty.");
@@ -131,8 +132,7 @@ namespace ExcelBinder.Services.Processors
                 return;
             }
 
-            var excelService = new ExcelService();
-            var rawData = excelService.ReadExcel(filePath, targetSheet).ToList();
+            var rawData = _excelService.ReadExcel(filePath, targetSheet).ToList();
             if (rawData.Count < 1)
             {
                 LogService.Instance.Warning($"Sheet '{targetSheet}' is empty. Skipping Enum generation.");

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Input;
 using ExcelBinder.Models;
 using ExcelBinder.Services;
+using ExcelBinder.Services.Processors;
 
 namespace ExcelBinder.ViewModels
 {
@@ -14,6 +15,7 @@ namespace ExcelBinder.ViewModels
         protected readonly ExcelService _excelService = new();
         protected readonly CodeGeneratorService _codeGenService = new();
         protected readonly FeatureDefinition _feature;
+        private readonly IFeatureProcessor _processor;
         private string _namespace;
 
         public FeatureDefinition SelectedFeature => _feature;
@@ -43,15 +45,16 @@ namespace ExcelBinder.ViewModels
         public ICommand DeselectAllCommand { get; }
         public ICommand NavigateToDashboardCommand { get; }
 
-        public bool IsSchemaPathVisible => FeatureProcessorFactory.GetProcessor(_feature.Category).IsSchemaPathVisible;
-        public bool IsExportPathVisible => FeatureProcessorFactory.GetProcessor(_feature.Category).IsExportPathVisible;
-        public bool IsScriptsPathVisible => FeatureProcessorFactory.GetProcessor(_feature.Category).IsScriptsPathVisible;
-        public bool IsSchemaStatusVisible => FeatureProcessorFactory.GetProcessor(_feature.Category).IsSchemaStatusVisible;
+        public bool IsSchemaPathVisible => _processor.IsSchemaPathVisible;
+        public bool IsExportPathVisible => _processor.IsExportPathVisible;
+        public bool IsScriptsPathVisible => _processor.IsScriptsPathVisible;
+        public bool IsSchemaStatusVisible => _processor.IsSchemaStatusVisible;
 
         protected ExecutionViewModelBase(FeatureDefinition feature)
         {
             _feature = feature;
             _namespace = feature.DefaultNamespace;
+            _processor = FeatureProcessorFactory.GetProcessor(feature.Category);
 
             RefreshFilesCommand = new RelayCommand(RefreshFiles);
             SelectAllCommand = new RelayCommand(ExecuteSelectAll);

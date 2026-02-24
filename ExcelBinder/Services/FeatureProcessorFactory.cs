@@ -4,6 +4,9 @@ using ExcelBinder.Services.Processors;
 
 namespace ExcelBinder.Services
 {
+    /// <summary>
+    /// Processor는 싱글턴으로 관리됩니다. 모든 Processor는 stateless를 유지해야 합니다.
+    /// </summary>
     public static class FeatureProcessorFactory
     {
         private static readonly Dictionary<string, IFeatureProcessor> _processors = new()

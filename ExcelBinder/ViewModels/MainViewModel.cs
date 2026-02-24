@@ -73,7 +73,23 @@ namespace ExcelBinder.ViewModels
         public AppSettings Settings
         {
             get => _settings;
-            set => SetProperty(ref _settings, value);
+            set
+            {
+                var old = _settings;
+                if (SetProperty(ref _settings, value))
+                {
+                    if (old != null)
+                    {
+                        old.PropertyChanged -= OnSettingsPropertyChanged;
+                        old.BoundFeatures.CollectionChanged -= OnBoundFeaturesCollectionChanged;
+                    }
+                    if (value != null)
+                    {
+                        value.PropertyChanged += OnSettingsPropertyChanged;
+                        value.BoundFeatures.CollectionChanged += OnBoundFeaturesCollectionChanged;
+                    }
+                }
+            }
         }
 
         public FeatureDefinition? SelectedFeature
@@ -131,11 +147,7 @@ namespace ExcelBinder.ViewModels
             DismissUpdateBannerCommand = new RelayCommand(() => IsUpdateBannerVisible = false);
             ShowUpdateBannerCommand = new RelayCommand(() => IsUpdateBannerVisible = true);
 
-            _settings = _featureService.LoadSettings();
-
-            // Subscribe to settings changes for live preview
-            _settings.PropertyChanged += (s, e) => { if (e.PropertyName == nameof(AppSettings.FeatureDefinitionsPath)) RefreshFeatures(); };
-            _settings.BoundFeatures.CollectionChanged += (s, e) => RefreshFeatures();
+            Settings = _featureService.LoadSettings();
 
             RefreshFeatures();
 
@@ -152,6 +164,16 @@ namespace ExcelBinder.ViewModels
             {
                 StartUpdateCheckOnStartup();
             }
+        }
+
+        private void OnSettingsPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(AppSettings.FeatureDefinitionsPath)) RefreshFeatures();
+        }
+
+        private void OnBoundFeaturesCollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            RefreshFeatures();
         }
 
         private void RefreshFeatures()

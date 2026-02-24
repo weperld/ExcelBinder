@@ -26,6 +26,11 @@ namespace ExcelBinder.ViewModels
                 var processor = FeatureProcessorFactory.GetProcessor(_feature.Category);
                 await processor.ExecuteGenerateAsync(this);
             }
+            catch (Exception ex)
+            {
+                LogService.Instance.Error($"Code generation error: {ex.Message}");
+                ShowLogs();
+            }
             finally
             {
                 IsBusy = false;

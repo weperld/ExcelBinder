@@ -181,7 +181,7 @@ namespace ExcelBinder.Services
                     _ => value ?? ""
                 };
             }
-            catch (Exception ex) when (!(ex is Exception && ex.Message.Contains("Type Mismatch")))
+            catch (Exception ex) when (ex is FormatException or OverflowException)
             {
                 throw new Exception($"Cannot parse '{value}' as {type}. {ex.Message}");
             }

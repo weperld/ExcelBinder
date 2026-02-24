@@ -50,6 +50,9 @@ namespace ExcelBinder.Services
             string key = $"{filePath}_{File.GetLastWriteTime(filePath).Ticks}";
             if (_featureCache.TryGetValue(key, out var cached)) return cached;
 
+            foreach (var staleKey in _featureCache.Keys.Where(k => k.StartsWith(filePath + "_")).ToList())
+                _featureCache.TryRemove(staleKey, out _);
+
             try
             {
                 var json = File.ReadAllText(filePath);

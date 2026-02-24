@@ -34,7 +34,7 @@ namespace ExcelBinder.Services
             }
         }
 
-        public IEnumerable<string[]> ReadExcel(string filePath, string sheetName = "")
+        public List<string[]> ReadExcel(string filePath, string sheetName = "")
         {
             using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             IWorkbook workbook = Path.GetExtension(filePath).ToLower() switch
@@ -47,8 +47,9 @@ namespace ExcelBinder.Services
             try
             {
                 ISheet sheet = string.IsNullOrEmpty(sheetName) ? workbook.GetSheetAt(0) : workbook.GetSheet(sheetName);
-                if (sheet == null) yield break;
+                if (sheet == null) return new List<string[]>();
 
+                var result = new List<string[]>();
                 for (int i = 0; i <= sheet.LastRowNum; i++)
                 {
                     IRow row = sheet.GetRow(i);
@@ -60,8 +61,9 @@ namespace ExcelBinder.Services
                         ICell cell = row.GetCell(j);
                         cellValues[j] = cell?.ToString() ?? string.Empty;
                     }
-                    yield return cellValues;
+                    result.Add(cellValues);
                 }
+                return result;
             }
             finally
             {

@@ -78,7 +78,11 @@ namespace ExcelBinder.ViewModels
         public RelayCommand(Action execute) => _execute = execute;
         public bool CanExecute(object? parameter) => true;
         public void Execute(object? parameter) => _execute();
-        public event EventHandler? CanExecuteChanged;
+        public event EventHandler? CanExecuteChanged
+        {
+            add => CommandManager.RequerySuggested += value;
+            remove => CommandManager.RequerySuggested -= value;
+        }
     }
 
     public class RelayCommand<T> : ICommand
@@ -91,6 +95,10 @@ namespace ExcelBinder.ViewModels
             if (parameter is T typed)
                 _execute(typed);
         }
-        public event EventHandler? CanExecuteChanged;
+        public event EventHandler? CanExecuteChanged
+        {
+            add => CommandManager.RequerySuggested += value;
+            remove => CommandManager.RequerySuggested -= value;
+        }
     }
 }

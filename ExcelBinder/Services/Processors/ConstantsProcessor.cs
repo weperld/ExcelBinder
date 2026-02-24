@@ -11,6 +11,8 @@ namespace ExcelBinder.Services.Processors
 {
     public class ConstantsProcessor : IFeatureProcessor
     {
+        private readonly ExcelService _excelService = new();
+
         public string CategoryName => ProjectConstants.Categories.Constants;
 
         public bool IsSchemaPathVisible => false;
@@ -42,13 +44,11 @@ namespace ExcelBinder.Services.Processors
             if (!Directory.Exists(vm.SelectedFeature.ScriptsPath))
                 Directory.CreateDirectory(vm.SelectedFeature.ScriptsPath);
 
-            var excelService = new ExcelService();
-
             foreach (var item in selectedSheets)
             {
                 try
                 {
-                    await ProcessSheet(item.File.FullPath, item.Sheet.SheetName, vm, excelService);
+                    await ProcessSheet(item.File.FullPath, item.Sheet.SheetName, vm, _excelService);
                 }
                 catch (Exception ex)
                 {

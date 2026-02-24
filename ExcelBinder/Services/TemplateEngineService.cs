@@ -10,7 +10,7 @@ namespace ExcelBinder.Services
     public class TemplateEngineService
     {
         // 템플릿 파싱 결과를 캐싱하여 반복적인 렌더링 성능을 최적화합니다.
-        private static readonly System.Collections.Concurrent.ConcurrentDictionary<string, Template> _templateCache = new();
+        private static readonly System.Collections.Concurrent.ConcurrentDictionary<(int Length, int Hash), Template> _templateCache = new();
 
         /// <summary>
         /// 템플릿 내용과 컨텍스트를 받아 렌더링된 문자열을 반환합니다.
@@ -21,14 +21,15 @@ namespace ExcelBinder.Services
         public string Render(string templateContent, object context)
         {
             // 캐시에서 먼저 확인하고, 없으면 파싱하여 저장합니다.
-            if (!_templateCache.TryGetValue(templateContent, out var template))
+            var cacheKey = (templateContent.Length, templateContent.GetHashCode());
+            if (!_templateCache.TryGetValue(cacheKey, out var template))
             {
                 template = Template.Parse(templateContent);
                 if (template.HasErrors)
                 {
                     throw new Exception($"Template Error: {string.Join(", ", template.Messages)}");
                 }
-                _templateCache.TryAdd(templateContent, template);
+                _templateCache.TryAdd(cacheKey, template);
             }
             
             return template.Render(context);

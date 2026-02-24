@@ -10,6 +10,9 @@ namespace ExcelBinder.Services.Processors
 {
     public class StaticDataProcessor : IFeatureProcessor
     {
+        private readonly ExcelService _excelService = new();
+        private readonly ExportService _exportService = new();
+
         public string CategoryName => ProjectConstants.Categories.StaticData;
 
         public bool IsSchemaPathVisible => true;
@@ -37,9 +40,6 @@ namespace ExcelBinder.Services.Processors
             LogService.Instance.Clear();
             LogService.Instance.Info($"Starting Export for {selectedSheets.Count} sheets...");
 
-            var excelService = new ExcelService();
-            var exportService = new ExportService();
-
             foreach (var item in selectedSheets)
             {
                 string schemaFile = vm.GetSchemaPath(item.File.FullPath, item.Sheet.SheetName);
@@ -49,24 +49,24 @@ namespace ExcelBinder.Services.Processors
                     continue;
                 }
 
-                try 
+                try
                 {
                     var schema = await System.Threading.Tasks.Task.Run(() => JsonConvert.DeserializeObject<SchemaDefinition>(File.ReadAllText(schemaFile)));
                     if (schema == null) continue;
 
-                    var data = await System.Threading.Tasks.Task.Run(() => excelService.ReadExcel(item.File.FullPath, item.Sheet.SheetName).ToList());
+                    var data = await System.Threading.Tasks.Task.Run(() => _excelService.ReadExcel(item.File.FullPath, item.Sheet.SheetName).ToList());
 
                     if (vm.IsBinaryChecked && vm.SelectedFeature.OutputOptions.SupportsBinary)
                     {
                         string binaryPath = Path.Combine(vm.SelectedFeature.ExportPath, schema.ClassName + vm.SelectedFeature.OutputOptions.Extension);
-                        await System.Threading.Tasks.Task.Run(() => exportService.ExportToBinary(schema, data, binaryPath, vm.SelectedFeature));
+                        await System.Threading.Tasks.Task.Run(() => _exportService.ExportToBinary(schema, data, binaryPath, vm.SelectedFeature));
                         LogService.Instance.Info($"Exported Binary: {schema.ClassName}");
                     }
 
                     if (vm.IsJsonChecked && vm.SelectedFeature.OutputOptions.SupportsJson)
                     {
                         string jsonPath = Path.Combine(vm.SelectedFeature.ExportPath, schema.ClassName + ProjectConstants.Extensions.Json);
-                        await System.Threading.Tasks.Task.Run(() => exportService.ExportToJson(schema, data, jsonPath, vm.SelectedFeature));
+                        await System.Threading.Tasks.Task.Run(() => _exportService.ExportToJson(schema, data, jsonPath, vm.SelectedFeature));
                         LogService.Instance.Info($"Exported JSON: {schema.ClassName}");
                     }
                 }
