@@ -66,25 +66,27 @@
 
 ## LOW - 선택적 개선
 
-- [ ] **L-01** 빌드 경고 16건 해소
-  - CS8602 (null 역참조), CS8600, CS8618, CS8714, CS0067 등
-  - Nullable 경고 0건 목표
+- [x] **L-01** 빌드 경고 16건 해소 → 경고 0건 달성 ✅
+  - CS8714/CS8621/CS8619: `ExportService.CreateHeaderMap` GroupBy에 null-forgiving 적용
+  - CS8600: `EnumProcessor` FirstOrDefault 반환 타입 `string?`로 변경
+  - CS8602: `EnumProcessor.GenerateEnum`, `ConstantsProcessor.ProcessSheet`에 null 가드 추가
+  - CS8618: `FeatureBuilderViewModel.OnComplete` → `Action?`, `_key`/`_value` → `string.Empty` 초기화
+  - CS8618: `SchemaEditorViewModel._selectedKey` → `string.Empty` 초기화
 
-- [ ] **L-02** 루트 디렉토리 .md 문서 정리
-  - 에이전트 전용 문서를 `.guides/` 등 하위 디렉토리로 이동
+- [x] **L-02** 루트 디렉토리 .md 문서 정리 ✅
+  - `AGENT_ROLES.md`, `DOCUMENTATION_STRUCTURE.md`, `END_TO_END_SCENARIOS.md`, `QUICK_REFERENCE.md` → `.guides/`로 이동
 
-- [ ] **L-03** `settings.json.example` 샘플 파일 추가
-  - 새 환경 설정 가이드 부재
+- [x] **L-03** `settings.json.example` 샘플 파일 추가 ✅
+  - `ExcelBinder/settings.json.example` 생성 (전체 설정 키 포함)
 
-- [ ] **L-04** BoundFeatures 경로 중복 방지 → `Path.GetFullPath` 정규화
-  - `MainViewModel.cs` (ExecuteBindFeatureFolder 등)
+- [x] **L-04** BoundFeatures 경로 중복 방지 → `Path.GetFullPath` 정규화 ✅
+  - `MainViewModel.cs` ExecuteBindFeature, ExecuteBindFeatureFolder에 `Path.GetFullPath` 적용
 
-- [ ] **L-05** EnumProcessor 동일 엑셀 파일 반복 읽기 최적화
-  - `EnumProcessor.cs:80, 134`
-  - 파일 1회 오픈 후 시트 데이터 캐시
+- [x] **L-05** EnumProcessor 동일 엑셀 파일 반복 읽기 최적화 ✅
+  - `ExcelService.ReadMultipleSheets` 메서드 추가 (1회 오픈으로 여러 시트 일괄 읽기)
+  - `EnumProcessor.ProcessFile`에서 모든 시트를 한 번에 읽어 캐시 후 `GenerateEnum`에 전달
 
-- [ ] **L-06** `ExportService.CreateHeaderMap` null 처리 명확화
-  - `ExportService.cs:51-56`
-  - nullable annotation 불일치 (CS8714)
+- [x] **L-06** `ExportService.CreateHeaderMap` null 처리 명확화 ✅
+  - L-01에서 함께 해결 (GroupBy `x.h!` null-forgiving 적용)
 
 - [x] **L-07** ~~`ChatMessage`에서 View 종속성 제거~~ N/A (AI 기능 제거로 해당 없음)
