@@ -335,14 +335,29 @@ namespace ExcelBinder.ViewModels
                 IsBusy = true;
                 var versionInfo = await _updateCheckService.CheckForUpdateAsync();
                 LatestVersionInfo = versionInfo;
-                if (versionInfo == null)
+                if (versionInfo != null)
                 {
-                    LogService.Instance.Info(ProjectConstants.Update.MsgUpToDate);
+                    var result = AppServices.Dialog.ShowMessage(
+                        string.Format(ProjectConstants.Update.MsgNewVersion, versionInfo.VersionString)
+                            + ProjectConstants.Update.MsgGoToDownload,
+                        ProjectConstants.Update.TitleUpdateCheck, MessageBoxButton.YesNo, MessageBoxImage.Information);
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        ExecuteOpenUpdatePage();
+                    }
+                }
+                else
+                {
+                    AppServices.Dialog.ShowMessage(
+                        ProjectConstants.Update.MsgUpToDate,
+                        ProjectConstants.Update.TitleUpdateCheck, MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
             catch (Exception ex)
             {
-                LogService.Instance.Error($"{ProjectConstants.Update.MsgCheckFailed}: {ex.Message}");
+                AppServices.Dialog.ShowMessage(
+                    $"{ProjectConstants.Update.MsgCheckFailed}: {ex.Message}",
+                    ProjectConstants.Update.TitleUpdateCheck, MessageBoxButton.OK, MessageBoxImage.Error);
             }
             finally
             {
