@@ -29,53 +29,38 @@
 
 ## MEDIUM - 수정 권장
 
-- [ ] **M-01** 예외 필터 논리 오류 → 명확한 예외 타입 사용
-  - `ExportService.cs:183`
-  - `when (!(ex is Exception && ...))` 조건이 읽기 어렵고 혼란스러움
-  - `catch (FormatException)` 등 명확한 예외 타입으로 변경
+- [x] **M-01** 예외 필터 논리 오류 → 명확한 예외 타입 사용 ✅
+  - `catch (Exception ex) when (ex is FormatException or OverflowException)` 패턴으로 변경
 
-- [ ] **M-02** yield return + finally 리소스 관리 → 문서화 또는 List 반환
-  - `ExcelService.cs:37-70`
-  - 호출자가 열거 완료하지 않으면 workbook 해제 지연 가능
-  - 대부분 `.ToList()`로 사용 중이므로 반환 타입을 `List`로 변경 고려
+- [x] **M-02** yield return + finally 리소스 관리 → List 반환 ✅
+  - `ExcelService.ReadExcel` 반환 타입을 `List<string[]>`로 변경
 
-- [ ] **M-03** `_featureCache` 무한 성장 → 캐시 정리 로직 추가
-  - `FeatureService.cs:18`
-  - static ConcurrentDictionary에 이전 키가 제거되지 않음
-  - 파일 경로당 하나의 엔트리만 유지하도록 변경
+- [x] **M-03** `_featureCache` 무한 성장 → 캐시 정리 로직 추가 ✅
+  - 새 엔트리 추가 전 동일 파일 경로의 stale 키 제거
 
-- [ ] **M-04** 템플릿 캐시 키 최적화 → 해시값 또는 파일 경로 기반으로 변경
-  - `TemplateEngineService.cs:13, 24`
-  - 템플릿 문자열 전체를 Dictionary 키로 사용
+- [x] **M-04** 템플릿 캐시 키 최적화 → 해시 기반으로 변경 ✅
+  - `(Length, HashCode)` 튜플 키로 변경하여 메모리 절약
 
-- [ ] **M-05** `AppServices` 정적 Service Locator → DI 컨테이너 도입 또는 null 체크
-  - `AppServices.cs`
-  - CLI 모드나 테스트에서 NullReferenceException 위험
-  - 최소한 null 체크 추가, 이상적으로는 DI 도입
+- [x] **M-05** `AppServices` 정적 Service Locator → null 체크 추가 ✅
+  - 미초기화 시 `InvalidOperationException` throw 패턴 적용
 
-- [ ] **M-06** 서비스 `new` 생성 남발 (13곳) → 생성자 주입 또는 공유 인스턴스
-  - Processors 전반 (`StaticDataProcessor`, `LogicProcessor`, `EnumProcessor` 등)
-  - 동일 서비스가 메서드마다 반복 생성됨
+- [x] **M-06** 서비스 `new` 생성 남발 → 공유 인스턴스 필드로 전환 ✅
+  - StaticData/Logic/Enum/Constants Processor에 readonly 필드 적용
 
-- [ ] **M-07** Processor 싱글턴 상태 공유 위험 → stateless 보장 또는 매번 생성
-  - `FeatureProcessorFactory.cs:9-16`
-  - static Dictionary에 프로세서 싱글턴 보관
+- [x] **M-07** Processor 싱글턴 상태 공유 위험 → stateless 문서화 ✅
+  - `FeatureProcessorFactory`에 stateless 요구사항 XML doc 추가
 
-- [ ] **M-08** Processor 매번 조회 → 생성자에서 한 번만 가져오기
-  - `ExecutionViewModelBase.cs:46-49`
-  - 프로퍼티 접근마다 `GetProcessor()` 호출
+- [x] **M-08** Processor 매번 조회 → 생성자에서 캐싱 ✅
+  - `ExecutionViewModelBase`에 `_processor` 필드 추가, 생성자에서 1회 조회
 
-- [ ] **M-09** `async void` 11곳 미처리 예외 → try-catch 추가 또는 AsyncRelayCommand
-  - Execution ViewModels 전반
-  - 예외 발생 시 앱 크래시 위험
+- [x] **M-09** `async void` 미처리 예외 → try-catch 추가 ✅
+  - 6개 메서드에 catch 블록 추가 (Export/Generate 계열)
 
-- [ ] **M-10** `CanExecuteChanged` 미연결 → CommandManager 연동 또는 CommunityToolkit 도입
-  - `CommonModels.cs:81, 90`
-  - 빌드 경고 CS0067 발생, IsBusy 상태와 미연동
+- [x] **M-10** `CanExecuteChanged` 미연결 → CommandManager 연동 ✅
+  - `RelayCommand`, `RelayCommand<T>` 모두 `CommandManager.RequerySuggested` 연동
 
-- [ ] **M-11** 이벤트 구독 해제 누락 → Settings 교체 시 이전 구독 해제
-  - `MainViewModel.cs:137-138`
-  - PropertyChanged, CollectionChanged 람다 구독 후 해제 없음
+- [x] **M-11** 이벤트 구독 해제 누락 → Settings setter에서 관리 ✅
+  - 명명된 핸들러로 전환, Settings 교체 시 이전 구독 해제
 
 ---
 
