@@ -261,7 +261,9 @@ namespace ExcelBinder.ViewModels
         private void ExecuteBindFeature()
         {
             string? path = AppServices.Dialog.BrowseOpenFile(ProjectConstants.Extensions.JsonFilter, ProjectConstants.UI.TitleSelectFile);
-            if (path != null && !Settings.BoundFeatures.Contains(path))
+            if (path == null) return;
+            path = Path.GetFullPath(path);
+            if (!Settings.BoundFeatures.Contains(path))
             {
                 Settings.BoundFeatures.Add(path);
             }
@@ -270,7 +272,9 @@ namespace ExcelBinder.ViewModels
         private void ExecuteBindFeatureFolder()
         {
             string? path = AppServices.Dialog.BrowseFolder(ProjectConstants.UI.TitleSelectFolder);
-            if (path != null && !Settings.BoundFeatures.Contains(path))
+            if (path == null) return;
+            path = Path.GetFullPath(path);
+            if (!Settings.BoundFeatures.Contains(path))
             {
                 Settings.BoundFeatures.Add(path);
             }

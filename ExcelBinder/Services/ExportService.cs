@@ -53,7 +53,7 @@ namespace ExcelBinder.Services
         {
             return header.Select((h, i) => new { h = h?.Trim(), i })
                          .Where(x => !string.IsNullOrEmpty(x.h))
-                         .GroupBy(x => x.h, StringComparer.OrdinalIgnoreCase)
+                         .GroupBy(x => x.h!, StringComparer.OrdinalIgnoreCase)
                          .ToDictionary(g => g.Key, g => g.First().i, StringComparer.OrdinalIgnoreCase);
         }
 

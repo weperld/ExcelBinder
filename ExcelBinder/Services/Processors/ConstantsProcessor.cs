@@ -62,6 +62,8 @@ namespace ExcelBinder.Services.Processors
 
         private async Task ProcessSheet(string filePath, string sheetName, IExecutionViewModel vm, ExcelService excelService)
         {
+            if (vm.SelectedFeature == null) return;
+
             var rawData = excelService.ReadExcel(filePath, sheetName).ToList();
             if (rawData.Count < 1)
             {

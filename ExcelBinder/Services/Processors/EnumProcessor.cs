@@ -81,15 +81,18 @@ namespace ExcelBinder.Services.Processors
         {
             var sheetNames = _excelService.GetSheetNames(filePath);
 
-            string definitionSheetName = sheetNames.FirstOrDefault(s => s.Equals("Definition", StringComparison.OrdinalIgnoreCase));
+            string? definitionSheetName = sheetNames.FirstOrDefault(s => s.Equals("Definition", StringComparison.OrdinalIgnoreCase));
             if (definitionSheetName == null)
             {
                 LogService.Instance.Error($"'Definition' sheet not found in {Path.GetFileName(filePath)}. Generation cancelled for this file.");
                 return;
             }
 
-            var rawData = _excelService.ReadExcel(filePath, definitionSheetName).ToList();
-            if (rawData.Count < 1)
+            // Read all non-comment sheets at once to avoid repeated file opens
+            var allSheetData = _excelService.ReadMultipleSheets(filePath,
+                sheetNames.Where(s => !s.StartsWith(ProjectConstants.Excel.CommentPrefix)));
+
+            if (!allSheetData.TryGetValue(definitionSheetName, out var rawData) || rawData.Count < 1)
             {
                 LogService.Instance.Warning($"'Definition' sheet in {Path.GetFileName(filePath)} is empty.");
                 return;
@@ -119,23 +122,23 @@ namespace ExcelBinder.Services.Processors
                 string underlyingType = typeIdx != -1 && row.Length > typeIdx ? row[typeIdx].Trim() : "";
                 bool isFlag = flagIdx != -1 && row.Length > flagIdx && row[flagIdx].Trim().Equals("true", StringComparison.OrdinalIgnoreCase);
 
-                await GenerateEnum(filePath, enumName, underlyingType, isFlag, vm, sheetNames);
+                await GenerateEnum(enumName, underlyingType, isFlag, vm, filePath, allSheetData);
             }
         }
 
-        private async Task GenerateEnum(string filePath, string enumName, string underlyingType, bool isFlag, IExecutionViewModel vm, List<string> sheetNames)
+        private async Task GenerateEnum(string enumName, string underlyingType, bool isFlag, IExecutionViewModel vm, string filePath, Dictionary<string, List<string[]>> sheetData)
         {
-            string targetSheet = sheetNames.FirstOrDefault(s => s.Equals(enumName, StringComparison.OrdinalIgnoreCase));
-            if (targetSheet == null)
+            if (vm.SelectedFeature == null) return;
+
+            if (!sheetData.TryGetValue(enumName, out var rawData))
             {
                 LogService.Instance.Warning($"Sheet '{enumName}' not found in {Path.GetFileName(filePath)}. Skipping Enum generation.");
                 return;
             }
 
-            var rawData = _excelService.ReadExcel(filePath, targetSheet).ToList();
             if (rawData.Count < 1)
             {
-                LogService.Instance.Warning($"Sheet '{targetSheet}' is empty. Skipping Enum generation.");
+                LogService.Instance.Warning($"Sheet '{enumName}' is empty. Skipping Enum generation.");
                 return;
             }
 
@@ -145,7 +148,7 @@ namespace ExcelBinder.Services.Processors
 
             if (nameIdx == -1 || valueIdx == -1)
             {
-                LogService.Instance.Error($"Invalid headers in sheet '{targetSheet}'. Required: 'Name', 'Value'. Generation failed for '{enumName}'.");
+                LogService.Instance.Error($"Invalid headers in sheet '{enumName}'. Required: 'Name', 'Value'. Generation failed for '{enumName}'.");
                 return;
             }
 

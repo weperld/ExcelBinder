@@ -90,7 +90,7 @@ namespace ExcelBinder.ViewModels
         public ICommand BrowseExportPathCommand { get; }
         public ICommand BrowseScriptsPathCommand { get; }
         public ICommand BrowseDataTemplateCommand { get; }
-        public event Action OnComplete;
+        public event Action? OnComplete;
 
         public FeatureBuilderViewModel(FeatureDefinition? existing = null, string? path = null)
         {
@@ -178,8 +178,8 @@ namespace ExcelBinder.ViewModels
 
     public class TypeMappingItem : ViewModelBase
     {
-        private string _key;
-        private string _value;
+        private string _key = string.Empty;
+        private string _value = string.Empty;
 
         public string Key { get => _key; set => SetProperty(ref _key, value); }
         public string Value { get => _value; set => SetProperty(ref _value, value); }

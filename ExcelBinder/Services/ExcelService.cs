@@ -71,6 +71,48 @@ namespace ExcelBinder.Services
             }
         }
 
+        public Dictionary<string, List<string[]>> ReadMultipleSheets(string filePath, IEnumerable<string> sheetNames)
+        {
+            using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            IWorkbook workbook = Path.GetExtension(filePath).ToLower() switch
+            {
+                ".xlsx" => new XSSFWorkbook(stream),
+                ".xls" => new HSSFWorkbook(stream),
+                _ => throw new NotSupportedException("Unsupported excel format")
+            };
+
+            try
+            {
+                var result = new Dictionary<string, List<string[]>>(StringComparer.OrdinalIgnoreCase);
+                foreach (var name in sheetNames)
+                {
+                    ISheet sheet = workbook.GetSheet(name);
+                    if (sheet == null) continue;
+
+                    var rows = new List<string[]>();
+                    for (int i = 0; i <= sheet.LastRowNum; i++)
+                    {
+                        IRow row = sheet.GetRow(i);
+                        if (row == null) continue;
+
+                        string[] cellValues = new string[row.LastCellNum];
+                        for (int j = 0; j < row.LastCellNum; j++)
+                        {
+                            ICell cell = row.GetCell(j);
+                            cellValues[j] = cell?.ToString() ?? string.Empty;
+                        }
+                        rows.Add(cellValues);
+                    }
+                    result[name] = rows;
+                }
+                return result;
+            }
+            finally
+            {
+                (workbook as IDisposable)?.Dispose();
+            }
+        }
+
         public List<(string[] Data, int OriginalIndex)> GetFilteredData(IEnumerable<string[]> rawData)
         {
             var dataList = rawData.ToList();
