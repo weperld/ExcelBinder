@@ -8,35 +8,26 @@
 
 ## HIGH - 수정 필수
 
-- [ ] **H-01** API 키 평문 저장 → DPAPI 암호화 적용
-  - `AppSettings.cs:62-76`
-  - OpenAiApiKey, ClaudeApiKey가 settings.json에 평문 저장됨
-  - `ProtectedData.Protect/Unprotect` 사용하여 암호화
+- [x] **H-01** API 키 평문 저장 → DPAPI 암호화 적용 ✅
+  - `CryptoHelper.cs` 신규 생성, `AppSettings.cs` 암호화 프로퍼티 추가
+  - `System.Security.Cryptography.ProtectedData` NuGet 패키지 추가
+  - 기존 평문 settings.json 하위 호환 유지
 
-- [ ] **H-02** `dynamic` 타입 사용 → 강타입 DTO 정의
-  - `AIService.cs:84-85, 115-116`
-  - OpenAI/Claude API 응답을 `dynamic`으로 파싱 (CLAUDE.md 절대 규칙 위반)
-  - API 응답용 DTO 클래스 정의하여 교체
+- [x] **H-02** `dynamic` 타입 사용 → 강타입 DTO 정의 ✅
+  - `AIService.cs`에 `OpenAiResponse`, `ClaudeResponse` DTO 클래스 정의
+  - `dynamic` 제거, `JsonConvert.DeserializeObject<T>()` 사용
 
-- [ ] **H-03** `GetAwaiter().GetResult()` 데드락 위험 → `Task.Run` 래핑
-  - `App.xaml.cs:109-110`
-  - WPF SynchronizationContext에서 동기 차단 호출
-  - `Task.Run(async () => { ... }).GetAwaiter().GetResult()` 패턴으로 변경
+- [x] **H-03** `GetAwaiter().GetResult()` 데드락 위험 → `Task.Run` 래핑 ✅
+  - `App.xaml.cs` CLI 실행 경로에 `Task.Run(async () => { ... })` 래핑 적용
 
-- [ ] **H-04** CLI 인자 범위 초과 위험 → 인덱스 범위 체크 추가
-  - `App.xaml.cs:44, 50`
-  - `--feature`, `--bind` 뒤에 값 없으면 `IndexOutOfRangeException`
-  - `i + 1 >= args.Length` 체크 추가
+- [x] **H-04** CLI 인자 범위 초과 위험 → 인덱스 범위 체크 추가 ✅
+  - `App.xaml.cs`에서 `--feature`, `--bind` 인자에 `i + 1 >= args.Length` 체크 추가
 
-- [ ] **H-05** 숫자 파싱 CultureInfo 미지정 → `InvariantCulture` 적용
-  - `ExportService.cs:171-193`
-  - 유럽 로케일 등에서 소수점 파싱 실패 가능
-  - 모든 `Parse` 호출에 `CultureInfo.InvariantCulture` 추가
+- [x] **H-05** 숫자 파싱 CultureInfo 미지정 → `InvariantCulture` 적용 ✅
+  - `ExportService.cs` 모든 `Parse` 호출에 `CultureInfo.InvariantCulture` 추가
 
-- [ ] **H-06** `RelayCommand<T>.Execute` null 캐스팅 → 타입/null 체크 추가
-  - `CommonModels.cs:89`
-  - `(T)parameter!` 강제 캐스팅으로 예외 위험
-  - `if (parameter is T typed) _execute(typed);` 패턴으로 변경
+- [x] **H-06** `RelayCommand<T>.Execute` null 캐스팅 → 타입/null 체크 추가 ✅
+  - `CommonModels.cs`에서 `if (parameter is T typed) _execute(typed);` 패턴으로 변경
 
 ---
 
