@@ -8,9 +8,9 @@
         <UseWPF>true</UseWPF>
         <OutputPath>..\Build</OutputPath>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-        <Version>2.3.0</Version>
-        <AssemblyVersion>2.3.0.0</AssemblyVersion>
-        <FileVersion>2.3.0.0</FileVersion>
+        <Version>2.3.1</Version>
+        <AssemblyVersion>2.3.1.0</AssemblyVersion>
+        <FileVersion>2.3.1.0</FileVersion>
         <Authors>Junie</Authors>
         <Description>Universal Excel extraction and code generation engine.</Description>
     </PropertyGroup>
