@@ -90,8 +90,6 @@ namespace ExcelBinder.ViewModels
         public ICommand BrowseExportPathCommand { get; }
         public ICommand BrowseScriptsPathCommand { get; }
         public ICommand BrowseDataTemplateCommand { get; }
-        public ICommand OpenAIAssistantCommand { get; }
-
         public event Action OnComplete;
 
         public FeatureBuilderViewModel(FeatureDefinition? existing = null, string? path = null)
@@ -117,55 +115,6 @@ namespace ExcelBinder.ViewModels
             BrowseExportPathCommand = new RelayCommand(() => BrowseFolder(p => Feature.ExportPath = p));
             BrowseScriptsPathCommand = new RelayCommand(() => BrowseFolder(p => Feature.ScriptsPath = p));
             BrowseDataTemplateCommand = new RelayCommand(() => BrowseFile(ProjectConstants.Extensions.LiquidFilter, p => Feature.Templates.DataClass = p));
-            OpenAIAssistantCommand = new RelayCommand(ExecuteOpenAIAssistant);
-        }
-
-        private void ExecuteOpenAIAssistant()
-        {
-            // We need settings to get API key.
-            var service = new FeatureService();
-            var settings = service.LoadSettings();
-
-            string apiKey = settings.AiModel.StartsWith(ProjectConstants.AI.ClaudePrefix) ? settings.ClaudeApiKey : settings.OpenAiApiKey;
-
-            if (string.IsNullOrEmpty(apiKey))
-            {
-                string provider = settings.AiModel.StartsWith(ProjectConstants.AI.ClaudePrefix) ? ProjectConstants.AI.ClaudeProvider : ProjectConstants.AI.OpenAIProvider;
-                AppServices.Dialog.ShowMessage($"Settings에서 {provider} API Key를 먼저 설정해 주세요.", "AI Assistant", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-
-            var aiVm = new AIAssistantViewModel(Feature, settings);
-            Action? closeDialog = null;
-
-            aiVm.OnTemplateApplied += template =>
-            {
-                // Save template to a file
-                string templatePath = Feature.Templates.DataClass;
-                if (string.IsNullOrEmpty(templatePath))
-                {
-                    string? savePath = AppServices.Dialog.BrowseSaveFile(
-                        ProjectConstants.Extensions.LiquidFilter,
-                        $"{Feature.Id}_Template{ProjectConstants.Extensions.Liquid}",
-                        "AI가 생성한 템플릿을 저장할 위치를 선택하세요");
-                    if (savePath == null) return;
-                    templatePath = savePath;
-                    Feature.Templates.DataClass = templatePath;
-                }
-
-                try
-                {
-                    File.WriteAllText(templatePath, template);
-                    AppServices.Dialog.ShowMessage(ProjectConstants.UI.MsgTemplateApplied, "AI Assistant");
-                    closeDialog?.Invoke();
-                }
-                catch (Exception ex)
-                {
-                    AppServices.Dialog.ShowMessage($"템플릿 저장 중 오류가 발생했습니다: {ex.Message}");
-                }
-            };
-
-            AppServices.Dialog.ShowAIAssistantDialog(aiVm, close => closeDialog = close);
         }
 
         private void BrowseFolder(Action<string> setter)

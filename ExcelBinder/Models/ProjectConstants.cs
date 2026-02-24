@@ -82,29 +82,6 @@ namespace ExcelBinder.Models
             };
         }
 
-        public static class AI
-        {
-            public const string ClaudePrefix = "claude-";
-            public const string OpenAIProvider = "OpenAI";
-            public const string ClaudeProvider = "Claude";
-            
-            public const string DefaultModel = "gpt-4o";
-
-            public const string StatusWelcome = "무엇을 도와드릴까요?";
-            public const string StatusGenerating = "AI가 템플릿을 생성 중입니다...";
-            public const string StatusCompleted = "완료되었습니다.";
-            public const string StatusError = "오류 발생";
-            
-            public const string MsgSchemaNotFound = "현재 설정된 정보가 없습니다. (스키마 경로를 확인해 주세요)";
-            public const string MsgTemplateCompleted = "템플릿 생성이 완료되었습니다! 오른쪽 미리보기를 확인해 보세요.";
-            
-            public static class Roles
-            {
-                public const string User = "User";
-                public const string Assistant = "Assistant";
-            }
-        }
-        
         public static class Update
         {
             public const string GitHubOwner = "weperld";

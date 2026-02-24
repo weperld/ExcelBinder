@@ -217,16 +217,11 @@ namespace ExcelBinder.ViewModels
 
         private void ExecuteNavigateToSettings()
         {
-            AppServices.Dialog.ShowSettingsDialog(this, Settings.OpenAiApiKey, Settings.ClaudeApiKey);
+            AppServices.Dialog.ShowSettingsDialog(this);
         }
 
         private void ExecuteSaveSettings(Window window)
         {
-            if (window is IPasswordProvider passwordProvider)
-            {
-                Settings.OpenAiApiKey = passwordProvider.OpenAiApiKey;
-                Settings.ClaudeApiKey = passwordProvider.ClaudeApiKey;
-            }
             _featureService.SaveSettings(Settings);
             RefreshFeatures();
             window?.Close();

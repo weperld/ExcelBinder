@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using System.Windows;
 using Microsoft.Win32;
 
@@ -20,21 +18,11 @@ namespace ExcelBinder.Services
             return MessageBox.Show(message, title, button, icon);
         }
 
-        public void ShowSettingsDialog(object viewModel, string openAiApiKey, string claudeApiKey)
+        public void ShowSettingsDialog(object viewModel)
         {
             var settingsWin = new Views.SettingsWindow { DataContext = viewModel };
             settingsWin.Owner = Application.Current.MainWindow;
-            settingsWin.ApiKeyBox.Password = openAiApiKey;
-            settingsWin.ClaudeApiKeyBox.Password = claudeApiKey;
             settingsWin.ShowDialog();
-        }
-
-        public void ShowAIAssistantDialog(object viewModel, Action<Action>? configureClose = null)
-        {
-            var aiWin = new Views.AIAssistantWindow { DataContext = viewModel };
-            aiWin.Owner = Application.Current.Windows.OfType<Window>().FirstOrDefault(w => w.IsActive);
-            configureClose?.Invoke(() => aiWin.Close());
-            aiWin.ShowDialog();
         }
 
         public string? BrowseFolder(string title = "")
