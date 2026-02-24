@@ -19,6 +19,7 @@
       <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
       <PackageReference Include="NPOI" Version="2.7.5" />
       <PackageReference Include="Scriban" Version="6.5.2" />
+      <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="10.0.3" />
     </ItemGroup>
 
 </Project>

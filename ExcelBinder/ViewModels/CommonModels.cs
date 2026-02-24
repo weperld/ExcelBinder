@@ -86,7 +86,11 @@ namespace ExcelBinder.ViewModels
         private readonly Action<T> _execute;
         public RelayCommand(Action<T> execute) => _execute = execute;
         public bool CanExecute(object? parameter) => true;
-        public void Execute(object? parameter) => _execute((T)parameter!);
+        public void Execute(object? parameter)
+        {
+            if (parameter is T typed)
+                _execute(typed);
+        }
         public event EventHandler? CanExecuteChanged;
     }
 }

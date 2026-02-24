@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using ExcelBinder.Models;
@@ -169,14 +170,14 @@ namespace ExcelBinder.Services
                 return type switch
                 {
                     ProjectConstants.Types.Int => ParseInt(value),
-                    ProjectConstants.Types.Float => float.Parse(value),
+                    ProjectConstants.Types.Float => float.Parse(value, CultureInfo.InvariantCulture),
                     ProjectConstants.Types.Bool => bool.Parse(value),
-                    ProjectConstants.Types.Long => long.Parse(value),
-                    ProjectConstants.Types.Double => double.Parse(value),
-                    ProjectConstants.Types.UInt => uint.Parse(value),
-                    ProjectConstants.Types.ULong => ulong.Parse(value),
-                    ProjectConstants.Types.Short => short.Parse(value),
-                    ProjectConstants.Types.Byte => byte.Parse(value),
+                    ProjectConstants.Types.Long => long.Parse(value, CultureInfo.InvariantCulture),
+                    ProjectConstants.Types.Double => double.Parse(value, CultureInfo.InvariantCulture),
+                    ProjectConstants.Types.UInt => uint.Parse(value, NumberStyles.Integer, CultureInfo.InvariantCulture),
+                    ProjectConstants.Types.ULong => ulong.Parse(value, NumberStyles.Integer, CultureInfo.InvariantCulture),
+                    ProjectConstants.Types.Short => short.Parse(value, NumberStyles.Integer, CultureInfo.InvariantCulture),
+                    ProjectConstants.Types.Byte => byte.Parse(value, NumberStyles.Integer, CultureInfo.InvariantCulture),
                     _ => value ?? ""
                 };
             }
@@ -188,9 +189,9 @@ namespace ExcelBinder.Services
 
         private int ParseInt(string value)
         {
-            if (float.TryParse(value, out float f) && f != (int)f)
+            if (float.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out float f) && f != (int)f)
                 throw new Exception($"Type Mismatch: Expected int but got float-like value '{value}'");
-            return int.Parse(value);
+            return int.Parse(value, NumberStyles.Integer, CultureInfo.InvariantCulture);
         }
     }
 }

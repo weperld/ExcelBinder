@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows;
 using ExcelBinder.ViewModels;
 using ExcelBinder.Services;
@@ -41,12 +42,14 @@ public partial class App : Application
             switch (args[i])
             {
                 case ProjectConstants.CLI.Feature:
+                    if (i + 1 >= args.Length) { Console.WriteLine("Error: --feature requires a value."); return; }
                     featureId = args[++i];
                     break;
                 case ProjectConstants.CLI.All:
                     selectAll = true;
                     break;
                 case ProjectConstants.CLI.Bind:
+                    if (i + 1 >= args.Length) { Console.WriteLine("Error: --bind requires a value."); return; }
                     vm.Settings.BoundFeatures.Add(args[++i]);
                     featureService.SaveSettings(vm.Settings);
                     break;
@@ -106,8 +109,11 @@ public partial class App : Application
                     }
 
                     var processor = FeatureProcessorFactory.GetProcessor(feature.Category);
-                    if (executeExport) processor.ExecuteExportAsync(execVm).GetAwaiter().GetResult();
-                    if (executeCodeGen) processor.ExecuteGenerateAsync(execVm).GetAwaiter().GetResult();
+                    Task.Run(async () =>
+                    {
+                        if (executeExport) await processor.ExecuteExportAsync(execVm);
+                        if (executeCodeGen) await processor.ExecuteGenerateAsync(execVm);
+                    }).GetAwaiter().GetResult();
                 }
             }
             else

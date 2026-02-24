@@ -7,6 +7,38 @@ using Newtonsoft.Json;
 
 namespace ExcelBinder.Services
 {
+    // OpenAI API 응답 DTO
+    internal class OpenAiResponse
+    {
+        [JsonProperty("choices")]
+        public List<OpenAiChoice> Choices { get; set; } = new();
+
+        internal class OpenAiChoice
+        {
+            [JsonProperty("message")]
+            public OpenAiMessage Message { get; set; } = new();
+        }
+
+        internal class OpenAiMessage
+        {
+            [JsonProperty("content")]
+            public string Content { get; set; } = string.Empty;
+        }
+    }
+
+    // Claude API 응답 DTO
+    internal class ClaudeResponse
+    {
+        [JsonProperty("content")]
+        public List<ClaudeContentBlock> Content { get; set; } = new();
+
+        internal class ClaudeContentBlock
+        {
+            [JsonProperty("text")]
+            public string Text { get; set; } = string.Empty;
+        }
+    }
+
     /// <summary>
     /// LLM(OpenAI, Claude)을 사용하여 템플릿 코드를 자동 생성하는 서비스입니다.
     /// </summary>
@@ -81,8 +113,8 @@ namespace ExcelBinder.Services
                 throw new Exception($"OpenAI API 오류: {response.StatusCode}\n{responseString}");
             }
 
-            var result = JsonConvert.DeserializeObject<dynamic>(responseString);
-            return result.choices[0].message.content.ToString();
+            var result = JsonConvert.DeserializeObject<OpenAiResponse>(responseString);
+            return result?.Choices[0].Message.Content ?? string.Empty;
         }
 
         private async Task<string> GenerateClaudeTemplateAsync(string apiKey, string model, string systemPrompt, string userPrompt)
@@ -112,8 +144,8 @@ namespace ExcelBinder.Services
                 throw new Exception($"Claude API 오류: {response.StatusCode}\n{responseString}");
             }
 
-            var result = JsonConvert.DeserializeObject<dynamic>(responseString);
-            return result.content[0].text.ToString();
+            var result = JsonConvert.DeserializeObject<ClaudeResponse>(responseString);
+            return result?.Content[0].Text ?? string.Empty;
         }
 
         public string GetSystemPromptForTemplate(string category, string schemaJson)

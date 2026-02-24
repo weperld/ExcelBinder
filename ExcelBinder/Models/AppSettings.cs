@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Newtonsoft.Json;
+using ExcelBinder.Services;
 using ExcelBinder.ViewModels;
 
 namespace ExcelBinder.Models
@@ -59,9 +60,14 @@ namespace ExcelBinder.Models
             set => SetProperty(ref _isJsonChecked, value);
         }
 
-        // TODO: API 키가 settings.json에 평문으로 저장됩니다.
-        // 향후 Windows DPAPI(ProtectedData)를 사용한 암호화 저장으로 전환을 권장합니다.
         [JsonProperty("aiApiKey")]
+        public string OpenAiApiKeyEncrypted
+        {
+            get => CryptoHelper.Encrypt(_openAiApiKey);
+            set => _openAiApiKey = CryptoHelper.Decrypt(value);
+        }
+
+        [JsonIgnore]
         public string OpenAiApiKey
         {
             get => _openAiApiKey;
@@ -69,6 +75,13 @@ namespace ExcelBinder.Models
         }
 
         [JsonProperty("claudeApiKey")]
+        public string ClaudeApiKeyEncrypted
+        {
+            get => CryptoHelper.Encrypt(_claudeApiKey);
+            set => _claudeApiKey = CryptoHelper.Decrypt(value);
+        }
+
+        [JsonIgnore]
         public string ClaudeApiKey
         {
             get => _claudeApiKey;
