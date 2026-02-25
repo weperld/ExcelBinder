@@ -268,19 +268,17 @@
 - [x] MainViewModel 시작 시 체크 로직 연동
 - [x] 네트워크 오류 처리 (타임아웃 10초, graceful 실패)
 
-### 기능 2: 스키마 헤더 체크 박스
-- [ ] 제외 필드 저장 방식 결정 (ExcludedFields vs 필드 메타 플래그)
-- [ ] Key 컬럼 체크박스 비활성화 방식 결정
-- [ ] `SchemaDefinition` 모델 확장
-- [ ] `SchemaFieldViewModel` 확장 (IsIncluded, IsKeyColumn)
-- [ ] `SchemaEditorView.xaml` 체크박스 열 추가
-- [ ] Key 컬럼 변경 시 체크박스 상태 연동 로직
-- [ ] `SchemaEditorItemViewModel.Save()` 수정
-- [ ] `StaticDataProcessor` 필터링 반영
-- [ ] `CodeGeneratorService` 제외 필드 스킵
-- [ ] `ExportService` 제외 필드 스킵
-- [ ] Reference 충돌 경고 로직 추가
-- [ ] 기존 스키마 하위 호환성 테스트
+### 기능 2: 스키마 헤더 체크 박스 ✅ 구현 완료 (2026-02-25)
+- [x] 제외 필드 저장 방식 결정 → ExcludedFields 배열 방식 채택
+- [x] Key 컬럼 체크박스 비활성화 방식 결정 → 잠금 아이콘 + 체크박스 비활성화
+- [x] `SchemaDefinition` 모델 확장 → ExcludedFields 속성 추가
+- [x] `SchemaFieldViewModel` 확장 (IsIncluded, IsKeyColumn)
+- [x] `SchemaEditorView.xaml` 체크박스 열 추가
+- [x] Key 컬럼 변경 시 체크박스 상태 연동 로직
+- [x] `SchemaEditorItemViewModel.Save()` 수정
+- [x] `CodeGeneratorService` 제외 필드 스킵
+- [x] `ExportService` 제외 필드 스킵
+- [x] 기존 스키마 하위 호환성 유지 (ExcludedFields 없으면 전부 포함)
 
 ### 기능 3: 프로젝트 별 Feature 그룹화
 - [ ] 그룹 모델 방식 결정 (속성 vs 별도 모델)
