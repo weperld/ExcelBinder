@@ -13,5 +13,8 @@ namespace ExcelBinder.Models
 
         [JsonProperty("fields")]
         public Dictionary<string, string> Fields { get; set; } = new Dictionary<string, string>();
+
+        [JsonProperty("excludedFields")]
+        public List<string> ExcludedFields { get; set; } = new List<string>();
     }
 }

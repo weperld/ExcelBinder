@@ -85,7 +85,24 @@ namespace ExcelBinder.ViewModels
         public string SelectedKey
         {
             get => _selectedKey;
-            set => SetProperty(ref _selectedKey, value);
+            set
+            {
+                if (!SetProperty(ref _selectedKey, value)) return;
+                UpdateKeyColumnStatus();
+            }
+        }
+
+        private void UpdateKeyColumnStatus()
+        {
+            foreach (var field in Fields)
+            {
+                bool isKey = field.HeaderName == _selectedKey;
+                field.IsKeyColumn = isKey;
+                if (isKey)
+                {
+                    field.IsIncluded = true;
+                }
+            }
         }
 
         public ObservableCollection<string> Headers { get; } = new();
@@ -141,12 +158,13 @@ namespace ExcelBinder.ViewModels
                         referenceType = info.RefType ?? "";
                     }
 
-                    Fields.Add(new SchemaFieldViewModel 
-                    { 
-                        HeaderName = group.Name, 
+                    Fields.Add(new SchemaFieldViewModel
+                    {
+                        HeaderName = group.Name,
                         Count = group.Count,
                         SelectedType = selectedType,
-                        ReferenceType = referenceType 
+                        ReferenceType = referenceType,
+                        IsIncluded = existingSchema == null || !existingSchema.ExcludedFields.Contains(group.Name)
                     });
                 }
 
@@ -158,6 +176,8 @@ namespace ExcelBinder.ViewModels
                 {
                     _selectedKey = Headers.FirstOrDefault() ?? ProjectConstants.Excel.DefaultSheetKey;
                 }
+
+                UpdateKeyColumnStatus();
             }
         }
 
@@ -167,7 +187,8 @@ namespace ExcelBinder.ViewModels
             {
                 ClassName = _sheetName + "Data",
                 Key = SelectedKey,
-                Fields = new Dictionary<string, string>()
+                Fields = new Dictionary<string, string>(),
+                ExcludedFields = new List<string>()
             };
 
             foreach (var field in Fields)
@@ -184,10 +205,15 @@ namespace ExcelBinder.ViewModels
                 }
 
                 schema.Fields[field.HeaderName] = typeStr;
+
+                if (!field.IsIncluded && field.HeaderName != SelectedKey)
+                {
+                    schema.ExcludedFields.Add(field.HeaderName);
+                }
             }
 
             if (!Directory.Exists(_outputPath)) Directory.CreateDirectory(_outputPath);
-            
+
             string finalFileName = $"{_fileName}_{_sheetName}_Schema.json";
 
             string savePath = Path.Combine(_outputPath, finalFileName);
@@ -203,6 +229,8 @@ namespace ExcelBinder.ViewModels
 
         private string _selectedType = ProjectConstants.Types.Int;
         private string _referenceType = string.Empty;
+        private bool _isIncluded = true;
+        private bool _isKeyColumn;
 
         public string SelectedType
         {
@@ -214,6 +242,18 @@ namespace ExcelBinder.ViewModels
         {
             get => _referenceType;
             set => SetProperty(ref _referenceType, value);
+        }
+
+        public bool IsIncluded
+        {
+            get => _isIncluded;
+            set => SetProperty(ref _isIncluded, value);
+        }
+
+        public bool IsKeyColumn
+        {
+            get => _isKeyColumn;
+            set => SetProperty(ref _isKeyColumn, value);
         }
     }
 }

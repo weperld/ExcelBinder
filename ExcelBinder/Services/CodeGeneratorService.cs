@@ -37,7 +37,7 @@ namespace ExcelBinder.Services
 
         private object PrepareDataContext(SchemaDefinition schema, FeatureDefinition feature, string nameSpace)
         {
-            var fields = schema.Fields.Select(f =>
+            var fields = schema.Fields.Where(f => !schema.ExcludedFields.Contains(f.Key)).Select(f =>
             {
                 var info = TypeParser.ParseType(f.Value, f.Key);
                 string baseType = ConvertPrimitive(info.BaseType, feature);

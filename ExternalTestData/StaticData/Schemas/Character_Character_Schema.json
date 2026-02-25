@@ -6,5 +6,6 @@
     "name": "string",
     "stat": "int:ref:StatData",
     "stat_growth": "int:ref:StatData"
-  }
+  },
+  "excludedFields": []
 }

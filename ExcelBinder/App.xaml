@@ -4,6 +4,7 @@
              xmlns:local="clr-namespace:ExcelBinder"
              xmlns:vm="clr-namespace:ExcelBinder.ViewModels"
              xmlns:items="clr-namespace:ExcelBinder.Views.ExecutionItems"
+             xmlns:converters="clr-namespace:ExcelBinder.Converters"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <!-- Data Templates for Execution ViewModels -->
@@ -44,6 +45,7 @@
         <SolidColorBrush x:Key="TagTextBrush" Color="#444444"/>
 
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
 
         <!-- Base Styles -->
         <Style TargetType="Button">

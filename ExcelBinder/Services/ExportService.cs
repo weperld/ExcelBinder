@@ -35,7 +35,7 @@ namespace ExcelBinder.Services
 
             foreach (var item in validRows)
             {
-                foreach (var field in schema.Fields)
+                foreach (var field in schema.Fields.Where(f => !schema.ExcludedFields.Contains(f.Key)))
                 {
                     try
                     {
@@ -123,7 +123,7 @@ namespace ExcelBinder.Services
             foreach (var item in validRows)
             {
                 var rowDict = new Dictionary<string, object>();
-                foreach (var field in schema.Fields)
+                foreach (var field in schema.Fields.Where(f => !schema.ExcludedFields.Contains(f.Key)))
                 {
                     try
                     {
