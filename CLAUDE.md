@@ -8,13 +8,16 @@
 
 ## 검색 도구 사용법
 ```bash
-PYTHONIOENCODING=utf-8 python .search/ai-grep stats                        # 코드베이스 개요
-PYTHONIOENCODING=utf-8 python .search/ai-grep relevant "query" --top 5     # 관련 파일 랭킹
-PYTHONIOENCODING=utf-8 python .search/ai-grep search "keyword"             # 전문 검색 + 스니펫
-PYTHONIOENCODING=utf-8 python .search/ai-grep refs "ClassName"             # 심볼 참조 검색
-PYTHONIOENCODING=utf-8 python .search/ai-grep get "file.cs" --lines 10-50  # 특정 줄만 읽기
-PYTHONIOENCODING=utf-8 python .search/ai-grep outline "file.cs"            # 파일 구조 확인
+# 접두어: PYTHONIOENCODING=utf-8 python .search/ai-grep
+
+ai-grep stats                              # 코드베이스 개요
+ai-grep relevant "query" --top 5           # 관련 파일 랭킹 (--top은 relevant 전용)
+ai-grep search "keyword" --limit 10        # 전문 검색 + 스니펫
+ai-grep refs "ClassName" --context 3       # 심볼 참조 검색 (--context: 전후 줄 수)
+ai-grep get "file.cs" --lines 10-50       # 특정 줄만 읽기 (--raw: JSON 없이 원본만)
+ai-grep outline "file.cs"                  # 파일 구조 확인
 ```
+**주의**: 각 명령어의 옵션을 혼용하지 말 것 (예: `refs --top` 불가)
 
 ## 프로젝트 개요
 
