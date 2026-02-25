@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Windows;
 
 namespace ExcelBinder.Services
@@ -11,5 +12,6 @@ namespace ExcelBinder.Services
         string? BrowseFolder(string title = "");
         string? BrowseOpenFile(string filter, string title = "");
         string? BrowseSaveFile(string filter, string defaultFileName, string title = "");
+        bool ShowUpdateInfoDialog(string message, List<ReleaseNoteEntry> entries, string title);
     }
 }

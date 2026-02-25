@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
@@ -19,6 +20,8 @@ namespace ExcelBinder.ViewModels
         private ExecutionViewModelBase? _currentExecutionViewModel;
         private VersionInfo? _latestVersionInfo;
         private bool _isUpdateBannerVisible;
+        private string _releaseNotesText = string.Empty;
+        private List<ReleaseNoteEntry> _releaseNoteEntries = new();
 
         public ExecutionViewModelBase? CurrentExecutionViewModel
         {
@@ -69,6 +72,24 @@ namespace ExcelBinder.ViewModels
         public string UpdateMessage => LatestVersionInfo != null
             ? string.Format(ProjectConstants.Update.MsgNewVersion, LatestVersionInfo.VersionString)
             : string.Empty;
+
+        /// <summary>
+        /// 현재 버전 이후의 릴리즈 노트 텍스트입니다.
+        /// </summary>
+        public string ReleaseNotesText
+        {
+            get => _releaseNotesText;
+            set => SetProperty(ref _releaseNotesText, value);
+        }
+
+        /// <summary>
+        /// 릴리즈 노트를 버전 태그와 본문으로 분리한 엔트리 목록입니다.
+        /// </summary>
+        public List<ReleaseNoteEntry> ReleaseNoteEntries
+        {
+            get => _releaseNoteEntries;
+            set => SetProperty(ref _releaseNoteEntries, value);
+        }
 
         public AppSettings Settings
         {
@@ -328,6 +349,18 @@ namespace ExcelBinder.ViewModels
             {
                 var versionInfo = await _updateCheckService.CheckForUpdateAsync();
                 LatestVersionInfo = versionInfo;
+
+                if (versionInfo != null)
+                {
+                    var releases = await _updateCheckService.GetReleaseNotesSinceCurrentAsync();
+                    ReleaseNotesText = UpdateCheckService.FormatReleaseNotes(releases);
+                    ReleaseNoteEntries = UpdateCheckService.ToReleaseNoteEntries(releases);
+                }
+                else
+                {
+                    ReleaseNotesText = string.Empty;
+                    ReleaseNoteEntries = new();
+                }
             }
             catch (Exception ex)
             {
@@ -358,11 +391,15 @@ namespace ExcelBinder.ViewModels
                 LatestVersionInfo = versionInfo;
                 if (versionInfo != null)
                 {
-                    var result = AppServices.Dialog.ShowMessage(
-                        string.Format(ProjectConstants.Update.MsgNewVersion, versionInfo.VersionString)
-                            + ProjectConstants.Update.MsgGoToDownload,
-                        ProjectConstants.Update.TitleUpdateCheck, MessageBoxButton.YesNo, MessageBoxImage.Information);
-                    if (result == MessageBoxResult.Yes)
+                    var releases = await _updateCheckService.GetReleaseNotesSinceCurrentAsync();
+                    ReleaseNotesText = UpdateCheckService.FormatReleaseNotes(releases);
+                    ReleaseNoteEntries = UpdateCheckService.ToReleaseNoteEntries(releases);
+
+                    var navigate = AppServices.Dialog.ShowUpdateInfoDialog(
+                        string.Format(ProjectConstants.Update.MsgNewVersion, versionInfo.VersionString),
+                        ReleaseNoteEntries,
+                        ProjectConstants.Update.TitleUpdateCheck);
+                    if (navigate)
                     {
                         ExecuteOpenUpdatePage();
                     }

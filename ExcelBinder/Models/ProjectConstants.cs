@@ -87,6 +87,7 @@ namespace ExcelBinder.Models
             public const string GitHubOwner = "weperld";
             public const string GitHubRepo = "ExcelBinder";
             public const string ApiUrl = $"https://api.github.com/repos/{GitHubOwner}/{GitHubRepo}/releases/latest";
+            public const string ReleasesApiUrl = $"https://api.github.com/repos/{GitHubOwner}/{GitHubRepo}/releases";
             public const string ReleasesPageUrl = $"https://github.com/{GitHubOwner}/{GitHubRepo}/releases";
             public const string UserAgent = "ExcelBinder-UpdateChecker";
             public const int TimeoutSeconds = 10;
