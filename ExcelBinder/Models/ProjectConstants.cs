@@ -75,10 +75,16 @@ namespace ExcelBinder.Models
             public const string Short = "short";
             public const string Byte = "byte";
             public const string Void = "void";
+            public const string Enum = "enum";
 
-            public static readonly string[] AllPrimitives = 
-            { 
-                Byte, Short, Int, UInt, Long, ULong, Float, Double, String, Bool 
+            public static readonly string[] AllPrimitives =
+            {
+                Byte, Short, Int, UInt, Long, ULong, Float, Double, String, Bool
+            };
+
+            public static readonly string[] SchemaFieldTypes =
+            {
+                Byte, Short, Int, UInt, Long, ULong, Float, Double, String, Bool, Enum
             };
         }
 

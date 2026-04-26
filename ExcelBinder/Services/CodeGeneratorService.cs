@@ -40,16 +40,18 @@ namespace ExcelBinder.Services
             var fields = schema.Fields.Where(f => !schema.ExcludedFields.Contains(f.Key)).Select(f =>
             {
                 var info = TypeParser.ParseType(f.Value, f.Key);
-                string baseType = ConvertPrimitive(info.BaseType, feature);
+                string baseType = ConvertPrimitive(info, feature);
                 return new
                 {
                     Name = f.Key,
                     Type = baseType,
                     IsList = info.IsList,
                     IsReference = info.IsReference,
+                    IsEnum = info.IsEnum,
+                    EnumType = info.EnumType,
                     RefType = info.RefType,
                     RefClassName = info.RefType != null ? info.RefType + "Data" : null,
-                    ReadMethod = GetReadMethod(info.BaseType),
+                    ReadMethod = GetReadMethod(info),
                     LowerName = f.Key.ToLower()
                 };
             }).ToList();
@@ -65,10 +67,14 @@ namespace ExcelBinder.Services
             };
         }
 
-        private string ConvertPrimitive(string baseType, FeatureDefinition feature)
+        private string ConvertPrimitive(TypeInfo info, FeatureDefinition feature)
         {
+            if (info.IsEnum && !string.IsNullOrEmpty(info.EnumType))
+                return info.EnumType;
+
+            string baseType = info.BaseType;
             if (feature.TypeMappings != null && feature.TypeMappings.TryGetValue(baseType, out var mapped)) return mapped;
-            
+
             return baseType switch
             {
                 ProjectConstants.Types.Int => ProjectConstants.Types.Int,
@@ -90,9 +96,16 @@ namespace ExcelBinder.Services
             if (schema.Fields.TryGetValue(schema.Key, out var type))
             {
                 var info = TypeParser.ParseType(type, schema.Key);
-                return ConvertPrimitive(info.BaseType, feature);
+                return ConvertPrimitive(info, feature);
             }
             return ProjectConstants.Types.Int;
+        }
+
+        private string GetReadMethod(TypeInfo info)
+        {
+            if (info.IsEnum && !string.IsNullOrEmpty(info.EnumType))
+                return $"System.Enum.Parse<{info.EnumType}>(reader.ReadString())";
+            return GetReadMethod(info.BaseType);
         }
 
         private string GetReadMethod(string type)

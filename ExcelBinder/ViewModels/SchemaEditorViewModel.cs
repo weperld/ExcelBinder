@@ -107,7 +107,7 @@ namespace ExcelBinder.ViewModels
 
         public ObservableCollection<string> Headers { get; } = new();
         public ObservableCollection<SchemaFieldViewModel> Fields { get; } = new();
-        public ObservableCollection<string> AvailableTypes { get; } = new(ProjectConstants.Types.AllPrimitives);
+        public ObservableCollection<string> AvailableTypes { get; } = new(ProjectConstants.Types.SchemaFieldTypes);
 
         public SchemaEditorItemViewModel(string excelPath, string sheetName, string outputPath)
         {
@@ -150,12 +150,14 @@ namespace ExcelBinder.ViewModels
 
                     string selectedType = ProjectConstants.Types.Int;
                     string referenceType = "";
+                    string enumType = "";
 
                     if (existingSchema != null && existingSchema.Fields.TryGetValue(group.Name, out var typeStr))
                     {
                         var info = TypeParser.ParseType(typeStr, group.Name);
                         selectedType = info.BaseType;
                         referenceType = info.RefType ?? "";
+                        enumType = info.EnumType ?? "";
                     }
 
                     Fields.Add(new SchemaFieldViewModel
@@ -164,6 +166,7 @@ namespace ExcelBinder.ViewModels
                         Count = group.Count,
                         SelectedType = selectedType,
                         ReferenceType = referenceType,
+                        EnumType = enumType,
                         IsIncluded = existingSchema == null || !existingSchema.ExcludedFields.Contains(group.Name)
                     });
                 }
@@ -194,14 +197,19 @@ namespace ExcelBinder.ViewModels
             foreach (var field in Fields)
             {
                 string typeStr = field.SelectedType;
+                if (field.CanInputEnum && !string.IsNullOrWhiteSpace(field.EnumType))
+                {
+                    typeStr = $"{typeStr}:{field.EnumType.Trim()}";
+                }
+
                 if (!string.IsNullOrWhiteSpace(field.ReferenceType))
                 {
-                    typeStr = $"{typeStr}:ref:{field.ReferenceType}";
+                    typeStr = $"{typeStr}:{ProjectConstants.Excel.ReferenceMarker}:{field.ReferenceType.Trim()}";
                 }
 
                 if (field.Count > 1)
                 {
-                    typeStr = $"List<{typeStr}>";
+                    typeStr = $"{ProjectConstants.Excel.ListPrefix}{typeStr}{ProjectConstants.Excel.ListSuffix}";
                 }
 
                 schema.Fields[field.HeaderName] = typeStr;
@@ -229,13 +237,22 @@ namespace ExcelBinder.ViewModels
 
         private string _selectedType = ProjectConstants.Types.Int;
         private string _referenceType = string.Empty;
+        private string _enumType = string.Empty;
         private bool _isIncluded = true;
         private bool _isKeyColumn;
 
         public string SelectedType
         {
             get => _selectedType;
-            set => SetProperty(ref _selectedType, value);
+            set
+            {
+                if (!SetProperty(ref _selectedType, value)) return;
+                OnPropertyChanged(nameof(CanInputEnum));
+                if (!CanInputEnum && !string.IsNullOrEmpty(_enumType))
+                {
+                    EnumType = string.Empty;
+                }
+            }
         }
 
         public string ReferenceType
@@ -243,6 +260,14 @@ namespace ExcelBinder.ViewModels
             get => _referenceType;
             set => SetProperty(ref _referenceType, value);
         }
+
+        public string EnumType
+        {
+            get => _enumType;
+            set => SetProperty(ref _enumType, value);
+        }
+
+        public bool CanInputEnum => _selectedType == ProjectConstants.Types.Enum;
 
         public bool IsIncluded
         {

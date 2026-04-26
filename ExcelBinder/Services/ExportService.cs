@@ -78,15 +78,25 @@ namespace ExcelBinder.Services
                 writer.Write(indices.Count);
                 foreach (var idx in indices)
                 {
-                    WritePrimitive(writer, info.BaseType, row[idx]);
+                    WritePrimitiveOrEnum(writer, info, row[idx]);
                 }
             }
             else
             {
                 int idx = GetColumnIndex(headerMap, info.ColumnName, fieldName);
                 string value = idx < row.Length ? row[idx] : "";
-                WritePrimitive(writer, info.BaseType, value);
+                WritePrimitiveOrEnum(writer, info, value);
             }
+        }
+
+        private void WritePrimitiveOrEnum(BinaryWriter writer, TypeInfo info, string value)
+        {
+            if (info.IsEnum)
+            {
+                writer.Write(value ?? "");
+                return;
+            }
+            WritePrimitive(writer, info.BaseType, value);
         }
 
         private void WritePrimitive(BinaryWriter writer, string type, string value)
@@ -151,7 +161,7 @@ namespace ExcelBinder.Services
                 var list = new List<object>();
                 foreach (var idx in indices)
                 {
-                    list.Add(ParsePrimitive(info.BaseType, row[idx]));
+                    list.Add(ParsePrimitiveOrEnum(info, row[idx]));
                 }
                 return list;
             }
@@ -159,8 +169,14 @@ namespace ExcelBinder.Services
             {
                 int idx = GetColumnIndex(headerMap, info.ColumnName, fieldName);
                 string value = idx < row.Length ? row[idx] : "";
-                return ParsePrimitive(info.BaseType, value);
+                return ParsePrimitiveOrEnum(info, value);
             }
+        }
+
+        private object ParsePrimitiveOrEnum(TypeInfo info, string value)
+        {
+            if (info.IsEnum) return value ?? "";
+            return ParsePrimitive(info.BaseType, value);
         }
 
         private object ParsePrimitive(string type, string value)

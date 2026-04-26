@@ -10,6 +10,8 @@ namespace ExcelBinder.Services
         public bool IsList;
         public bool IsReference;
         public string? RefType;
+        public bool IsEnum;
+        public string? EnumType;
         public string ColumnName;
     }
 
@@ -23,12 +25,21 @@ namespace ExcelBinder.Services
             if (current.StartsWith(ProjectConstants.Excel.ListPrefix) && current.EndsWith(ProjectConstants.Excel.ListSuffix))
             {
                 info.IsList = true;
-                current = current.Substring(ProjectConstants.Excel.ListPrefix.Length, 
+                current = current.Substring(ProjectConstants.Excel.ListPrefix.Length,
                     current.Length - ProjectConstants.Excel.ListPrefix.Length - ProjectConstants.Excel.ListSuffix.Length).Trim();
             }
 
             var parts = current.Split(ProjectConstants.Excel.TypeDelimiter[0]).Select(p => p.Trim()).ToArray();
             info.BaseType = parts[0];
+
+            if (info.BaseType == ProjectConstants.Types.Enum)
+            {
+                info.IsEnum = true;
+                if (parts.Length > 1 && !string.IsNullOrWhiteSpace(parts[1]) && parts[1] != ProjectConstants.Excel.ReferenceMarker)
+                {
+                    info.EnumType = parts[1];
+                }
+            }
 
             if (parts.Contains(ProjectConstants.Excel.ReferenceMarker))
             {
@@ -41,7 +52,10 @@ namespace ExcelBinder.Services
             }
 
             string last = parts.Last();
-            if (last != info.BaseType && last != ProjectConstants.Excel.ReferenceMarker && (info.RefType == null || last != info.RefType))
+            if (last != info.BaseType
+                && last != ProjectConstants.Excel.ReferenceMarker
+                && (info.RefType == null || last != info.RefType)
+                && (info.EnumType == null || last != info.EnumType))
             {
                 info.ColumnName = last;
             }

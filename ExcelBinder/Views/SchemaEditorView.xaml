@@ -66,14 +66,16 @@
                                 <Grid Grid.Row="0" Margin="10,5,25,10">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="60"/>
-                                        <ColumnDefinition Width="200"/>
+                                        <ColumnDefinition Width="180"/>
+                                        <ColumnDefinition Width="120"/>
                                         <ColumnDefinition Width="150"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Text="Include" FontWeight="Bold" Foreground="{StaticResource MutedTextBrush}"/>
                                     <TextBlock Grid.Column="1" Text="Excel Header" FontWeight="Bold" Foreground="{StaticResource MutedTextBrush}"/>
                                     <TextBlock Grid.Column="2" Text="Data Type" FontWeight="Bold" Foreground="{StaticResource MutedTextBrush}"/>
-                                    <StackPanel Grid.Column="3" Orientation="Horizontal">
+                                    <TextBlock Grid.Column="3" Text="Enum Type" FontWeight="Bold" Foreground="{StaticResource MutedTextBrush}"/>
+                                    <StackPanel Grid.Column="4" Orientation="Horizontal">
                                         <TextBlock Text="Reference (Optional)" FontWeight="Bold" Foreground="{StaticResource MutedTextBrush}"/>
                                         <Button Style="{StaticResource HelpButtonStyle}" ToolTipService.ToolTip="{StaticResource ReferenceTypeHelp}"/>
                                     </StackPanel>
@@ -87,7 +89,8 @@
                                                     <Grid>
                                                         <Grid.ColumnDefinitions>
                                                             <ColumnDefinition Width="60"/>
-                                                            <ColumnDefinition Width="200"/>
+                                                            <ColumnDefinition Width="180"/>
+                                                            <ColumnDefinition Width="120"/>
                                                             <ColumnDefinition Width="150"/>
                                                             <ColumnDefinition Width="*"/>
                                                         </Grid.ColumnDefinitions>
@@ -102,7 +105,11 @@
                                                         <TextBlock Grid.Column="1" Text="{Binding DisplayName}" VerticalAlignment="Center" FontWeight="SemiBold" Margin="5,0"/>
                                                         <ComboBox Grid.Column="2" ItemsSource="{Binding DataContext.AvailableTypes, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                                                   SelectedItem="{Binding SelectedType}" Margin="5,0" Height="30"/>
-                                                        <TextBox Grid.Column="3" Text="{Binding ReferenceType, UpdateSourceTrigger=PropertyChanged}" Margin="5,0" Height="30"
+                                                        <TextBox Grid.Column="3" Text="{Binding EnumType, UpdateSourceTrigger=PropertyChanged}"
+                                                                 IsEnabled="{Binding CanInputEnum}"
+                                                                 Margin="5,0" Height="30"
+                                                                 Tag="Enum (정수형 타입에서만 사용)"/>
+                                                        <TextBox Grid.Column="4" Text="{Binding ReferenceType, UpdateSourceTrigger=PropertyChanged}" Margin="5,0" Height="30"
                                                                  Tag="Reference Type (Optional)"/>
                                                     </Grid>
                                                 </Border>
