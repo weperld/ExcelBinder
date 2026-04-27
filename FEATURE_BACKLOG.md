@@ -288,13 +288,16 @@
 - [x] Settings 업데이트 확인에 스크롤 가능한 커스텀 다이얼로그 추가
 - [x] 버전별 색상 구분 (SecondaryBrush) + 교대 배경 적용
 
-### 기능 3: 프로젝트 별 Feature 그룹화
-- [ ] 그룹 모델 방식 결정 (속성 vs 별도 모델)
-- [ ] 그룹 UI 형태 결정 (Expander / Tab / TreeView)
-- [ ] `FeatureDefinition` Group 속성 추가
-- [ ] Feature Builder 그룹 지정 UI 추가
-- [ ] 그룹 관리 기능 구현
-- [ ] DashboardView 그룹화 UI 적용
-- [ ] MainViewModel 그룹 필터링 로직
-- [ ] 기존 Feature JSON 하위 호환성 확인
-- [ ] 그룹 미지정 Feature 처리 확인
+### 기능 3: 프로젝트 별 Feature 그룹화 ✅ 구현 완료 (2026-04-28)
+- [x] 그룹 모델 방식 결정 → 별도 `FeatureGroup` 모델 (Id/Name/FeatureIds, Feature 본체 무변경)
+- [x] 그룹 UI 형태 결정 → 좌측 사이드바 ListBox + 우측 WrapPanel
+- [x] 저장 위치 결정 → `Features/_groups.json` (Features 폴더 내부)
+- [x] 다대다 매핑 허용 (한 Feature가 여러 그룹 소속 가능)
+- [x] Dashboard 사이드바 ContextMenu (이름변경/삭제, 빈 공간에서 새 그룹 만들기)
+- [x] Feature 카드 ContextMenu 동적 서브메뉴 (체크박스 토글, 즉시 저장)
+- [x] "전체" 가상 그룹 (항상 첫 번째, 이름변경/삭제 불가)
+- [x] 그룹명 중복 거부, 빈 이름 거부
+- [x] DialogService.ShowInput 신규 (validator 주입)
+- [x] AppSettings.LastSelectedGroupId 자동 영속화
+- [x] Feature 삭제 시 lazy GC (RefreshFeatures 시점)
+- [x] _groups.json 손상 시 graceful 처리 (try-catch + 빈 리스트 fallback)

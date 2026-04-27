@@ -68,6 +68,16 @@ Excel Load → ExcelLoaderService.Parse() → ColumnFilter/RowFilter → Process
 - **BinderData**: 엑셀에서 추출된 데이터 구조 (`Models/BinderData.cs`)
 - **CodeGen**: Scriban 템플릿 기반 C# 코드 자동 생성 (`Services/CodeGenService.cs`)
 
+### Feature 그룹화 (Dashboard)
+- Dashboard 좌측 사이드바에 그룹 리스트 표시: "전체" (가상, 항상 첫 번째, 이름변경/삭제 불가) + 사용자 정의 그룹
+- 그룹 정보는 `Features/_groups.json`에 저장 (FeatureDefinition은 그룹 소속 정보를 보유하지 않음 — 단방향 참조)
+- 한 Feature는 여러 사용자 그룹에 동시 소속 가능 (다대다)
+- 그룹 관리: 사이드바 항목 우클릭(이름변경/삭제), 빈 공간 우클릭 또는 "+" 버튼(새 그룹)
+- Feature 매핑: Feature 카드 우클릭 → "그룹에 추가/제거" 서브메뉴 (체크박스 토글, 즉시 반영 + 저장)
+- 그룹명 중복 거부, "전체"라는 이름 사용 불가
+- 정합성: Feature 삭제 시 lazy GC (Refresh 시점에 dangling ID 자동 정리)
+- 마지막 선택 그룹은 `AppSettings.LastSelectedGroupId`로 영속화
+
 ### Enum 타입 필드 처리 (StaticData 스키마)
 - SchemaEditor의 Data Type 드롭다운에서 `enum`을 선택한 경우에만 Enum Type 입력 활성
 - Schema JSON 토큰: `"FieldName": "enum:MyEnumType"` (List는 `"List<enum:MyEnumType>"`)
