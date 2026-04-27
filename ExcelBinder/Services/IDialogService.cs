@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Windows;
+using ExcelBinder.Models;
 
 namespace ExcelBinder.Services
 {
@@ -13,5 +14,7 @@ namespace ExcelBinder.Services
         string? BrowseOpenFile(string filter, string title = "");
         string? BrowseSaveFile(string filter, string defaultFileName, string title = "");
         bool ShowUpdateInfoDialog(string message, List<ReleaseNoteEntry> entries, string title);
+        string? ShowInput(string title, string prompt, string? defaultValue = null, Func<string, string?>? validator = null);
+        IReadOnlyList<string>? ShowFeatureSelectionDialog(string title, string prompt, IEnumerable<FeatureDefinition> allFeatures, IEnumerable<string> selectedFeatureIds);
     }
 }

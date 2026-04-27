@@ -148,6 +148,12 @@ namespace ExcelBinder.ViewModels
                 return;
             }
 
+            if (Feature.Id.StartsWith("_"))
+            {
+                AppServices.Dialog.ShowMessage("Feature ID는 '_'로 시작할 수 없습니다.", ProjectConstants.UI.TitleWarning, MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             Feature.TypeMappings = TypeMappings
                 .Where(m => !string.IsNullOrWhiteSpace(m.Key))
                 .ToDictionary(m => m.Key, m => m.Value);

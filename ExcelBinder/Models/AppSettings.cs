@@ -9,6 +9,7 @@ namespace ExcelBinder.Models
     {
         private string _featureDefinitionsPath = ProjectConstants.Defaults.FeatureDefinitionsPath;
         private string _lastFeatureId = string.Empty;
+        private string _lastSelectedGroupId = ProjectConstants.Defaults.AllGroupId;
         private ObservableCollection<string> _boundFeatures = new();
         private bool _isBinaryChecked = true;
         private bool _isJsonChecked = false;
@@ -26,6 +27,13 @@ namespace ExcelBinder.Models
         {
             get => _lastFeatureId;
             set => SetProperty(ref _lastFeatureId, value);
+        }
+
+        [JsonProperty("lastSelectedGroupId")]
+        public string LastSelectedGroupId
+        {
+            get => _lastSelectedGroupId;
+            set => SetProperty(ref _lastSelectedGroupId, value);
         }
 
         [JsonProperty("boundFeatures")]

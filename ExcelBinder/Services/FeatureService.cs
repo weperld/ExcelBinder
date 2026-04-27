@@ -80,8 +80,11 @@ namespace ExcelBinder.Services
             var features = new List<FeatureDefinition>();
             foreach (var file in Directory.GetFiles(directoryPath, "*.json"))
             {
+                string fileName = Path.GetFileName(file);
+                if (fileName.StartsWith("_")) continue;
+
                 var feature = LoadFeatureFromFile(file);
-                if (feature != null)
+                if (feature != null && !string.IsNullOrEmpty(feature.Id))
                 {
                     features.Add(feature);
                 }

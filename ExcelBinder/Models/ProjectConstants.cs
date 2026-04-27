@@ -114,6 +114,9 @@ namespace ExcelBinder.Models
             public const string FeatureName = "New Feature";
             public const string FeatureDefinitionsPath = "Features";
             public const string NotFound = "Not Found";
+            public const string GroupsFileName = "_groups.json";
+            public const string AllGroupId = "__all__";
+            public const string AllGroupName = "전체";
         }
 
         public static class UI
@@ -129,6 +132,22 @@ namespace ExcelBinder.Models
             public const string MsgFeatureSaved = "기능 정의가 성공적으로 저장되었습니다.";
             public const string MsgSaveError = "저장 중 오류가 발생했습니다: ";
             public const string MsgTemplateApplied = "템플릿이 성공적으로 적용되었습니다.";
+
+            public const string TitleAddGroup = "그룹 추가";
+            public const string TitleRenameGroup = "그룹 이름변경";
+            public const string PromptGroupName = "그룹 이름을 입력하세요:";
+            public const string MsgGroupNameRequired = "그룹 이름을 입력해야 합니다.";
+            public const string MsgGroupNameDuplicate = "이미 존재하는 그룹 이름입니다.";
+            public const string MsgConfirmDeleteGroup = "그룹 '{0}'을(를) 삭제하시겠습니까? (포함된 Feature는 삭제되지 않습니다)";
+            public const string MenuRename = "이름변경";
+            public const string MenuDelete = "삭제";
+            public const string MenuAddNewGroup = "새 그룹 만들기";
+            public const string MenuAddToGroup = "그룹에 추가/제거";
+            public const string ButtonAddGroup = "+ 새 그룹";
+            public const string ButtonManageGroupMembers = "Feature 관리";
+            public const string TitleManageGroupMembers = "그룹 멤버 편집";
+            public const string PromptManageGroupMembers = "'{0}' 그룹에 포함할 Feature를 선택하세요:";
+            public const string MsgNoFeatures = "표시할 Feature가 없습니다.";
         }
     }
 }
