@@ -56,8 +56,8 @@ namespace ExcelBinder.Services
             var window = new Window
             {
                 Title = title,
-                Width = 400,
-                MinWidth = 320,
+                Width = 520,
+                MinWidth = 416,
                 SizeToContent = SizeToContent.Height,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
                 ResizeMode = ResizeMode.NoResize,
@@ -161,10 +161,10 @@ namespace ExcelBinder.Services
             var window = new Window
             {
                 Title = title,
-                Width = 480,
-                Height = 520,
-                MinWidth = 360,
-                MinHeight = 360,
+                Width = 624,
+                Height = 676,
+                MinWidth = 468,
+                MinHeight = 468,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
                 ResizeMode = ResizeMode.CanResizeWithGrip,
             };
@@ -325,10 +325,10 @@ namespace ExcelBinder.Services
             var window = new Window
             {
                 Title = title,
-                Width = 480,
-                Height = 420,
-                MinWidth = 380,
-                MinHeight = 300,
+                Width = 624,
+                Height = 546,
+                MinWidth = 494,
+                MinHeight = 390,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
                 ResizeMode = ResizeMode.CanResizeWithGrip,
             };
