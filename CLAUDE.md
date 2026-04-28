@@ -78,6 +78,16 @@ Excel Load → ExcelLoaderService.Parse() → ColumnFilter/RowFilter → Process
 - 정합성: Feature 삭제 시 lazy GC (Refresh 시점에 dangling ID 자동 정리)
 - 마지막 선택 그룹은 `AppSettings.LastSelectedGroupId`로 영속화
 
+### 인앱 사용자 가이드 (GuideWindow)
+- 별도 가이드 윈도우는 좌측 사이드바 트리(카테고리 → 토픽 2단) + 우측 본문(`FlowDocumentScrollViewer`) 구조
+- 콘텐츠는 `Resources/Guides/*.xaml`(FlowDocument 형식)로 작성하고 `<Resource>`로 빌드 임베드, 트리는 `_index.json`(EmbeddedResource)이 정의
+- 진입점: 메인 윈도우 우상단 `?` 버튼 + `F1` 단축키(메인은 `ShowDialog` 모달), FeatureBuilderView/SchemaEditorView 헤더 `?` 아이콘(모달리스 `Show`로 페이지 작업과 병행 가능)
+- 첫 실행 시 `AppSettings.HasSeenGuide=false`이면 "시작하기" 토픽으로 자동 표시(`MainWindow.Loaded` → `Dispatcher.BeginInvoke(Background)`), "다시 보지 않기" 체크 후 닫기 시에만 영속화
+- TreeView는 커스텀 `ControlTemplate`로 기본 파란 하이라이트를 부드러운 톤(`#DDE5F5`/`#EEF2FA`)으로 교체, 카테고리 노드 클릭은 본문에 영향 없음(`SelectedItemChanged`에서 `GuideTopic`만 통과)
+- 본문은 `GuideViewModel`에서 로드 후 `ApplyReadabilityDefaults`로 FontSize 16/LineHeight 28/ColumnWidth 960 적용, `ApplySectionAlternation`으로 H2(SemiBold + 18~22pt) 단위 옅은 배경 교차(`#F8FAFC`/`#EEF2F8`)
+- 휠 스크롤은 `PreviewMouseWheel`을 가로채 `WheelScrollLines × 1.5`만큼 `LineUp/LineDown` 호출(기본 동작 차단)
+- 새 토픽 추가 시: `Resources/Guides/NN_X.xaml` 생성 → `_index.json`에 `{ id, title, resource }` 등록 → `.csproj`의 `<None Remove>`/`<Page Remove>`/`<Resource Include>` 3쌍 추가
+
 ### Enum 타입 필드 처리 (StaticData 스키마)
 - SchemaEditor의 Data Type 드롭다운에서 `enum`을 선택한 경우에만 Enum Type 입력 활성
 - Schema JSON 토큰: `"FieldName": "enum:MyEnumType"` (List는 `"List<enum:MyEnumType>"`)

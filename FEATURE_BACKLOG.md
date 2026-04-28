@@ -301,3 +301,18 @@
 - [x] AppSettings.LastSelectedGroupId 자동 영속화
 - [x] Feature 삭제 시 lazy GC (RefreshFeatures 시점)
 - [x] _groups.json 손상 시 graceful 처리 (try-catch + 빈 리스트 fallback)
+
+### 기능 6: 인앱 사용자 가이드 시스템 ✅ 구현 완료 (2026-04-28)
+- [x] 진입점 결정 → 메인 윈도우 우상단 `?` 버튼 + `F1` 단축키(모달) + FeatureBuilderView/SchemaEditorView 헤더 `?` 아이콘(모달리스)
+- [x] 윈도우 구조 결정 → 좌측 사이드바 TreeView(2단: 카테고리/토픽) + 우측 FlowDocumentScrollViewer
+- [x] 콘텐츠 형식 결정 → WPF FlowDocument(.xaml) — Markdown 파서 의존성 회피
+- [x] 저장 위치 결정 → `Resources/Guides/` 임베드 리소스 (오프라인 동작 + 단일 실행 파일 배포 유지)
+- [x] 첫 실행 자동 표시 (`AppSettings.HasSeenGuide` 플래그, "다시 보지 않기" 체크 시에만 저장)
+- [x] 콘텐츠 5편 작성 → 시작하기 / Feature 만들기 / SchemaEditor / Export·CodeGen / 템플릿 작성(Scriban 가이드 + 예시 3종)
+- [x] TreeView 커스텀 ControlTemplate (기본 파란 하이라이트 제거, 톤다운 `#DDE5F5`/`#EEF2FA`)
+- [x] 휠 스크롤 1.5배 가속 (PreviewMouseWheel + LineUp/Down × WheelScrollLines)
+- [x] 본문 가독성 강화 (FontSize 16 / LineHeight 28 / ColumnWidth 960 / OptimalParagraph)
+- [x] 섹션 교차 배경 (H2 단위 자동 그룹화 후 `#F8FAFC`/`#EEF2F8`)
+- [x] Window 사이즈 일괄 1.3배 + Main/Guide 추가 15:9 가로 확장
+- [x] FeatureService.LoadFeatures가 `_*` 시스템 파일 무시하도록 가드 (가이드 인덱스와 충돌 방지)
+- [x] FlowDocument 로드 실패 시 fallback 문서 (LogService 기록, 빈 catch 없음)
