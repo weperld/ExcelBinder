@@ -148,6 +148,18 @@ namespace ExcelBinder.Models
             public const string TitleManageGroupMembers = "그룹 멤버 편집";
             public const string PromptManageGroupMembers = "'{0}' 그룹에 포함할 Feature를 선택하세요:";
             public const string MsgNoFeatures = "표시할 Feature가 없습니다.";
+
+            public const string TitleGuide = "ExcelBinder 사용 가이드";
+            public const string TooltipHelp = "사용 가이드 (F1)";
+            public const string TooltipHelpView = "이 화면 가이드 보기";
+            public const string ButtonClose = "닫기";
+            public const string CheckDoNotShow = "다시 보지 않기";
+            public const string MsgGuideMissing = "콘텐츠를 불러올 수 없습니다.";
+
+            public const string GuideTopicGettingStarted = "getting-started";
+            public const string GuideTopicFeatureBuilder = "feature-builder";
+            public const string GuideTopicSchemaEditor = "schema-editor";
+            public const string GuideTopicExportCodeGen = "export-codegen";
         }
     }
 }

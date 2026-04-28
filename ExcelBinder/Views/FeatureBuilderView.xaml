@@ -16,7 +16,14 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Feature Builder" FontSize="28" FontWeight="Bold" Margin="0,5,0,25" Padding="0,5,0,0" Foreground="{StaticResource PrimaryBrush}"/>
+        <DockPanel Margin="0,5,0,25" LastChildFill="False">
+            <TextBlock Text="Feature Builder" FontSize="28" FontWeight="Bold" Padding="0,5,0,0"
+                       Foreground="{StaticResource PrimaryBrush}" DockPanel.Dock="Left"/>
+            <Button Content="?" DockPanel.Dock="Right" VerticalAlignment="Center"
+                    Width="28" Height="28" FontWeight="Bold" FontSize="14"
+                    ToolTip="이 화면 가이드 보기"
+                    Click="HelpButton_Click" Tag="feature-builder"/>
+        </DockPanel>
 
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0,0,-10,0" Padding="0,10,10,0">
             <StackPanel>

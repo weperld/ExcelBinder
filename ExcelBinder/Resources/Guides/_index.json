@@ -1,0 +1,21 @@
+{
+  "categories": [
+    {
+      "id": "basics",
+      "title": "기본 사용법",
+      "topics": [
+        { "id": "getting-started", "title": "시작하기", "resource": "01_GettingStarted.xaml" }
+      ]
+    },
+    {
+      "id": "features",
+      "title": "기능별 가이드",
+      "topics": [
+        { "id": "feature-builder", "title": "Feature 만들기", "resource": "02_FeatureBuilder.xaml" },
+        { "id": "schema-editor", "title": "Schema Editor", "resource": "03_SchemaEditor.xaml" },
+        { "id": "export-codegen", "title": "Export / CodeGen", "resource": "04_ExportCodeGen.xaml" },
+        { "id": "templates", "title": "템플릿 작성", "resource": "05_Templates.xaml" }
+      ]
+    }
+  ]
+}

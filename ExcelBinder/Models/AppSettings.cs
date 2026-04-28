@@ -14,6 +14,7 @@ namespace ExcelBinder.Models
         private bool _isBinaryChecked = true;
         private bool _isJsonChecked = false;
         private bool _checkForUpdatesOnStartup = true;
+        private bool _hasSeenGuide = false;
 
         [JsonProperty("featureDefinitionsPath")]
         public string FeatureDefinitionsPath
@@ -62,6 +63,13 @@ namespace ExcelBinder.Models
         {
             get => _isJsonChecked;
             set => SetProperty(ref _isJsonChecked, value);
+        }
+
+        [JsonProperty("hasSeenGuide")]
+        public bool HasSeenGuide
+        {
+            get => _hasSeenGuide;
+            set => SetProperty(ref _hasSeenGuide, value);
         }
     }
 }

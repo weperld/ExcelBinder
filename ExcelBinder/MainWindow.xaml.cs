@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Threading;
 
 using ExcelBinder.Services;
 using ExcelBinder.ViewModels;
@@ -46,5 +47,14 @@ public partial class MainWindow : Window, INavigationService
     public void NavigateToSchemaEditor(object viewModel)
     {
         MainFrame.Navigate(new SchemaEditorView { DataContext = viewModel });
+    }
+
+    private void Window_Loaded(object sender, RoutedEventArgs e)
+    {
+        // 첫 실행 자동 표시는 Dashboard 초기화 이후에 트리거 (UI 경합 방지)
+        Dispatcher.BeginInvoke(new System.Action(() =>
+        {
+            _viewModel.TriggerFirstRunGuideIfNeeded();
+        }), DispatcherPriority.Background);
     }
 }

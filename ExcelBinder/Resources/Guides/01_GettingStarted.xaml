@@ -1,0 +1,54 @@
+<FlowDocument xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+              FontFamily="Segoe UI" FontSize="14" PagePadding="0" LineHeight="22">
+    <Paragraph FontSize="28" FontWeight="Bold" Foreground="#2F4F8F" Margin="0,0,0,8">
+        시작하기
+    </Paragraph>
+    <Paragraph Foreground="#555" Margin="0,0,0,18">
+        ExcelBinder는 엑셀 파일에서 데이터를 추출하여 JSON / Binary로 변환하고, C# 코드를 자동 생성하는 도구입니다.
+        이 가이드는 처음 사용자를 위한 전체 흐름 요약입니다.
+    </Paragraph>
+
+    <Paragraph FontSize="20" FontWeight="SemiBold" Margin="0,8,0,4">개념 한눈에 보기</Paragraph>
+    <List MarkerStyle="Disc" Margin="20,0,0,12">
+        <ListItem><Paragraph><Bold>Feature</Bold> — 하나의 변환 작업 단위 (예: 캐릭터 데이터, 아이템 데이터)</Paragraph></ListItem>
+        <ListItem><Paragraph><Bold>Schema</Bold> — 엑셀 헤더가 어떤 C# 타입으로 매핑되는지 정의하는 파일</Paragraph></ListItem>
+        <ListItem><Paragraph><Bold>Export</Bold> — 엑셀 데이터를 JSON / Binary로 추출</Paragraph></ListItem>
+        <ListItem><Paragraph><Bold>CodeGen</Bold> — Scriban 템플릿으로 C# 클래스 자동 생성</Paragraph></ListItem>
+    </List>
+
+    <Paragraph FontSize="20" FontWeight="SemiBold" Margin="0,12,0,4">전체 흐름</Paragraph>
+    <Paragraph Margin="0,0,0,4">
+        <Bold>1단계.</Bold> Settings에서 <Italic>Feature Definitions Path</Italic>를 지정합니다.
+        Feature 정의 파일(.json)이 저장되는 폴더입니다.
+    </Paragraph>
+    <Paragraph Margin="0,0,0,4">
+        <Bold>2단계.</Bold> Dashboard에서 <Italic>"+"</Italic> 버튼으로 새 Feature를 만듭니다.
+        Feature ID, 카테고리(StaticData / SchemaGen / Logic / Enum / Constants), 엑셀/스키마 경로를 설정합니다.
+    </Paragraph>
+    <Paragraph Margin="0,0,0,4">
+        <Bold>3단계.</Bold> SchemaGen 카테고리로 스키마를 먼저 생성하거나, 직접 SchemaEditor에서 헤더 → 타입 매핑을 정의합니다.
+    </Paragraph>
+    <Paragraph Margin="0,0,0,4">
+        <Bold>4단계.</Bold> Feature 카드의 실행 화면에서 Export(JSON / Binary) 또는 CodeGen 버튼으로 산출물을 생성합니다.
+    </Paragraph>
+
+    <Paragraph FontSize="20" FontWeight="SemiBold" Margin="0,16,0,4">엑셀 작성 규칙</Paragraph>
+    <List MarkerStyle="Disc" Margin="20,0,0,12">
+        <ListItem><Paragraph><Bold>1행</Bold>: 헤더 (필드 이름)</Paragraph></ListItem>
+        <ListItem><Paragraph><Bold>2행 이후</Bold>: 데이터</Paragraph></ListItem>
+        <ListItem><Paragraph>헤더에 <Bold>#</Bold>이 붙은 열은 추출에서 <Bold>제외</Bold>됩니다.</Paragraph></ListItem>
+        <ListItem><Paragraph>첫 유효 셀이 <Bold>#</Bold>로 시작하는 행은 <Bold>제외</Bold>됩니다.</Paragraph></ListItem>
+        <ListItem><Paragraph>시트 이름이 <Bold>#</Bold>로 시작하면 해당 시트는 무시됩니다.</Paragraph></ListItem>
+    </List>
+
+    <Paragraph FontSize="20" FontWeight="SemiBold" Margin="0,12,0,4">단축키 / 진입점</Paragraph>
+    <List MarkerStyle="Disc" Margin="20,0,0,12">
+        <ListItem><Paragraph><Bold>F1</Bold> — 어디서든 가이드 윈도우 열기</Paragraph></ListItem>
+        <ListItem><Paragraph>메인 윈도우 우상단 <Bold>?</Bold> 버튼 — 가이드 열기</Paragraph></ListItem>
+        <ListItem><Paragraph>각 기능 화면(Feature Builder, Schema Editor)의 헤더 <Bold>?</Bold> 아이콘 — 해당 기능 가이드로 직접 이동</Paragraph></ListItem>
+    </List>
+
+    <Paragraph FontStyle="Italic" Foreground="Gray" Margin="0,20,0,0">
+        좌측 사이드바의 "기능별 가이드"에서 각 기능의 상세 사용법을 확인하세요.
+    </Paragraph>
+</FlowDocument>

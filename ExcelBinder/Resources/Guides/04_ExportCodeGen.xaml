@@ -1,0 +1,39 @@
+<FlowDocument xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+              FontFamily="Segoe UI" FontSize="14" PagePadding="0" LineHeight="22">
+    <Paragraph FontSize="28" FontWeight="Bold" Foreground="#2F4F8F" Margin="0,0,0,8">
+        Export / CodeGen
+    </Paragraph>
+    <Paragraph Foreground="#555" Margin="0,0,0,18">
+        Export는 엑셀 데이터를 JSON / Binary 산출물로 변환하고, CodeGen은 Scriban 템플릿을 사용해 C# 코드를 생성합니다.
+    </Paragraph>
+
+    <Paragraph FontStyle="Italic" Foreground="Gray" Margin="0,0,0,16">
+        ※ 상세 콘텐츠는 준비 중입니다. 아래는 기본 흐름 요약입니다.
+    </Paragraph>
+
+    <Paragraph FontSize="20" FontWeight="SemiBold" Margin="0,8,0,4">Export</Paragraph>
+    <List MarkerStyle="Disc" Margin="20,0,0,12">
+        <ListItem><Paragraph><Bold>출력 포맷</Bold> — Feature의 Output Options에서 Binary / JSON 선택 (둘 다 가능)</Paragraph></ListItem>
+        <ListItem><Paragraph><Bold>출력 위치</Bold> — Feature의 Export Directory</Paragraph></ListItem>
+        <ListItem><Paragraph><Bold>파일 확장자</Bold> — Output Options의 Extension 항목 (Binary는 <Bold>.bytes</Bold> 고정)</Paragraph></ListItem>
+        <ListItem><Paragraph>Schema가 없는 시트는 자동 무시됩니다.</Paragraph></ListItem>
+    </List>
+
+    <Paragraph FontSize="20" FontWeight="SemiBold" Margin="0,12,0,4">CodeGen</Paragraph>
+    <List MarkerStyle="Disc" Margin="20,0,0,12">
+        <ListItem><Paragraph><Bold>템플릿</Bold> — Feature의 Templates 항목에서 <Bold>.liquid</Bold> 파일 지정</Paragraph></ListItem>
+        <ListItem><Paragraph><Bold>네임스페이스</Bold> — Feature의 Default Namespace 사용</Paragraph></ListItem>
+        <ListItem><Paragraph><Bold>출력 위치</Bold> — Feature의 Scripts Directory</Paragraph></ListItem>
+        <ListItem><Paragraph>Enum 필드 읽기는 <Bold>System.Enum.Parse&lt;T&gt;(reader.ReadString())</Bold>로 인라인 생성됩니다 (대소문자 구분).</Paragraph></ListItem>
+    </List>
+
+    <Paragraph FontSize="20" FontWeight="SemiBold" Margin="0,12,0,4">CLI 자동화</Paragraph>
+    <Paragraph Margin="0,0,0,4"><Bold>특정 Feature 처리:</Bold></Paragraph>
+    <Paragraph Margin="20,0,0,8" FontFamily="Consolas" FontSize="14" Background="#F4F4F4" Padding="8">
+        dotnet run -- --feature my_data --export --codegen
+    </Paragraph>
+    <Paragraph Margin="0,0,0,4"><Bold>모든 Feature 처리:</Bold></Paragraph>
+    <Paragraph Margin="20,0,0,8" FontFamily="Consolas" FontSize="14" Background="#F4F4F4" Padding="8">
+        dotnet run -- --all --export --codegen
+    </Paragraph>
+</FlowDocument>

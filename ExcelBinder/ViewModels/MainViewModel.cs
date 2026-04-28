@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Input;
 using ExcelBinder.Services;
 using ExcelBinder.Models;
+using ExcelBinder.Views;
 using Newtonsoft.Json;
 
 namespace ExcelBinder.ViewModels
@@ -186,6 +187,7 @@ namespace ExcelBinder.ViewModels
         public ICommand DeleteGroupCommand { get; }
         public ICommand ToggleFeatureGroupMembershipCommand { get; }
         public ICommand ManageGroupMembersCommand { get; }
+        public ICommand OpenGuideCommand { get; }
 
         public bool IsCustomGroupSelected => _selectedGroup != null && !_selectedGroup.IsAllGroup;
 
@@ -215,6 +217,7 @@ namespace ExcelBinder.ViewModels
             DeleteGroupCommand = new RelayCommand<FeatureGroup>(ExecuteDeleteGroup);
             ToggleFeatureGroupMembershipCommand = new RelayCommand<FeatureGroupToggleArgs>(ExecuteToggleFeatureGroupMembership);
             ManageGroupMembersCommand = new RelayCommand(ExecuteManageGroupMembers);
+            OpenGuideCommand = new RelayCommand(() => OpenGuide());
 
             Settings = _featureService.LoadSettings();
             _groupService = new FeatureGroupService(Settings.FeatureDefinitionsPath);
@@ -554,6 +557,41 @@ namespace ExcelBinder.ViewModels
         public void ShowLogs()
         {
             AppServices.Dialog.ShowLogWindow();
+        }
+
+        /// <summary>
+        /// 가이드 윈도우를 모달로 표시합니다. 메인 ?/F1 진입 및 첫 실행 자동 표시 시 사용됩니다.
+        /// </summary>
+        public void OpenGuide(string? topicId = null, bool isFirstRunMode = false)
+        {
+            var vm = new GuideViewModel(topicId, isFirstRunMode);
+            var win = new GuideWindow
+            {
+                DataContext = vm,
+                Owner = Application.Current.MainWindow
+            };
+            vm.RequestClose += () =>
+            {
+                if (vm.IsFirstRunMode && vm.DoNotShowAgain)
+                {
+                    Settings.HasSeenGuide = true;
+                    _featureService.SaveSettings(Settings);
+                }
+                win.Close();
+            };
+            win.ShowDialog();
+        }
+
+        /// <summary>
+        /// 첫 실행이라면(HasSeenGuide=false) "시작하기" 토픽으로 가이드 자동 표시.
+        /// MainWindow.Loaded에서 호출됩니다.
+        /// </summary>
+        public void TriggerFirstRunGuideIfNeeded()
+        {
+            if (!Settings.HasSeenGuide)
+            {
+                OpenGuide(ProjectConstants.UI.GuideTopicGettingStarted, isFirstRunMode: true);
+            }
         }
 
         /// <summary>

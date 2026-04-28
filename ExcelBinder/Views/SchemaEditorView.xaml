@@ -12,10 +12,17 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Margin="0,5,0,25">
-            <TextBlock Text="Schema Editor" FontSize="28" FontWeight="Bold" Padding="0,5,0,0" Foreground="{StaticResource PrimaryBrush}"/>
-            <TextBlock Text="Configure how Excel headers map to data types and references" FontSize="14" Foreground="{StaticResource MutedTextBrush}" Margin="0,5,0,0"/>
-        </StackPanel>
+        <DockPanel Margin="0,5,0,25" LastChildFill="True">
+            <Button Content="?" DockPanel.Dock="Right" VerticalAlignment="Top"
+                    Width="28" Height="28" FontWeight="Bold" FontSize="14"
+                    Margin="10,5,0,0"
+                    ToolTip="이 화면 가이드 보기"
+                    Click="HelpButton_Click" Tag="schema-editor"/>
+            <StackPanel>
+                <TextBlock Text="Schema Editor" FontSize="28" FontWeight="Bold" Padding="0,5,0,0" Foreground="{StaticResource PrimaryBrush}"/>
+                <TextBlock Text="Configure how Excel headers map to data types and references" FontSize="14" Foreground="{StaticResource MutedTextBrush}" Margin="0,5,0,0"/>
+            </StackPanel>
+        </DockPanel>
 
         <TabControl Grid.Row="1" ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedItem}" TabStripPlacement="Left" BorderThickness="1" BorderBrush="{StaticResource BorderBrush}">
             <TabControl.Resources>

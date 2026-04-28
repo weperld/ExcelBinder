@@ -5,15 +5,44 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:ExcelBinder.ViewModels"
         mc:Ignorable="d"
-        Title="Excel Binder" Height="750" Width="1000" MinHeight="600" MinWidth="800">
+        Title="Excel Binder" Height="975" Width="1625" MinHeight="780" MinWidth="1300"
+        Loaded="Window_Loaded">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </Window.Resources>
+    <Window.InputBindings>
+        <KeyBinding Key="F1" Command="{Binding OpenGuideCommand}"/>
+    </Window.InputBindings>
     <Grid>
         <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden"/>
 
+        <!-- Help Button (top-right, always visible) -->
+        <Button HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,18,68,0"
+                Command="{Binding OpenGuideCommand}"
+                Width="36" Height="36" Cursor="Hand"
+                ToolTip="사용 가이드 (F1)">
+            <Button.Template>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="HelpBorder" Background="White" CornerRadius="18"
+                            BorderBrush="{StaticResource PrimaryBrush}" BorderThickness="2">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="8" ShadowDepth="2" Opacity="0.2" Color="#000000"/>
+                        </Border.Effect>
+                        <TextBlock Text="?" FontSize="18" FontWeight="Bold"
+                                   Foreground="{StaticResource PrimaryBrush}"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="HelpBorder" Property="Background" Value="{StaticResource LightBackgroundBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+
         <!-- Update Indicator Button (shown when toast is dismissed but update exists) -->
-        <Button HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,18,22,0"
+        <Button HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,18,114,0"
                 Visibility="{Binding IsUpdateIndicatorVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
                 Command="{Binding ShowUpdateBannerCommand}"
                 Width="36" Height="36" Cursor="Hand" ToolTip="새 버전이 출시되었습니다. 클릭하여 확인하세요.">

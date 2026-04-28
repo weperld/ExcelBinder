@@ -21,4 +21,24 @@
       <PackageReference Include="Scriban" Version="6.5.2" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="Resources\Guides\_index.json" />
+      <None Remove="Resources\Guides\01_GettingStarted.xaml" />
+      <None Remove="Resources\Guides\02_FeatureBuilder.xaml" />
+      <None Remove="Resources\Guides\03_SchemaEditor.xaml" />
+      <None Remove="Resources\Guides\04_ExportCodeGen.xaml" />
+      <None Remove="Resources\Guides\05_Templates.xaml" />
+      <Page Remove="Resources\Guides\01_GettingStarted.xaml" />
+      <Page Remove="Resources\Guides\02_FeatureBuilder.xaml" />
+      <Page Remove="Resources\Guides\03_SchemaEditor.xaml" />
+      <Page Remove="Resources\Guides\04_ExportCodeGen.xaml" />
+      <Page Remove="Resources\Guides\05_Templates.xaml" />
+      <EmbeddedResource Include="Resources\Guides\_index.json" />
+      <Resource Include="Resources\Guides\01_GettingStarted.xaml" />
+      <Resource Include="Resources\Guides\02_FeatureBuilder.xaml" />
+      <Resource Include="Resources\Guides\03_SchemaEditor.xaml" />
+      <Resource Include="Resources\Guides\04_ExportCodeGen.xaml" />
+      <Resource Include="Resources\Guides\05_Templates.xaml" />
+    </ItemGroup>
+
 </Project>
