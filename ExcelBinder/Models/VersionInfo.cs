@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace ExcelBinder.Models
@@ -26,6 +27,12 @@ namespace ExcelBinder.Models
         public string Body { get; set; } = string.Empty;
 
         /// <summary>
+        /// 릴리즈에 첨부된 다운로드 가능한 자산 목록입니다.
+        /// </summary>
+        [JsonProperty("assets")]
+        public List<ReleaseAsset> Assets { get; set; } = new();
+
+        /// <summary>
         /// 릴리즈의 버전 문자열입니다. TagName에서 "v" 접두사를 제거한 값입니다.
         /// </summary>
         [JsonIgnore]
@@ -37,5 +44,20 @@ namespace ExcelBinder.Models
                 return tag.StartsWith('v') || tag.StartsWith('V') ? tag[1..] : tag;
             }
         }
+    }
+
+    /// <summary>
+    /// GitHub 릴리즈에 첨부된 자산 (zip, exe 등) 정보입니다.
+    /// </summary>
+    public class ReleaseAsset
+    {
+        [JsonProperty("name")]
+        public string Name { get; set; } = string.Empty;
+
+        [JsonProperty("browser_download_url")]
+        public string BrowserDownloadUrl { get; set; } = string.Empty;
+
+        [JsonProperty("size")]
+        public long Size { get; set; }
     }
 }

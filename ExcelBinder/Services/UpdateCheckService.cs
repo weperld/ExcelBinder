@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using ExcelBinder.Models;
@@ -19,6 +21,7 @@ namespace ExcelBinder.Services
     public class UpdateCheckService
     {
         private static readonly HttpClient _httpClient = CreateHttpClient();
+        private static readonly HttpClient _downloadClient = CreateDownloadClient();
 
         /// <summary>
         /// 새 버전이 있는지 확인합니다.
@@ -162,6 +165,109 @@ namespace ExcelBinder.Services
             client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json"));
             return client;
+        }
+
+        private static HttpClient CreateDownloadClient()
+        {
+            var client = new HttpClient
+            {
+                Timeout = TimeSpan.FromMinutes(ProjectConstants.Update.DownloadTimeoutMinutes)
+            };
+            client.DefaultRequestHeaders.UserAgent.Add(
+                new ProductInfoHeaderValue(ProjectConstants.Update.UserAgent, GetCurrentVersion()?.ToString() ?? "0.0.0"));
+            return client;
+        }
+
+        /// <summary>
+        /// 릴리즈 자산(zip)을 지정 경로에 다운로드합니다. 진행률은 0~100 정수로 보고됩니다.
+        /// </summary>
+        /// <returns>성공 시 true. 자산 없음/HTTP 실패/취소 시 false.</returns>
+        public async Task<bool> DownloadAssetAsync(
+            VersionInfo release, string targetPath,
+            IProgress<int>? progress = null, CancellationToken ct = default)
+        {
+            if (release.Assets.Count == 0)
+            {
+                LogService.Instance.Warning("릴리즈에 첨부된 자산이 없습니다.");
+                return false;
+            }
+
+            var asset = release.Assets.FirstOrDefault(a =>
+                a.Name.EndsWith(".zip", StringComparison.OrdinalIgnoreCase));
+            if (asset == null || string.IsNullOrEmpty(asset.BrowserDownloadUrl))
+            {
+                LogService.Instance.Warning("릴리즈에서 zip 자산을 찾지 못했습니다.");
+                return false;
+            }
+
+            bool success = false;
+            try
+            {
+                using var resp = await _downloadClient.GetAsync(
+                    asset.BrowserDownloadUrl, HttpCompletionOption.ResponseHeadersRead, ct);
+                if (!resp.IsSuccessStatusCode)
+                {
+                    LogService.Instance.Warning($"다운로드 실패: HTTP {(int)resp.StatusCode}");
+                    return false;
+                }
+
+                long total = resp.Content.Headers.ContentLength ?? asset.Size;
+                using (var src = await resp.Content.ReadAsStreamAsync(ct))
+                using (var dst = new FileStream(targetPath, FileMode.Create, FileAccess.Write, FileShare.None))
+                {
+                    var buffer = new byte[81920];
+                    long readTotal = 0;
+                    int lastReported = -1;
+                    int n;
+                    while ((n = await src.ReadAsync(buffer.AsMemory(0, buffer.Length), ct)) > 0)
+                    {
+                        await dst.WriteAsync(buffer.AsMemory(0, n), ct);
+                        readTotal += n;
+                        if (total > 0 && progress != null)
+                        {
+                            int pct = (int)(readTotal * 100 / total);
+                            if (pct != lastReported)
+                            {
+                                lastReported = pct;
+                                progress.Report(pct);
+                            }
+                        }
+                    }
+                }
+
+                progress?.Report(100);
+                success = true;
+                return true;
+            }
+            catch (OperationCanceledException)
+            {
+                LogService.Instance.Warning("다운로드가 취소되었습니다.");
+                return false;
+            }
+            catch (Exception ex) when (ex is HttpRequestException or IOException)
+            {
+                LogService.Instance.Warning($"다운로드 중 오류: {ex.Message}");
+                return false;
+            }
+            finally
+            {
+                if (!success) TryDeletePartialFile(targetPath);
+            }
+        }
+
+        /// <summary>
+        /// 다운로드 실패/취소 시 디스크에 남는 손상된 파일을 정리합니다.
+        /// </summary>
+        private static void TryDeletePartialFile(string path)
+        {
+            try
+            {
+                if (File.Exists(path)) File.Delete(path);
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                LogService.Instance.Warning($"손상된 다운로드 파일 정리 실패: {ex.Message}");
+            }
         }
     }
 }

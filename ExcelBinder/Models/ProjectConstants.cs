@@ -97,6 +97,7 @@ namespace ExcelBinder.Models
             public const string ReleasesPageUrl = $"https://github.com/{GitHubOwner}/{GitHubRepo}/releases";
             public const string UserAgent = "ExcelBinder-UpdateChecker";
             public const int TimeoutSeconds = 10;
+            public const int DownloadTimeoutMinutes = 10;
 
             public const string TitleUpdateCheck = "업데이트 확인";
             public const string MsgNewVersion = "새 버전 {0}이(가) 출시되었습니다!";
@@ -105,6 +106,16 @@ namespace ExcelBinder.Models
             public const string MsgCheckFailed = "업데이트 확인에 실패했습니다.";
             public const string BtnDownload = "다운로드";
             public const string BtnDismiss = "닫기";
+
+            public const string TitleDownload = "업데이트 다운로드";
+            public const string ZipFilter = "Zip 파일 (*.zip)|*.zip";
+            public const string MsgDownloadSuccess = "다운로드가 완료되었습니다.\n\n경로: {0}\n\n저장 폴더를 열까요?";
+            public const string MsgDownloadFailed = "다운로드에 실패했습니다. 로그를 확인하세요.";
+            public const string MsgDownloadError = "다운로드 중 오류가 발생했습니다: {0}";
+            public const string MsgNoAsset = "이 릴리즈에 첨부된 zip 파일이 없습니다. GitHub 페이지에서 직접 받아주세요.";
+            public const string DefaultDownloadFileName = "ExcelBinder_Release_{0}.zip";
+            public const string BtnDownloadInApp = "다운로드";
+            public const string BtnGitHubPage = "GitHub";
         }
 
         public static class Defaults
