@@ -95,18 +95,21 @@ namespace ExcelBinder.Services.Processors
             for (int i = 1; i < rawData.Count; i++)
             {
                 var row = rawData[i];
-                if (row.Length <= Math.Max(nameIdx, Math.Max(typeIdx, valueIdx))) continue;
-                
+                // Name/Type 열이 존재해야 선언 가능 (Value 열은 비어 있어도 default로 생성)
+                if (row.Length <= Math.Max(nameIdx, typeIdx)) continue;
+
                 string name = row[nameIdx].Trim();
                 string type = row[typeIdx].Trim();
-                string value = row[valueIdx].Trim();
+                string value = row.Length > valueIdx ? row[valueIdx].Trim() : "";
 
-                if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(type) || string.IsNullOrWhiteSpace(value)) continue;
+                // Name/Type이 비면 선언 자체가 불가하므로 건너뜀
+                if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(type)) continue;
 
                 // Prefix # rule
                 if (name.StartsWith(ProjectConstants.Excel.CommentPrefix)) continue;
 
-                string formattedValue = FormatValue(type, value);
+                // Value가 비면 default 키워드로 생성
+                string formattedValue = string.IsNullOrWhiteSpace(value) ? "default" : FormatValue(type, value);
                 sb.AppendLine($"        public const {type} {name} = {formattedValue};");
                 generatedEntries++;
             }
