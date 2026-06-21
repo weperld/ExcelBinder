@@ -28,17 +28,35 @@
       <None Remove="Resources\Guides\03_SchemaEditor.xaml" />
       <None Remove="Resources\Guides\04_ExportCodeGen.xaml" />
       <None Remove="Resources\Guides\05_Templates.xaml" />
+      <None Remove="Resources\Guides\06_Common.xaml" />
+      <None Remove="Resources\Guides\07_Constants.xaml" />
+      <None Remove="Resources\Guides\08_Enum.xaml" />
+      <None Remove="Resources\Guides\09_Logic.xaml" />
+      <None Remove="Resources\Guides\10_StaticData.xaml" />
+      <None Remove="Resources\Guides\11_SchemaGen.xaml" />
       <Page Remove="Resources\Guides\01_GettingStarted.xaml" />
       <Page Remove="Resources\Guides\02_FeatureBuilder.xaml" />
       <Page Remove="Resources\Guides\03_SchemaEditor.xaml" />
       <Page Remove="Resources\Guides\04_ExportCodeGen.xaml" />
       <Page Remove="Resources\Guides\05_Templates.xaml" />
+      <Page Remove="Resources\Guides\06_Common.xaml" />
+      <Page Remove="Resources\Guides\07_Constants.xaml" />
+      <Page Remove="Resources\Guides\08_Enum.xaml" />
+      <Page Remove="Resources\Guides\09_Logic.xaml" />
+      <Page Remove="Resources\Guides\10_StaticData.xaml" />
+      <Page Remove="Resources\Guides\11_SchemaGen.xaml" />
       <EmbeddedResource Include="Resources\Guides\_index.json" />
       <Resource Include="Resources\Guides\01_GettingStarted.xaml" />
       <Resource Include="Resources\Guides\02_FeatureBuilder.xaml" />
       <Resource Include="Resources\Guides\03_SchemaEditor.xaml" />
       <Resource Include="Resources\Guides\04_ExportCodeGen.xaml" />
       <Resource Include="Resources\Guides\05_Templates.xaml" />
+      <Resource Include="Resources\Guides\06_Common.xaml" />
+      <Resource Include="Resources\Guides\07_Constants.xaml" />
+      <Resource Include="Resources\Guides\08_Enum.xaml" />
+      <Resource Include="Resources\Guides\09_Logic.xaml" />
+      <Resource Include="Resources\Guides\10_StaticData.xaml" />
+      <Resource Include="Resources\Guides\11_SchemaGen.xaml" />
     </ItemGroup>
 
 </Project>

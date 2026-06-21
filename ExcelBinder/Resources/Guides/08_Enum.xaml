@@ -1,0 +1,42 @@
+<FlowDocument xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+              FontFamily="Segoe UI" FontSize="14" PagePadding="0" LineHeight="22">
+    <Paragraph FontSize="28" FontWeight="Bold" Foreground="#2F4F8F" Margin="0,0,0,8">
+        Enum 작성법
+    </Paragraph>
+    <Paragraph Foreground="#555" Margin="0,0,0,18">
+        열거형(enum) 코드를 생성하는 타입입니다. <Bold>파일 단위</Bold>로 처리하며,
+        한 파일은 <Bold>Definition 시트 1개</Bold> + <Bold>각 enum별 멤버 시트</Bold>로 구성됩니다.
+    </Paragraph>
+
+    <Paragraph FontSize="20" FontWeight="SemiBold" Margin="0,8,0,4">1. Definition 시트</Paragraph>
+    <Paragraph Margin="0,0,0,4">어떤 enum을 만들지 선언합니다. 헤더는 <Bold>Name</Bold> / <Bold>Type</Bold> / <Bold>IsFlag</Bold>:</Paragraph>
+    <Paragraph Margin="20,0,0,8" FontFamily="Consolas" FontSize="13" Background="#F4F4F4" Padding="8" xml:space="preserve">Name          Type    IsFlag
+ElementType           false
+AccessFlag    byte    true</Paragraph>
+    <Paragraph Margin="0,0,0,12">
+        <Bold>Name</Bold>은 enum 이름(필수), <Bold>Type</Bold>은 underlying 타입(생략 가능), <Bold>IsFlag</Bold>가 <Italic>true</Italic>면 <Italic>[Flags]</Italic>가 붙습니다.
+    </Paragraph>
+
+    <Paragraph FontSize="20" FontWeight="SemiBold" Margin="0,12,0,4">2. 멤버 시트</Paragraph>
+    <Paragraph Margin="0,0,0,4">Definition의 각 Name과 <Bold>같은 이름의 시트</Bold>를 만들고 멤버를 나열합니다. 헤더는 <Bold>Name</Bold> / <Bold>Value</Bold>:</Paragraph>
+    <Paragraph Margin="20,0,0,8" FontFamily="Consolas" FontSize="13" Background="#F4F4F4" Padding="8" xml:space="preserve">[ElementType 시트]
+Name    Value
+Fire
+Water
+Wind    10</Paragraph>
+
+    <Paragraph FontSize="20" FontWeight="SemiBold" Margin="0,12,0,4">생성 결과</Paragraph>
+    <Paragraph Margin="20,0,0,8" FontFamily="Consolas" FontSize="13" Background="#F4F4F4" Padding="8" xml:space="preserve">public enum ElementType
+{
+    Fire,
+    Water,
+    Wind = 10,
+}</Paragraph>
+
+    <Paragraph FontSize="20" FontWeight="SemiBold" Margin="0,12,0,4">규칙 요약</Paragraph>
+    <List MarkerStyle="Disc" Margin="20,0,0,12">
+        <ListItem><Paragraph><Bold>Value</Bold>가 비어 있으면 자동 증가(0, 1, 2...), 값을 적으면 해당 값부터 이어집니다.</Paragraph></ListItem>
+        <ListItem><Paragraph>Definition에 선언했지만 같은 이름의 시트가 없으면 그 enum은 건너뜁니다.</Paragraph></ListItem>
+        <ListItem><Paragraph><Bold># 처리:</Bold> 시트명이 #로 시작하면 그 시트는 무시되고, Definition·멤버 시트에서 <Italic>Name</Italic> 셀이 #로 시작하는 행은 제외됩니다.</Paragraph></ListItem>
+    </List>
+</FlowDocument>

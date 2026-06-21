@@ -1,0 +1,21 @@
+<FlowDocument xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+              FontFamily="Segoe UI" FontSize="14" PagePadding="0" LineHeight="22">
+    <Paragraph FontSize="28" FontWeight="Bold" Foreground="#2F4F8F" Margin="0,0,0,8">
+        SchemaGen 작성법
+    </Paragraph>
+    <Paragraph Foreground="#555" Margin="0,0,0,18">
+        StaticData에서 사용할 스키마(.json)를 생성하는 타입입니다.
+        <Bold>StaticData와 동일한 형태</Bold>의 엑셀(1행 필드명, 2행부터 데이터)을 입력으로 받습니다.
+    </Paragraph>
+
+    <Paragraph FontSize="20" FontWeight="SemiBold" Margin="0,8,0,4">시트 형태</Paragraph>
+    <Paragraph Margin="20,0,0,8" FontFamily="Consolas" FontSize="13" Background="#F4F4F4" Padding="8" xml:space="preserve">Id    Name        Hp    Element    #Memo
+1     Slime       30    Water      약한 몹
+2     Dragon      500   Fire       보스</Paragraph>
+
+    <Paragraph FontSize="20" FontWeight="SemiBold" Margin="0,12,0,4">동작</Paragraph>
+    <List MarkerStyle="Disc" Margin="20,0,0,12">
+        <ListItem><Paragraph>별도의 데이터 작성 규칙은 없습니다. 시트를 선택해 실행하면 <Bold>Schema Editor</Bold>로 진입해 각 필드의 타입을 지정·저장합니다.</Paragraph></ListItem>
+        <ListItem><Paragraph><Bold>#</Bold> 시트·열·행 무시 규칙은 StaticData와 동일하게 적용됩니다.</Paragraph></ListItem>
+    </List>
+</FlowDocument>

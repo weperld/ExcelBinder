@@ -1,0 +1,21 @@
+<FlowDocument xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+              FontFamily="Segoe UI" FontSize="14" PagePadding="0" LineHeight="22">
+    <Paragraph FontSize="28" FontWeight="Bold" Foreground="#2F4F8F" Margin="0,0,0,8">
+        StaticData 작성법
+    </Paragraph>
+    <Paragraph Foreground="#555" Margin="0,0,0,18">
+        스키마(.json)를 기준으로 데이터를 추출해 Binary/JSON으로 내보내는 타입입니다.
+        엑셀 자체는 <Bold>1행 = 필드명(헤더)</Bold>, <Bold>2행부터 = 실제 데이터</Bold>의 일반적인 표 형태입니다.
+    </Paragraph>
+
+    <Paragraph FontSize="20" FontWeight="SemiBold" Margin="0,8,0,4">시트 형태</Paragraph>
+    <Paragraph Margin="20,0,0,8" FontFamily="Consolas" FontSize="13" Background="#F4F4F4" Padding="8" xml:space="preserve">Id    Name        Hp    Element    #Memo
+1     Slime       30    Water      약한 몹
+2     Dragon      500   Fire       보스</Paragraph>
+
+    <Paragraph FontSize="20" FontWeight="SemiBold" Margin="0,12,0,4">규칙 요약</Paragraph>
+    <List MarkerStyle="Disc" Margin="20,0,0,12">
+        <ListItem><Paragraph>각 셀의 표기법(enum 멤버명, <Bold>List&lt;T&gt;</Bold> 구분, 참조 <Italic>ref</Italic> 등)은 필드 타입에 따릅니다 — 자세한 내용은 <Bold>Schema Editor</Bold> 가이드를 참고하세요.</Paragraph></ListItem>
+        <ListItem><Paragraph><Bold># 처리(전체 적용):</Bold> 시트명이 #면 시트 무시, 헤더에 #를 붙인 열은 제외(위 예시의 <Italic>#Memo</Italic>), 첫 유효 열 값이 #로 시작하는 데이터 행은 제외됩니다.</Paragraph></ListItem>
+    </List>
+</FlowDocument>

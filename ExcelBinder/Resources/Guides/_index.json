@@ -16,6 +16,18 @@
         { "id": "export-codegen", "title": "Export / CodeGen", "resource": "04_ExportCodeGen.xaml" },
         { "id": "templates", "title": "템플릿 작성", "resource": "05_Templates.xaml" }
       ]
+    },
+    {
+      "id": "data-authoring",
+      "title": "데이터(엑셀) 작성 포맷",
+      "topics": [
+        { "id": "common", "title": "공통 규칙", "resource": "06_Common.xaml" },
+        { "id": "constants-format", "title": "Constants", "resource": "07_Constants.xaml" },
+        { "id": "enum-format", "title": "Enum", "resource": "08_Enum.xaml" },
+        { "id": "logic-format", "title": "Logic", "resource": "09_Logic.xaml" },
+        { "id": "staticdata-format", "title": "StaticData", "resource": "10_StaticData.xaml" },
+        { "id": "schemagen-format", "title": "SchemaGen", "resource": "11_SchemaGen.xaml" }
+      ]
     }
   ]
 }

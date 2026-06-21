@@ -1,0 +1,30 @@
+<FlowDocument xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+              FontFamily="Segoe UI" FontSize="14" PagePadding="0" LineHeight="22">
+    <Paragraph FontSize="28" FontWeight="Bold" Foreground="#2F4F8F" Margin="0,0,0,8">
+        공통 규칙
+    </Paragraph>
+    <Paragraph Foreground="#555" Margin="0,0,0,18">
+        Feature 타입(StaticData / Logic / SchemaGen / Enum / Constants)마다 엑셀 시트를 작성하는 형태가 다릅니다.
+        이 장에서는 모든 타입에 공통으로 적용되는 규칙을 먼저 정리하고, 이후 각 소분류에서 타입별 작성법을 다룹니다.
+    </Paragraph>
+
+    <Paragraph FontSize="20" FontWeight="SemiBold" Margin="0,8,0,4">행·헤더 배치</Paragraph>
+    <List MarkerStyle="Disc" Margin="20,0,0,12">
+        <ListItem><Paragraph><Bold>헤더 행</Bold>은 1행, <Bold>데이터</Bold>는 2행부터 시작합니다. (모든 타입 동일)</Paragraph></ListItem>
+        <ListItem><Paragraph>헤더 이름은 <Bold>대소문자를 구분하지 않으며</Bold>, 열 순서는 자유입니다 (이름으로 매칭).</Paragraph></ListItem>
+    </List>
+
+    <Paragraph FontSize="20" FontWeight="SemiBold" Margin="0,12,0,4"># 접두어 처리</Paragraph>
+    <Paragraph Margin="0,0,0,6">
+        <Bold>#</Bold> 접두어로 항목을 제외할 수 있으나, <Bold>적용 범위가 타입마다 다릅니다</Bold>. 각 타입의 "# 처리" 항목을 반드시 확인하세요.
+    </Paragraph>
+    <Paragraph Margin="20,0,0,8" FontFamily="Consolas" FontSize="13" Background="#F4F4F4" Padding="8" xml:space="preserve">타입          처리 단위    # 시트무시  # 열무시   # 행무시
+Constants     시트          X           X          O (Name 셀)
+Enum          파일          O           X          O (Name 셀)
+Logic         시트          X           X          X (미적용)
+StaticData    스키마        O           O          O (첫 유효열)
+SchemaGen     스키마        O           O          O</Paragraph>
+    <Paragraph Foreground="#555" Margin="0,0,0,12">
+        ※ Logic은 현재 <Italic>#</Italic> 행 무시가 적용되지 않으므로 주석·임시 행을 시트에 남기면 안 됩니다(해당 장 참고).
+    </Paragraph>
+</FlowDocument>
