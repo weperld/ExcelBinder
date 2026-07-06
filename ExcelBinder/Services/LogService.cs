@@ -20,7 +20,9 @@ namespace ExcelBinder.Services
         public void Log(LogLevel level, string message)
         {
             Console.WriteLine($"[{DateTime.Now:HH:mm:ss}] [{level}] {message}");
-            App.Current?.Dispatcher?.Invoke(() =>
+            // BeginInvoke(비동기 마셜링) 사용: CLI 모드에서 UI 스레드가 GetResult()로 블로킹된 채
+            // 백그라운드 작업이 로그를 남기면 Invoke(동기)는 데드락을 유발한다.
+            App.Current?.Dispatcher?.BeginInvoke(() =>
             {
                 Logs.Add(new LogItem { Level = level, Message = message });
             });
@@ -28,7 +30,7 @@ namespace ExcelBinder.Services
 
         public void Clear()
         {
-            App.Current?.Dispatcher?.Invoke(() => Logs.Clear());
+            App.Current?.Dispatcher?.BeginInvoke(() => Logs.Clear());
         }
 
         public void SaveToFile(string filePath)

@@ -15,6 +15,8 @@ namespace ExcelBinder.Services
     {
         public void ShowLogWindow()
         {
+            if (App.IsCliMode) return; // CLI: 창 없이 콘솔 로그로 대체 (스레드풀에서 창 생성 시 크래시/행 방지)
+
             var logWin = new Views.LogWindow();
             if (Application.Current.MainWindow != null)
                 logWin.Owner = Application.Current.MainWindow;
@@ -23,6 +25,8 @@ namespace ExcelBinder.Services
 
         public MessageBoxResult ShowMessage(string message, string title = "", MessageBoxButton button = MessageBoxButton.OK, MessageBoxImage icon = MessageBoxImage.Information)
         {
+            if (App.IsCliMode) return MessageBoxResult.None; // CLI: 헤드리스 실행 보장
+
             return MessageBox.Show(message, title, button, icon);
         }
 

@@ -13,10 +13,14 @@ namespace ExcelBinder;
 
 public partial class App : Application
 {
+    /// <summary>CLI 모드 여부. CLI에서는 창/메시지박스를 열지 않는다 (헤드리스 실행 보장).</summary>
+    public static bool IsCliMode { get; private set; }
+
     protected override void OnStartup(StartupEventArgs e)
     {
         if (e.Args.Length > 0)
         {
+            IsCliMode = true;
             RunCli(e.Args);
             Shutdown();
             return;

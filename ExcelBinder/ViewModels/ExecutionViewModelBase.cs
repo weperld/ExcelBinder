@@ -181,6 +181,8 @@ namespace ExcelBinder.ViewModels
 
         public void ShowLogs()
         {
+            if (App.IsCliMode) return; // CLI: Dialog 서비스 미초기화 상태 — 콘솔 로그로 대체
+
             AppServices.Dialog.ShowLogWindow();
         }
     }
