@@ -135,56 +135,13 @@ dotnet run -- --feature my_project_data --all --export --codegen
 - 엑셀 타입 → 프로젝트 전용 타입 변환
 - 예: `"int"` → `"int32"`, `"string"` → `"string"`
 
-### 4. AI Assistant
-- OpenAI/Claude API 연동
-- 대화형 템플릿 생성 및 가이드
-
----
-
-## 📌 에이전트 필독 순서
-
-새로운 대화에서 작업을 시작할 때:
-
-1. **AGENTS.md** 읽기 (메뉴 및 지시 템플릿)
-2. **PROJECT_SUMMARY.md** 읽기 (현재 파일)
-3. **QUICK_REFERENCE.md** 참조 (자주 쓰는 패턴)
-4. 필요한 가이드 읽기 (CODE_STYLE.md, WORKFLOW_PLANNING/INDEX.md 등)
-5. **WORK_IN_PROGRESS.md** 확인 (진행 중인 작업)
-
----
-
-## 🔄 개발 프로세스
-
-```
-기획서 전달 → 유형 분석 → 계획 수립 → 사용자 확인 → 구현 → 보고
-```
-
-**상세 절차:** [WORKFLOW_PLANNING/INDEX.md](./WORKFLOW_PLANNING/INDEX.md)
-
----
-
-## 🚨 긴급 상황
-
-빌드 오류나 런타임 오류 발생 시:
-```
-🚨 [파일:라인] [오류 메시지]
-```
-
-예시:
-```
-🚨 ExportService.cs:45 NullReferenceException 발생
-```
-
 ---
 
 ## 📖 상세 문서
 
 | 항목 | 문서 |
 |------|------|
-| 전체 가이드 목차 | [AGENTS.md](./AGENTS.md) |
 | 빌드 및 실행 | [.guides/BUILD_GUIDE.md](./.guides/BUILD_GUIDE.md) |
-| 기획서 처리 | [WORKFLOW_PLANNING/INDEX.md](./WORKFLOW_PLANNING/INDEX.md) |
-| 작업 추적 | [WORK_IN_PROGRESS.md](./WORK_IN_PROGRESS.md) |
-| 빠른 참조 | [QUICK_REFERENCE.md](./QUICK_REFERENCE.md) |
 | 코드 스타일 | [.guides/CODE_STYLE.md](./.guides/CODE_STYLE.md) |
 | 기술 규칙 | [.guides/TECHNICAL_RULES.md](./.guides/TECHNICAL_RULES.md) |
+| 커밋 규칙 | [.guides/COMMIT_RULES.md](./.guides/COMMIT_RULES.md) |

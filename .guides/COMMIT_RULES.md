@@ -10,8 +10,6 @@
 [태그] 요약
 
 본문 (선택사항)
-
-WorkID: WIP-YYYYMMDD-NNN
 ```
 
 ### 필수 요소
@@ -57,25 +55,7 @@ WorkID: WIP-YYYYMMDD-NNN
 
 try-finally 패턴을 적용하여 예외 발생 시에도
 IsBusy 상태가 올바르게 해제되도록 수정
-
-WorkID: WIP-20250208-001
 ```
-
----
-
-## 🔗 WorkID 참조
-
-작업 추적 시스템과 연동하기 위해 WorkID를 포함:
-
-```
-[feat] CSV 데이터 추출 기능 추가
-
-WorkID: WIP-20250208-001
-```
-
-### WorkID 형식
-- `WIP-YYYYMMDD-NNN`
-- 예: `WIP-20250208-001`
 
 ---
 
@@ -259,21 +239,15 @@ git diff README.md
 ```bash
 # 그룹 A: [feat] CSV 데이터 추출 기능 추가
 git add Services/CSVProcessor.cs Models/CSVDataItem.cs
-git commit -m "[feat] CSV 데이터 추출 기능 추가
-
-WorkID: WIP-20250208-001"
+git commit -m "[feat] CSV 데이터 추출 기능 추가"
 
 # 그룹 B: [docs] CSV 기능 사용법 추가
 git add README.md
-git commit -m "[docs] CSV 기능 사용법 추가
-
-WorkID: WIP-20250208-001"
+git commit -m "[docs] CSV 기능 사용법 추가"
 
 # 그룹 C: [fix] ExportService null 참조 에러 수정
 git add Services/ExportService.cs
-git commit -m "[fix] ExportService null 참조 에러 수정
-
-WorkID: WIP-20250208-001"
+git commit -m "[fix] ExportService null 참조 에러 수정"
 
 # 그룹 D: [style] ExportService 포맷팅
 git add Services/ExportService.cs
@@ -304,7 +278,7 @@ git rebase -i HEAD~3
 ## 🔐 커밋 및 푸시 안전 규칙
 
 ### 커밋 전 체크리스트
-- **절대 규칙 위반 코드는 커밋하지 않음**: AGENTS.md 절대 규칙 (Line 8-33) 위반 코드는 커밋하지 않음
+- **절대 규칙 위반 코드는 커밋하지 않음**: CLAUDE.md 절대 규칙 위반 코드는 커밋하지 않음
 - **불필요한 파일 제외**: 보안에 민감한 파일이나 불필요한 파일은 커밋하지 않음
   - 예: `.env`, `credentials.json`, `.env.local`, `*.log`, `.DS_Store` 등
 
