@@ -34,6 +34,16 @@ public partial class App : Application
             return;
         }
 
+        // GUI 모드 전역 예외 방어선: 처리되지 않은 예외로 앱이 통째로 죽는 대신 알리고 계속한다.
+        DispatcherUnhandledException += (_, ev) =>
+        {
+            LogService.Instance.Error($"Unhandled exception: {ev.Exception}");
+            MessageBox.Show(
+                $"예기치 않은 오류가 발생했습니다.\n\n{ev.Exception.Message}",
+                "ExcelBinder 오류", MessageBoxButton.OK, MessageBoxImage.Error);
+            ev.Handled = true;
+        };
+
         base.OnStartup(e);
     }
 

@@ -19,8 +19,8 @@
                     ToolTip="이 화면 가이드 보기"
                     Click="HelpButton_Click" Tag="schema-editor"/>
             <StackPanel>
-                <TextBlock Text="Schema Editor" FontSize="28" FontWeight="Bold" Padding="0,5,0,0" Foreground="{StaticResource PrimaryBrush}"/>
-                <TextBlock Text="Configure how Excel headers map to data types and references" FontSize="14" Foreground="{StaticResource MutedTextBrush}" Margin="0,5,0,0"/>
+                <TextBlock Text="Schema 편집기" FontSize="28" FontWeight="Bold" Padding="0,5,0,0" Foreground="{StaticResource PrimaryBrush}"/>
+                <TextBlock Text="Excel 헤더를 데이터 타입 및 참조에 매핑하는 방법을 설정합니다" FontSize="14" Foreground="{StaticResource MutedTextBrush}" Margin="0,5,0,0"/>
             </StackPanel>
         </DockPanel>
 
@@ -54,15 +54,15 @@
                         <Border Grid.Row="1" Background="{StaticResource LightBackgroundBrush}" CornerRadius="6" Padding="15" Margin="0,0,0,20">
                             <StackPanel Orientation="Horizontal">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,15,0">
-                                    <TextBlock Text="Key Column:" FontWeight="Bold"/>
+                                    <TextBlock Text="Key 컬럼:" FontWeight="Bold"/>
                                     <Button Style="{StaticResource HelpButtonStyle}" ToolTipService.ToolTip="{StaticResource KeyColumnHelp}"/>
                                 </StackPanel>
                                 <ComboBox ItemsSource="{Binding Headers}" SelectedItem="{Binding SelectedKey}" Width="250" Height="32"/>
-                                <TextBlock Text="(The primary identifier for this sheet)" VerticalAlignment="Center" Margin="15,0,0,0" FontSize="12" Foreground="{StaticResource MutedTextBrush}"/>
+                                <TextBlock Text="(이 시트의 기본 식별자)" VerticalAlignment="Center" Margin="15,0,0,0" FontSize="12" Foreground="{StaticResource MutedTextBrush}"/>
                             </StackPanel>
                         </Border>
 
-                        <GroupBox Grid.Row="2" Header="Field Configurations">
+                        <GroupBox Grid.Row="2" Header="필드 설정">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
@@ -78,12 +78,12 @@
                                         <ColumnDefinition Width="150"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Text="Include" FontWeight="Bold" Foreground="{StaticResource MutedTextBrush}"/>
-                                    <TextBlock Grid.Column="1" Text="Excel Header" FontWeight="Bold" Foreground="{StaticResource MutedTextBrush}"/>
-                                    <TextBlock Grid.Column="2" Text="Data Type" FontWeight="Bold" Foreground="{StaticResource MutedTextBrush}"/>
-                                    <TextBlock Grid.Column="3" Text="Enum Type" FontWeight="Bold" Foreground="{StaticResource MutedTextBrush}"/>
+                                    <TextBlock Text="포함" FontWeight="Bold" Foreground="{StaticResource MutedTextBrush}"/>
+                                    <TextBlock Grid.Column="1" Text="Excel 헤더" FontWeight="Bold" Foreground="{StaticResource MutedTextBrush}"/>
+                                    <TextBlock Grid.Column="2" Text="데이터 타입" FontWeight="Bold" Foreground="{StaticResource MutedTextBrush}"/>
+                                    <TextBlock Grid.Column="3" Text="Enum 타입" FontWeight="Bold" Foreground="{StaticResource MutedTextBrush}"/>
                                     <StackPanel Grid.Column="4" Orientation="Horizontal">
-                                        <TextBlock Text="Reference (Optional)" FontWeight="Bold" Foreground="{StaticResource MutedTextBrush}"/>
+                                        <TextBlock Text="참조 (선택)" FontWeight="Bold" Foreground="{StaticResource MutedTextBrush}"/>
                                         <Button Style="{StaticResource HelpButtonStyle}" ToolTipService.ToolTip="{StaticResource ReferenceTypeHelp}"/>
                                     </StackPanel>
                                 </Grid>
@@ -117,7 +117,7 @@
                                                                  Margin="5,0" Height="30"
                                                                  Tag="Enum (정수형 타입에서만 사용)"/>
                                                         <TextBox Grid.Column="4" Text="{Binding ReferenceType, UpdateSourceTrigger=PropertyChanged}" Margin="5,0" Height="30"
-                                                                 Tag="Reference Type (Optional)"/>
+                                                                 Tag="참조 타입 (선택)"/>
                                                     </Grid>
                                                 </Border>
                                             </DataTemplate>
@@ -133,8 +133,8 @@
 
         <Border Grid.Row="2" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,1,0,0" Padding="0,20,0,0" Margin="0,15,0,0">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Content="Cancel" Command="{Binding CancelCommand}" Width="100" Height="38" Margin="0,0,12,0"/>
-                <Button Content="Complete Schema" Style="{StaticResource SecondaryButton}" 
+                <Button Content="취소" Command="{Binding CancelCommand}" Width="100" Height="38" Margin="0,0,12,0"/>
+                <Button Content="Schema 완료" Style="{StaticResource SecondaryButton}"
                         Command="{Binding CompleteCommand}" Width="180" Height="38"/>
             </StackPanel>
         </Border>

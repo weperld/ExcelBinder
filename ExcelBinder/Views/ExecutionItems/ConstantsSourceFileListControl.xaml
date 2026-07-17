@@ -6,7 +6,7 @@
              xmlns:vm="clr-namespace:ExcelBinder.ViewModels"
              mc:Ignorable="d"
              d:DesignHeight="400" d:DesignWidth="800">
-    <GroupBox Header="Source Sheets (Class per Sheet)">
+    <GroupBox Header="소스 시트 (시트별 클래스)">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
@@ -31,8 +31,8 @@
                             <StackPanel>
                                 <DockPanel Margin="0,0,0,10">
                                     <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,15,0">
-                                        <Button Content="All" Command="{Binding SelectAllCommand}" Width="45" Height="24" Margin="0,0,5,0" FontSize="11"/>
-                                        <Button Content="None" Command="{Binding DeselectAllCommand}" Width="55" Height="24" FontSize="11"/>
+                                        <Button Content="전체" Command="{Binding SelectAllCommand}" Width="45" Height="24" Margin="0,0,5,0" FontSize="11"/>
+                                        <Button Content="없음" Command="{Binding DeselectAllCommand}" Width="55" Height="24" FontSize="11"/>
                                     </StackPanel>
                                     <TextBlock Text="{Binding FileName}" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
                                 </DockPanel>
@@ -56,9 +56,9 @@
             </ListBox>
 
             <StackPanel Grid.Row="1" Orientation="Horizontal">
-                <Button Content="Select All Files" Command="{Binding SelectAllCommand}" Width="120" Height="32" Margin="0,0,10,0"/>
-                <Button Content="Deselect All" Command="{Binding DeselectAllCommand}" Width="120" Height="32" Margin="0,0,10,0"/>
-                <Button Content="Refresh List" Command="{Binding RefreshFilesCommand}" Width="120" Height="32"/>
+                <Button Content="모든 파일 선택" Command="{Binding SelectAllCommand}" Width="120" Height="32" Margin="0,0,10,0"/>
+                <Button Content="전체 해제" Command="{Binding DeselectAllCommand}" Width="120" Height="32" Margin="0,0,10,0"/>
+                <Button Content="목록 새로고침" Command="{Binding RefreshFilesCommand}" Width="120" Height="32"/>
             </StackPanel>
         </Grid>
     </GroupBox>

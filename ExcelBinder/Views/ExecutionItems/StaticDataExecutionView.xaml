@@ -24,14 +24,14 @@
         <Border Grid.Row="3" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,1,0,0" Padding="0,20,0,0">
             <Grid>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <TextBlock Text="Format:" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,15,0"/>
+                    <TextBlock Text="포맷:" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,15,0"/>
                     <CheckBox Content="Binary" IsChecked="{Binding IsBinaryChecked}" Visibility="{Binding SelectedFeature.OutputOptions.SupportsBinary, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center" Margin="0,0,20,0"/>
                     <CheckBox Content="JSON" IsChecked="{Binding IsJsonChecked}" Visibility="{Binding SelectedFeature.OutputOptions.SupportsJson, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Center"/>
                 </StackPanel>
                 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Content="Generate Code" Command="{Binding GenerateCodeCommand}" Width="180" Height="42" Margin="0,0,10,0"/>
-                    <Button Content="Execute Export" Command="{Binding ExportCommand}" Width="180" Height="42" Style="{StaticResource PrimaryButton}"/>
+                    <Button Content="코드 생성" Command="{Binding GenerateCodeCommand}" Width="180" Height="42" Margin="0,0,10,0"/>
+                    <Button Content="Export 실행" Command="{Binding ExportCommand}" Width="180" Height="42" Style="{StaticResource PrimaryButton}"/>
                 </StackPanel>
             </Grid>
         </Border>

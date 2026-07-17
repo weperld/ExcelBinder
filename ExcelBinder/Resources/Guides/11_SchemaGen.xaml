@@ -15,7 +15,7 @@
 
     <Paragraph FontSize="20" FontWeight="SemiBold" Margin="0,12,0,4">동작</Paragraph>
     <List MarkerStyle="Disc" Margin="20,0,0,12">
-        <ListItem><Paragraph>별도의 데이터 작성 규칙은 없습니다. 시트를 선택해 실행하면 <Bold>Schema Editor</Bold>로 진입해 각 필드의 타입을 지정·저장합니다.</Paragraph></ListItem>
+        <ListItem><Paragraph>별도의 데이터 작성 규칙은 없습니다. 시트를 선택해 실행하면 <Bold>Schema 편집기</Bold>로 진입해 각 필드의 타입을 지정·저장합니다.</Paragraph></ListItem>
         <ListItem><Paragraph><Bold>#</Bold> 시트·열·행 무시 규칙은 StaticData와 동일하게 적용됩니다.</Paragraph></ListItem>
     </List>
 </FlowDocument>

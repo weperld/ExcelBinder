@@ -108,6 +108,13 @@ namespace ExcelBinder.Services.Processors
                 // Prefix # rule
                 if (name.StartsWith(ProjectConstants.Excel.CommentPrefix)) continue;
 
+                // 유효하지 않은 식별자는 컴파일 불가 코드를 만들므로 건너뜀
+                if (!CSharpLiteral.IsValidIdentifier(name))
+                {
+                    LogService.Instance.Warning($"'{sheetName}' 시트의 상수명 '{name}'은(는) 유효한 C# 식별자가 아니어서 건너뜁니다.");
+                    continue;
+                }
+
                 // Value가 비면 default 키워드로 생성
                 string formattedValue = string.IsNullOrWhiteSpace(value) ? "default" : FormatValue(type, value);
                 sb.AppendLine($"        public const {type} {name} = {formattedValue};");
@@ -133,9 +140,10 @@ namespace ExcelBinder.Services.Processors
         {
             if (type.Equals("string", StringComparison.OrdinalIgnoreCase))
             {
-                if (!value.StartsWith("\"") || !value.EndsWith("\""))
+                // 사용자가 직접 따옴표로 감싼 값은 리터럴로 신뢰 (기존 동작 유지)
+                if (!value.StartsWith("\"") || !value.EndsWith("\"") || value.Length < 2)
                 {
-                    return $"\"{value}\"";
+                    return CSharpLiteral.Escape(value);
                 }
             }
             else if (type.Equals("float", StringComparison.OrdinalIgnoreCase))

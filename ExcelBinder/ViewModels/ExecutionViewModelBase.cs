@@ -179,6 +179,19 @@ namespace ExcelBinder.ViewModels
             }
         }
 
+        /// <summary>치명적 실패를 에러 로그 + 오류 대화상자 + 로그 창으로 사용자에게 알립니다.</summary>
+        protected void ReportFatal(string operation, Exception ex)
+        {
+            LogService.Instance.Error($"{operation} 실패: {ex.Message}");
+            if (!App.IsCliMode)
+            {
+                AppServices.Dialog.ShowMessage(
+                    $"{operation} 중 오류가 발생했습니다.\n\n{ex.Message}\n\n자세한 내용은 로그 창을 확인하세요.",
+                    "오류", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+            }
+            ShowLogs();
+        }
+
         public void ShowLogs()
         {
             if (App.IsCliMode) return; // CLI: Dialog 서비스 미초기화 상태 — 콘솔 로그로 대체

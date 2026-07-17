@@ -8,7 +8,7 @@
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     </UserControl.Resources>
-    <GroupBox Header="Source Files and Sheets">
+    <GroupBox Header="소스 파일 및 시트">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
@@ -35,8 +35,8 @@
                             <StackPanel>
                                 <DockPanel Margin="0,0,0,10">
                                     <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,15,0">
-                                        <Button Content="All" Command="{Binding SelectAllCommand}" Width="45" Height="24" Margin="0,0,5,0" FontSize="11"/>
-                                        <Button Content="None" Command="{Binding DeselectAllCommand}" Width="55" Height="24" FontSize="11"/>
+                                        <Button Content="전체" Command="{Binding SelectAllCommand}" Width="45" Height="24" Margin="0,0,5,0" FontSize="11"/>
+                                        <Button Content="없음" Command="{Binding DeselectAllCommand}" Width="55" Height="24" FontSize="11"/>
                                     </StackPanel>
                                     <TextBlock Text="{Binding FileName}" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
                                 </DockPanel>
@@ -48,7 +48,7 @@
                                                 <CheckBox IsChecked="{Binding IsSelected}" IsEnabled="{Binding CanBeSelected}" 
                                                           HorizontalContentAlignment="Stretch" VerticalContentAlignment="Center" Padding="10,8">
                                                     <DockPanel LastChildFill="True">
-                                                        <Border Width="12" Height="12" CornerRadius="6" Margin="0,0,10,0" VerticalAlignment="Center" ToolTip="Schema Status"
+                                                        <Border Width="12" Height="12" CornerRadius="6" Margin="0,0,10,0" VerticalAlignment="Center" ToolTip="스키마 상태 (초록: 스키마 있음 / 빨강: 스키마 없음)"
                                                                 Visibility="{Binding DataContext.IsSchemaStatusVisible, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BooleanToVisibilityConverter}}">
                                                             <Border.Style>
                                                                 <Style TargetType="Border">
@@ -78,9 +78,9 @@
             </ListBox>
             
             <StackPanel Grid.Row="1" Orientation="Horizontal">
-                <Button Content="Select All Files" Command="{Binding SelectAllCommand}" Width="120" Height="32" Margin="0,0,10,0"/>
-                <Button Content="Deselect All" Command="{Binding DeselectAllCommand}" Width="120" Height="32" Margin="0,0,10,0"/>
-                <Button Content="Refresh List" Command="{Binding RefreshFilesCommand}" Width="120" Height="32"/>
+                <Button Content="모든 파일 선택" Command="{Binding SelectAllCommand}" Width="120" Height="32" Margin="0,0,10,0"/>
+                <Button Content="전체 해제" Command="{Binding DeselectAllCommand}" Width="120" Height="32" Margin="0,0,10,0"/>
+                <Button Content="목록 새로고침" Command="{Binding RefreshFilesCommand}" Width="120" Height="32"/>
             </StackPanel>
         </Grid>
     </GroupBox>

@@ -46,7 +46,7 @@ namespace ExcelBinder.Services
                         }
                         catch (Exception ex)
                         {
-                            throw new Exception($"[Row {item.OriginalIndex}] Column '{field.Key}' error: {ex.Message}");
+                            throw new Exception($"[{item.OriginalIndex}행] '{field.Key}' 컬럼 오류: {ex.Message}");
                         }
                     }
                 }
@@ -68,7 +68,7 @@ namespace ExcelBinder.Services
             var trimmedFieldName = fieldName.Trim();
             if (headerMap.TryGetValue(trimmedFieldName, out idx)) return idx;
 
-            throw new Exception($"Column '{columnName}' (or '{trimmedFieldName}') not found in excel header. Please check your schema or excel file.");
+            throw new Exception($"엑셀 헤더에서 '{columnName}' (또는 '{trimmedFieldName}') 컬럼을 찾을 수 없습니다. 스키마 또는 엑셀 파일을 확인하세요.");
         }
 
         private void WriteField(BinaryWriter writer, string type, string[] row, string[] header, Dictionary<string, int> headerMap, string fieldName, FeatureDefinition feature)
@@ -103,7 +103,7 @@ namespace ExcelBinder.Services
                 .ToList();
 
             if (indices.Count == 0)
-                LogService.Instance.Warning($"List column '{info.ColumnName}' not found in excel header. Exported as empty list. Please check your schema or excel file.");
+                LogService.Instance.Warning($"List 컬럼 '{info.ColumnName}'이(가) 엑셀 헤더에 없어 빈 리스트로 출력됩니다. 스키마 또는 엑셀 파일을 확인하세요.");
 
             return indices.Select(i => i < row.Length ? row[i] : "")
                           .Where(v => !string.IsNullOrEmpty(v))
@@ -162,7 +162,7 @@ namespace ExcelBinder.Services
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception($"[Row {item.OriginalIndex}] Column '{field.Key}' error: {ex.Message}");
+                        throw new Exception($"[{item.OriginalIndex}행] '{field.Key}' 컬럼 오류: {ex.Message}");
                     }
                 }
                 result.Add(rowDict);
@@ -217,14 +217,14 @@ namespace ExcelBinder.Services
             }
             catch (Exception ex) when (ex is FormatException or OverflowException)
             {
-                throw new Exception($"Cannot parse '{value}' as {type}. {ex.Message}");
+                throw new Exception($"'{value}' 값을 {type} 타입으로 변환할 수 없습니다. ({ex.Message})");
             }
         }
 
         private int ParseInt(string value)
         {
             if (float.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out float f) && f != (int)f)
-                throw new Exception($"Type Mismatch: Expected int but got float-like value '{value}'");
+                throw new Exception($"타입 불일치: int가 필요한 자리에 소수 값 '{value}'이(가) 입력되었습니다.");
             return int.Parse(value, NumberStyles.Integer, CultureInfo.InvariantCulture);
         }
     }

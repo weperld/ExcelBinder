@@ -30,8 +30,7 @@ namespace ExcelBinder.ViewModels
             }
             catch (Exception ex)
             {
-                LogService.Instance.Error($"Code generation error: {ex.Message}");
-                ShowLogs();
+                ReportFatal("코드 생성", ex);
             }
             finally
             {

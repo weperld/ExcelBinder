@@ -179,6 +179,18 @@ namespace ExcelBinder.Services.Processors
                 string entryName = row[nameIdx].Trim();
                 string entryValue = row.Length > valueIdx ? row[valueIdx].Trim() : "";
 
+                // 유효하지 않은 멤버명/선언을 깨뜨리는 값은 컴파일 불가 코드를 만들므로 건너뜀
+                if (!CSharpLiteral.IsValidIdentifier(entryName))
+                {
+                    LogService.Instance.Warning($"Enum '{enumName}'의 멤버명 '{entryName}'은(는) 유효한 C# 식별자가 아니어서 건너뜁니다.");
+                    continue;
+                }
+                if (entryValue.IndexOfAny(new[] { '\n', '\r', ';', '{', '}', '"' }) >= 0)
+                {
+                    LogService.Instance.Warning($"Enum '{enumName}'의 멤버 '{entryName}' 값 '{entryValue}'에 허용되지 않는 문자가 있어 건너뜁니다.");
+                    continue;
+                }
+
                 if (string.IsNullOrEmpty(entryValue))
                 {
                     sb.AppendLine($"        {entryName},");

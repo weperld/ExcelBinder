@@ -27,12 +27,12 @@
         <!-- Actions -->
         <Border Grid.Row="3" Background="{StaticResource LightBackgroundBrush}" Padding="20" Margin="0,20,0,0" CornerRadius="8">
             <DockPanel>
-                <TextBlock Text="Generates C# Enum files from the 'Definition' sheet and value sheets." 
+                <TextBlock Text="'Definition' 시트와 값 시트로부터 C# Enum 파일을 생성합니다."
                            VerticalAlignment="Center" Foreground="{StaticResource MutedTextBrush}"/>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Content="Create Template" Command="{Binding CreateTemplateCommand}" Width="140" Height="36" Margin="0,0,10,0"/>
-                    <Button Content="Show Logs" Command="{Binding ShowLogsCommand}" Width="100" Height="36" Margin="0,0,10,0"/>
-                    <Button Content="Generate Enum Code" Style="{StaticResource PrimaryButton}" 
+                    <Button Content="템플릿 생성" Command="{Binding CreateTemplateCommand}" Width="140" Height="36" Margin="0,0,10,0"/>
+                    <Button Content="로그 보기" Command="{Binding ShowLogsCommand}" Width="100" Height="36" Margin="0,0,10,0"/>
+                    <Button Content="Enum 코드 생성" Style="{StaticResource PrimaryButton}"
                             Command="{Binding GenerateCommand}" Width="180" Height="36"/>
                 </StackPanel>
             </DockPanel>

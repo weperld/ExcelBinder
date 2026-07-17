@@ -6,7 +6,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="800">
     <DockPanel Margin="0,5,0,25">
-        <Button Content="← Back" Command="{Binding NavigateToDashboardCommand}" Width="80" Height="32" VerticalAlignment="Top"/>
+        <Button Content="← 뒤로" Command="{Binding NavigateToDashboardCommand}" Width="80" Height="32" VerticalAlignment="Top"/>
         <StackPanel Margin="20,0,0,0">
             <Border Background="{StaticResource LightBackgroundBrush}" CornerRadius="4" Padding="6,2" HorizontalAlignment="Left" Margin="0,0,0,5">
                 <TextBlock Text="{Binding SelectedFeature.Category}" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TagTextBrush}"/>

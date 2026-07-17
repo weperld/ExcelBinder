@@ -12,7 +12,7 @@
       "title": "기능별 가이드",
       "topics": [
         { "id": "feature-builder", "title": "Feature 만들기", "resource": "02_FeatureBuilder.xaml" },
-        { "id": "schema-editor", "title": "Schema Editor", "resource": "03_SchemaEditor.xaml" },
+        { "id": "schema-editor", "title": "Schema 편집기", "resource": "03_SchemaEditor.xaml" },
         { "id": "export-codegen", "title": "Export / CodeGen", "resource": "04_ExportCodeGen.xaml" },
         { "id": "templates", "title": "템플릿 작성", "resource": "05_Templates.xaml" }
       ]

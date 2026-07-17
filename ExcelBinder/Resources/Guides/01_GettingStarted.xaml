@@ -18,11 +18,11 @@
 
     <Paragraph FontSize="20" FontWeight="SemiBold" Margin="0,12,0,4">전체 흐름</Paragraph>
     <Paragraph Margin="0,0,0,4">
-        <Bold>1단계.</Bold> Settings에서 <Italic>Feature Definitions Path</Italic>를 지정합니다.
+        <Bold>1단계.</Bold> 설정에서 <Italic>기본 스캔 폴더</Italic>를 지정합니다.
         Feature 정의 파일(.json)이 저장되는 폴더입니다.
     </Paragraph>
     <Paragraph Margin="0,0,0,4">
-        <Bold>2단계.</Bold> Dashboard 하단의 <Italic>"+ Create New Feature"</Italic> 버튼으로 새 Feature를 만듭니다.
+        <Bold>2단계.</Bold> Dashboard 하단의 <Italic>"+ 새 Feature 만들기"</Italic> 버튼으로 새 Feature를 만듭니다.
         Feature ID, 카테고리(StaticData / SchemaGen / Logic / Enum / Constants), 엑셀/스키마 경로를 설정합니다.
         (좌측 사이드바의 <Italic>"+"</Italic> 버튼은 Feature가 아닌 <Bold>그룹</Bold> 생성용입니다.)
     </Paragraph>
@@ -46,7 +46,7 @@
     <List MarkerStyle="Disc" Margin="20,0,0,12">
         <ListItem><Paragraph><Bold>F1</Bold> — 어디서든 가이드 윈도우 열기</Paragraph></ListItem>
         <ListItem><Paragraph>메인 윈도우 우상단 <Bold>?</Bold> 버튼 — 가이드 열기</Paragraph></ListItem>
-        <ListItem><Paragraph>각 기능 화면(Feature Builder, Schema Editor)의 헤더 <Bold>?</Bold> 아이콘 — 해당 기능 가이드로 직접 이동</Paragraph></ListItem>
+        <ListItem><Paragraph>각 기능 화면(Feature 빌더, Schema 편집기)의 헤더 <Bold>?</Bold> 아이콘 — 해당 기능 가이드로 직접 이동</Paragraph></ListItem>
     </List>
 
     <Paragraph FontStyle="Italic" Foreground="Gray" Margin="0,20,0,0">

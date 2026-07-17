@@ -13,17 +13,17 @@
 
     <Paragraph FontSize="20" FontWeight="SemiBold" Margin="0,8,0,4">Export</Paragraph>
     <List MarkerStyle="Disc" Margin="20,0,0,12">
-        <ListItem><Paragraph><Bold>출력 포맷</Bold> — Feature의 Output Options에서 Binary / JSON 선택 (둘 다 가능)</Paragraph></ListItem>
-        <ListItem><Paragraph><Bold>출력 위치</Bold> — Feature의 Export Directory</Paragraph></ListItem>
-        <ListItem><Paragraph><Bold>파일 확장자</Bold> — Output Options의 Extension 항목 (Binary는 <Bold>.bytes</Bold> 고정)</Paragraph></ListItem>
+        <ListItem><Paragraph><Bold>출력 포맷</Bold> — Feature의 출력 옵션에서 Binary / JSON 선택 (둘 다 가능)</Paragraph></ListItem>
+        <ListItem><Paragraph><Bold>출력 위치</Bold> — Feature의 Export 디렉터리</Paragraph></ListItem>
+        <ListItem><Paragraph><Bold>파일 확장자</Bold> — 출력 옵션의 확장자 항목 (Binary는 <Bold>.bytes</Bold> 고정)</Paragraph></ListItem>
         <ListItem><Paragraph>Schema가 없는 시트는 자동 무시됩니다.</Paragraph></ListItem>
     </List>
 
     <Paragraph FontSize="20" FontWeight="SemiBold" Margin="0,12,0,4">CodeGen</Paragraph>
     <List MarkerStyle="Disc" Margin="20,0,0,12">
-        <ListItem><Paragraph><Bold>템플릿</Bold> — Feature의 Templates 항목에서 <Bold>.liquid</Bold> 파일 지정</Paragraph></ListItem>
-        <ListItem><Paragraph><Bold>네임스페이스</Bold> — Feature의 Default Namespace 사용</Paragraph></ListItem>
-        <ListItem><Paragraph><Bold>출력 위치</Bold> — Feature의 Scripts Directory</Paragraph></ListItem>
+        <ListItem><Paragraph><Bold>템플릿</Bold> — Feature의 템플릿 항목에서 <Bold>.liquid</Bold> 파일 지정</Paragraph></ListItem>
+        <ListItem><Paragraph><Bold>네임스페이스</Bold> — Feature의 기본 네임스페이스 사용</Paragraph></ListItem>
+        <ListItem><Paragraph><Bold>출력 위치</Bold> — Feature의 Scripts 디렉터리</Paragraph></ListItem>
         <ListItem><Paragraph>Enum 필드 읽기는 <Bold>System.Enum.Parse&lt;T&gt;(reader.ReadString())</Bold>로 인라인 생성됩니다 (대소문자 구분).</Paragraph></ListItem>
     </List>
 

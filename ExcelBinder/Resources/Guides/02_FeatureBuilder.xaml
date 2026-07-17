@@ -14,21 +14,21 @@
     <Paragraph FontSize="20" FontWeight="SemiBold" Margin="0,8,0,4">필수 입력 항목</Paragraph>
     <List MarkerStyle="Disc" Margin="20,0,0,12">
         <ListItem><Paragraph><Bold>Feature ID</Bold> — 영문/숫자/언더스코어. <Bold>'_'</Bold>로 시작 불가 (시스템 파일과 충돌 방지).</Paragraph></ListItem>
-        <ListItem><Paragraph><Bold>Category</Bold> — StaticData / SchemaGen / Logic / Enum / Constants 중 선택. 카테고리에 따라 보이는 입력란이 달라집니다.</Paragraph></ListItem>
-        <ListItem><Paragraph><Bold>Display Name</Bold> — Dashboard에 표시될 이름.</Paragraph></ListItem>
-        <ListItem><Paragraph><Bold>Excel Directory</Bold> — 입력 엑셀 파일이 위치한 폴더.</Paragraph></ListItem>
+        <ListItem><Paragraph><Bold>카테고리</Bold> — StaticData / SchemaGen / Logic / Enum / Constants 중 선택. 카테고리에 따라 보이는 입력란이 달라집니다.</Paragraph></ListItem>
+        <ListItem><Paragraph><Bold>표시 이름</Bold> — Dashboard에 표시될 이름.</Paragraph></ListItem>
+        <ListItem><Paragraph><Bold>Excel 디렉터리</Bold> — 입력 엑셀 파일이 위치한 폴더.</Paragraph></ListItem>
     </List>
 
     <Paragraph FontSize="20" FontWeight="SemiBold" Margin="0,12,0,4">카테고리별 추가 입력</Paragraph>
     <List MarkerStyle="Disc" Margin="20,0,0,12">
-        <ListItem><Paragraph><Bold>StaticData</Bold> — Schema Directory, Export Directory, Scripts Directory, Type Mappings, Templates, Output Options</Paragraph></ListItem>
-        <ListItem><Paragraph><Bold>SchemaGen</Bold> — Schema Directory (산출 위치)</Paragraph></ListItem>
-        <ListItem><Paragraph><Bold>Logic / Enum / Constants</Bold> — Scripts Directory + 카테고리별 템플릿</Paragraph></ListItem>
+        <ListItem><Paragraph><Bold>StaticData</Bold> — Schema 디렉터리, Export 디렉터리, Scripts 디렉터리, 타입 매핑, 템플릿, 출력 옵션</Paragraph></ListItem>
+        <ListItem><Paragraph><Bold>SchemaGen</Bold> — Schema 디렉터리 (산출 위치)</Paragraph></ListItem>
+        <ListItem><Paragraph><Bold>Logic / Enum / Constants</Bold> — Scripts 디렉터리 + 카테고리별 템플릿</Paragraph></ListItem>
     </List>
 
-    <Paragraph FontSize="20" FontWeight="SemiBold" Margin="0,12,0,4">Type Mappings</Paragraph>
+    <Paragraph FontSize="20" FontWeight="SemiBold" Margin="0,12,0,4">타입 매핑</Paragraph>
     <Paragraph Margin="0,0,0,8">
         엑셀에서 사용하는 타입 표기를 프로젝트 전용 타입으로 변환합니다 (예: <Bold>int → int32</Bold>).
-        "Populate Default Types" 버튼을 누르면 기본 매핑(예: int → int)이 자동 채워집니다.
+        "기본 타입 채우기" 버튼을 누르면 기본 매핑(예: int → int)이 자동 채워집니다.
     </Paragraph>
 </FlowDocument>

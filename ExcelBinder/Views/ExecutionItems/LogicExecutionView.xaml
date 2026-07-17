@@ -20,7 +20,7 @@
 
         <Border Grid.Row="3" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,1,0,0" Padding="0,20,0,0">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Content="Generate Logic" Command="{Binding GenerateCodeCommand}" Width="180" Height="42" 
+                <Button Content="Logic 생성" Command="{Binding GenerateCodeCommand}" Width="180" Height="42"
                         Background="{StaticResource PrimaryBrush}" Foreground="White" FontWeight="SemiBold" BorderThickness="0"/>
             </StackPanel>
         </Border>
