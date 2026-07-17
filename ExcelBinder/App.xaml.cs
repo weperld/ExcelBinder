@@ -49,8 +49,10 @@ public partial class App : Application
 
     private void RunCli(string[] args)
     {
+        // CLI는 MainViewModel을 만들지 않는다 — 생성 시 업데이트 확인(HTTP)·설정 저장 등
+        // GUI용 부작용이 함께 발화되기 때문. 필요한 것은 설정과 Feature 목록뿐이다.
         var featureService = new FeatureService();
-        var vm = new MainViewModel();
+        var settings = featureService.LoadSettings();
         
         string featureId = "";
         bool executeExport = false;
@@ -72,8 +74,8 @@ public partial class App : Application
                     break;
                 case ProjectConstants.CLI.Bind:
                     if (i + 1 >= args.Length) { Console.WriteLine("Error: --bind requires a value."); Environment.ExitCode = 1; return; }
-                    vm.Settings.BoundFeatures.Add(args[++i]);
-                    featureService.SaveSettings(vm.Settings);
+                    settings.BoundFeatures.Add(args[++i]);
+                    featureService.SaveSettings(settings);
                     break;
                 case ProjectConstants.CLI.Export:
                     executeExport = true;
@@ -98,14 +100,10 @@ public partial class App : Application
 
         if (!string.IsNullOrEmpty(featureId))
         {
-            // Re-refresh to ensure all bound features are loaded
-            vm.RefreshFeaturesCommand.Execute(null);
-            var feature = vm.Features.FirstOrDefault(f => f.Id == featureId);
+            var feature = featureService.LoadAllFeatures(settings).FirstOrDefault(f => f.Id == featureId);
             if (feature != null)
             {
-                vm.SelectedFeature = feature;
-
-                ExecutionViewModelBase? execVm = ExecutionViewModelFactory.Create(feature, vm.Settings);
+                ExecutionViewModelBase? execVm = ExecutionViewModelFactory.Create(feature, settings);
 
                 if (execVm != null)
                 {

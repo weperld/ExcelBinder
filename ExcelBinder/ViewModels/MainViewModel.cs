@@ -187,35 +187,7 @@ namespace ExcelBinder.ViewModels
         private void RefreshFeatures()
         {
             Features.Clear();
-
-            // Load from directory
-            if (Directory.Exists(Settings.FeatureDefinitionsPath))
-            {
-                var featuresFromDir = _featureService.LoadFeatures(Settings.FeatureDefinitionsPath);
-                foreach (var f in featuresFromDir) Features.Add(f);
-            }
-
-            // Load from bound paths
-            foreach (var path in Settings.BoundFeatures)
-            {
-                if (Directory.Exists(path))
-                {
-                    var featuresFromDir = _featureService.LoadFeatures(path);
-                    foreach (var f in featuresFromDir)
-                    {
-                        if (Features.All(x => x.Id != f.Id))
-                            Features.Add(f);
-                    }
-                }
-                else if (File.Exists(path))
-                {
-                    var f = _featureService.LoadFeatureFromFile(path);
-                    if (f != null && Features.All(x => x.Id != f.Id))
-                    {
-                        Features.Add(f);
-                    }
-                }
-            }
+            foreach (var f in _featureService.LoadAllFeatures(Settings)) Features.Add(f);
 
             if (_groupService != null)
             {

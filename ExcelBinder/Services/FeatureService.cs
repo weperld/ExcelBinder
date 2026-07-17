@@ -87,6 +87,34 @@ namespace ExcelBinder.Services
             return features;
         }
 
+        /// <summary>기본 스캔 폴더와 바인딩된 경로들에서 Feature 정의를 병합 로드합니다 (ID 중복 제거).</summary>
+        public List<FeatureDefinition> LoadAllFeatures(AppSettings settings)
+        {
+            var result = new List<FeatureDefinition>();
+
+            if (Directory.Exists(settings.FeatureDefinitionsPath))
+            {
+                result.AddRange(LoadFeatures(settings.FeatureDefinitionsPath));
+            }
+
+            foreach (var path in settings.BoundFeatures)
+            {
+                if (Directory.Exists(path))
+                {
+                    foreach (var f in LoadFeatures(path))
+                    {
+                        if (result.All(x => x.Id != f.Id)) result.Add(f);
+                    }
+                }
+                else if (File.Exists(path))
+                {
+                    var f = LoadFeatureFromFile(path);
+                    if (f != null && result.All(x => x.Id != f.Id)) result.Add(f);
+                }
+            }
+            return result;
+        }
+
         public string? GetFeaturePath(string featureId, AppSettings settings)
         {
             // Check in directory
