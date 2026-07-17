@@ -31,7 +31,6 @@ namespace ExcelBinder.Services.Processors
             if (selectedSheets.Count == 0)
             {
                 LogService.Instance.Warning("Please select at least one sheet for schema generation.");
-                vm.ShowLogs();
                 return System.Threading.Tasks.Task.CompletedTask;
             }
 
@@ -45,7 +44,6 @@ namespace ExcelBinder.Services.Processors
                 {
                     LogService.Instance.Info("Schema Generation Session Finished.");
                     vm.RefreshFiles();
-                    vm.ShowLogs();
                 }
                 AppServices.Navigation.NavigateToExecution();
             };

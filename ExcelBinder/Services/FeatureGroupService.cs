@@ -119,6 +119,18 @@ namespace ExcelBinder.Services
             return true;
         }
 
+        /// <summary>그룹의 멤버 목록을 통째로 교체하고 저장합니다.</summary>
+        public bool SetGroupMembers(string groupId, IEnumerable<string> featureIds, IList<FeatureGroup> existing)
+        {
+            var target = existing.FirstOrDefault(g => g.Id == groupId);
+            if (target == null || target.IsAllGroup) return false;
+
+            target.FeatureIds.Clear();
+            target.FeatureIds.AddRange(featureIds);
+            SaveGroups(existing);
+            return true;
+        }
+
         public void CleanupDanglingIds(IEnumerable<string> validFeatureIds, IList<FeatureGroup> groups)
         {
             var valid = new HashSet<string>(validFeatureIds);

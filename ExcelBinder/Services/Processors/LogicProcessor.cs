@@ -36,7 +36,6 @@ namespace ExcelBinder.Services.Processors
             {
                 LogService.Instance.Clear();
                 LogService.Instance.Warning($"Template file not found: {vm.SelectedFeature.Templates.DataClass}. Code generation cancelled.");
-                vm.ShowLogs();
                 return;
             }
 
@@ -46,7 +45,6 @@ namespace ExcelBinder.Services.Processors
             if (selectedSheets.Count == 0)
             {
                 LogService.Instance.Warning("Please select at least one sheet for logic generation.");
-                vm.ShowLogs();
                 return;
             }
 
@@ -76,7 +74,6 @@ namespace ExcelBinder.Services.Processors
             }
             
             LogService.Instance.Info("Logic Generation Finished.");
-            vm.ShowLogs();
         }
 
         public System.Threading.Tasks.Task CreateTemplateAsync(string filePath) => System.Threading.Tasks.Task.CompletedTask;

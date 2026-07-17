@@ -33,7 +33,6 @@ namespace ExcelBinder.Services.Processors
             if (selectedSheets.Count == 0)
             {
                 LogService.Instance.Warning("Please select at least one sheet with a valid schema.");
-                vm.ShowLogs();
                 return;
             }
 
@@ -77,7 +76,6 @@ namespace ExcelBinder.Services.Processors
             }
             
             LogService.Instance.Info("Export Process Finished.");
-            vm.ShowLogs();
         }
 
         public async System.Threading.Tasks.Task ExecuteGenerateAsync(IExecutionViewModel vm)
@@ -88,7 +86,6 @@ namespace ExcelBinder.Services.Processors
             {
                 LogService.Instance.Clear();
                 LogService.Instance.Warning($"Template file not found: {vm.SelectedFeature.Templates.DataClass}. Code generation cancelled.");
-                vm.ShowLogs();
                 return;
             }
 
@@ -123,7 +120,6 @@ namespace ExcelBinder.Services.Processors
             }
 
             LogService.Instance.Info("Code Generation Finished.");
-            vm.ShowLogs();
         }
 
         public System.Threading.Tasks.Task CreateTemplateAsync(string filePath) => System.Threading.Tasks.Task.CompletedTask;

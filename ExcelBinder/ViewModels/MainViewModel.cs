@@ -466,9 +466,8 @@ namespace ExcelBinder.ViewModels
 
             if (selectedIds == null) return;
 
-            _selectedGroup.FeatureIds.Clear();
-            _selectedGroup.FeatureIds.AddRange(selectedIds);
-            _groupService.SaveGroups(Groups);
+            // 그룹 상태 변경+저장은 서비스에 일원화 (VM이 직접 컬렉션을 수정하지 않는다)
+            if (!_groupService.SetGroupMembers(_selectedGroup.Id, selectedIds, Groups.ToList())) return;
             OnPropertyChanged(nameof(FilteredFeatures));
         }
 

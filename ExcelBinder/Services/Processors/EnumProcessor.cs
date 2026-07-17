@@ -54,7 +54,6 @@ namespace ExcelBinder.Services.Processors
             if (selectedFiles.Count == 0)
             {
                 LogService.Instance.Warning("Please select at least one excel file.");
-                vm.ShowLogs();
                 return;
             }
 
@@ -74,7 +73,6 @@ namespace ExcelBinder.Services.Processors
             }
 
             LogService.Instance.Info("Enum Code Generation Finished.");
-            vm.ShowLogs();
         }
 
         private async Task ProcessFile(string filePath, IExecutionViewModel vm)
