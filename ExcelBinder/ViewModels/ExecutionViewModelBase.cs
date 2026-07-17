@@ -169,7 +169,7 @@ namespace ExcelBinder.ViewModels
                 string? code = _codeGenService.GenerateDataCode(schema, SelectedFeature, Namespace);
                 if (!string.IsNullOrEmpty(code))
                 {
-                    File.WriteAllText(Path.Combine(SelectedFeature.ScriptsPath, schema.ClassName + ProjectConstants.Extensions.CSharp), code);
+                    SafeFile.AtomicWriteText(Path.Combine(SelectedFeature.ScriptsPath, schema.ClassName + ProjectConstants.Extensions.CSharp), code);
                     LogService.Instance.Info($"Generated Code: {schema.ClassName}");
                 }
             }

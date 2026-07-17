@@ -70,9 +70,9 @@ namespace ExcelBinder.Services.Processors
             }
 
             var header = rawData[0];
-            int nameIdx = Array.FindIndex(header, h => h.Trim().Equals("Name", StringComparison.OrdinalIgnoreCase));
-            int typeIdx = Array.FindIndex(header, h => h.Trim().Equals("Type", StringComparison.OrdinalIgnoreCase));
-            int valueIdx = Array.FindIndex(header, h => h.Trim().Equals("Value", StringComparison.OrdinalIgnoreCase));
+            int nameIdx = ExcelService.FindColumn(header, "Name");
+            int typeIdx = ExcelService.FindColumn(header, "Type");
+            int valueIdx = ExcelService.FindColumn(header, "Value");
 
             if (nameIdx == -1 || typeIdx == -1 || valueIdx == -1)
             {
@@ -125,7 +125,7 @@ namespace ExcelBinder.Services.Processors
             if (generatedEntries > 0)
             {
                 string outputPath = Path.Combine(vm.SelectedFeature.ScriptsPath, sheetName + ProjectConstants.Extensions.CSharp);
-                await File.WriteAllTextAsync(outputPath, sb.ToString());
+                await Task.Run(() => SafeFile.AtomicWriteText(outputPath, sb.ToString()));
                 LogService.Instance.Info($"Successfully generated Constants: {sheetName} ({generatedEntries} constants)");
             }
             else

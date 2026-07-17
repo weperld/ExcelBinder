@@ -63,7 +63,7 @@ namespace ExcelBinder.Services.Processors
                     string? code = await System.Threading.Tasks.Task.Run(() => _codeGenService.GenerateLogicCode(context, vm.SelectedFeature));
                     if (!string.IsNullOrEmpty(code))
                     {
-                        await System.Threading.Tasks.Task.Run(() => File.WriteAllText(Path.Combine(vm.SelectedFeature.ScriptsPath, className + ProjectConstants.Extensions.CSharp), code));
+                        await System.Threading.Tasks.Task.Run(() => SafeFile.AtomicWriteText(Path.Combine(vm.SelectedFeature.ScriptsPath, className + ProjectConstants.Extensions.CSharp), code));
                         LogService.Instance.Info($"Generated Logic: {className}");
                     }
                 }

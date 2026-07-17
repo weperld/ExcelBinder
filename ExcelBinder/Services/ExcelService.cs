@@ -133,6 +133,10 @@ namespace ExcelBinder.Services
             return result;
         }
 
+        /// <summary>헤더 배열에서 이름이 일치하는 컬럼 인덱스를 찾습니다 (Trim + 대소문자 무시). 없으면 -1.</summary>
+        public static int FindColumn(string[] header, string name) =>
+            Array.FindIndex(header, h => string.Equals(h?.Trim(), name, StringComparison.OrdinalIgnoreCase));
+
         /// <summary>
         /// 셀 값을 타입 기반으로 읽어 invariant 문자열로 반환합니다.
         /// cell.ToString()은 수식 셀에서 수식 텍스트를, 숫자 셀에서 현재 로케일 형식
