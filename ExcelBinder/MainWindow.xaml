@@ -43,8 +43,8 @@
 
         <!-- Update Indicator Button (shown when toast is dismissed but update exists) -->
         <Button HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,18,114,0"
-                Visibility="{Binding IsUpdateIndicatorVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
-                Command="{Binding ShowUpdateBannerCommand}"
+                Visibility="{Binding Update.IsUpdateIndicatorVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+                Command="{Binding Update.ShowUpdateBannerCommand}"
                 Width="36" Height="36" Cursor="Hand" ToolTip="새 버전이 출시되었습니다. 클릭하여 확인하세요.">
             <Button.Template>
                 <ControlTemplate TargetType="Button">
@@ -72,7 +72,7 @@
 
         <!-- Update Toast Notification -->
         <Border HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,15,20,0"
-                Visibility="{Binding IsUpdateBannerVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+                Visibility="{Binding Update.IsUpdateBannerVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
                 Background="White" BorderBrush="{StaticResource SecondaryBrush}" BorderThickness="1"
                 CornerRadius="8" Padding="24,18" Width="450">
             <Border.Effect>
@@ -80,13 +80,13 @@
             </Border.Effect>
             <StackPanel>
                 <DockPanel Margin="0,0,0,8">
-                    <Button Content="✕" DockPanel.Dock="Right" Command="{Binding DismissUpdateBannerCommand}"
+                    <Button Content="✕" DockPanel.Dock="Right" Command="{Binding Update.DismissUpdateBannerCommand}"
                             Width="28" Height="28" FontSize="16" Padding="0"
                             Background="Transparent" BorderThickness="0" VerticalAlignment="Top" Cursor="Hand"/>
-                    <TextBlock Text="{Binding UpdateMessage}" FontSize="17" FontWeight="SemiBold" TextWrapping="Wrap"/>
+                    <TextBlock Text="{Binding Update.UpdateMessage}" FontSize="17" FontWeight="SemiBold" TextWrapping="Wrap"/>
                 </DockPanel>
                 <ScrollViewer MaxHeight="240" VerticalScrollBarVisibility="Auto" Margin="0,0,0,8">
-                    <ItemsControl ItemsSource="{Binding ReleaseNoteEntries}">
+                    <ItemsControl ItemsSource="{Binding Update.ReleaseNoteEntries}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Border x:Name="EntryBorder" Padding="8,6" CornerRadius="3" Margin="0,0,0,2">
@@ -111,8 +111,8 @@
                 <TextBlock Text="다운로드 버튼을 누르면 zip 파일을 직접 받습니다."
                            FontSize="14" Foreground="{StaticResource MutedTextBrush}" Margin="0,0,0,8"/>
                 <ProgressBar Height="6" Maximum="100"
-                             Value="{Binding DownloadProgress}"
-                             Visibility="{Binding IsDownloadingUpdate, Converter={StaticResource BooleanToVisibilityConverter}}"
+                             Value="{Binding Update.DownloadProgress}"
+                             Visibility="{Binding Update.IsDownloadingUpdate, Converter={StaticResource BooleanToVisibilityConverter}}"
                              Margin="0,0,0,8"/>
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -121,18 +121,18 @@
                     </Grid.ColumnDefinitions>
                     <Button Grid.Column="0" Content="다운로드"
                             Style="{StaticResource SecondaryButton}"
-                            Command="{Binding DownloadUpdateCommand}"
-                            IsEnabled="{Binding CanDownloadUpdate}"
+                            Command="{Binding Update.DownloadUpdateCommand}"
+                            IsEnabled="{Binding Update.CanDownloadUpdate}"
                             Height="36" FontSize="14" Margin="0,0,4,0"/>
                     <Button Grid.Column="1" Content="GitHub"
-                            Command="{Binding OpenUpdatePageCommand}"
+                            Command="{Binding Update.OpenUpdatePageCommand}"
                             Height="36" FontSize="14" Margin="4,0,0,0"/>
                 </Grid>
             </StackPanel>
         </Border>
 
-        <!-- Loading Overlay (MainViewModel 작업: 업데이트 확인 등) -->
-        <Grid Background="#55000000" Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}">
+        <!-- Loading Overlay (UpdateViewModel 작업: 업데이트 확인 등) -->
+        <Grid Background="#55000000" Visibility="{Binding Update.IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}">
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                 <ProgressBar IsIndeterminate="True" Width="200" Height="20" Margin="0,0,0,10"/>
                 <TextBlock Text="처리 중입니다... 잠시만 기다려 주세요." Foreground="White" FontWeight="Bold" HorizontalAlignment="Center"/>

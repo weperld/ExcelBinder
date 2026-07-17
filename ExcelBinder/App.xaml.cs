@@ -104,17 +104,8 @@ public partial class App : Application
             if (feature != null)
             {
                 vm.SelectedFeature = feature;
-                
-                // Create appropriate Execution ViewModel
-                IExecutionViewModel? execVm = feature.Category switch
-                {
-                    ProjectConstants.Categories.StaticData => new StaticDataExecutionViewModel(feature, vm.Settings),
-                    ProjectConstants.Categories.Logic => new LogicExecutionViewModel(feature),
-                    ProjectConstants.Categories.SchemaGen => new SchemaGenExecutionViewModel(feature),
-                    ProjectConstants.Categories.Enum => new EnumExecutionViewModel(feature),
-                    ProjectConstants.Categories.Constants => new ConstantsExecutionViewModel(feature),
-                    _ => null
-                };
+
+                IExecutionViewModel? execVm = ExecutionViewModelFactory.Create(feature, vm.Settings);
 
                 if (execVm != null)
                 {

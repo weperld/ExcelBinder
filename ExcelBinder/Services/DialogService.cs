@@ -324,6 +324,29 @@ namespace ExcelBinder.Services
             }
         }
 
+        public bool ShowGuideWindow(string? topicId = null, bool isFirstRunMode = false)
+        {
+            var vm = new ViewModels.GuideViewModel(topicId, isFirstRunMode);
+            var win = new Views.GuideWindow
+            {
+                DataContext = vm,
+                Owner = Application.Current.MainWindow
+            };
+
+            bool markSeen = false;
+            vm.RequestClose += () =>
+            {
+                if (vm.IsFirstRunMode && vm.DoNotShowAgain)
+                {
+                    markSeen = true;
+                }
+                win.Close();
+            };
+            win.ShowDialog();
+
+            return markSeen;
+        }
+
         public bool ShowUpdateInfoDialog(string message, List<ReleaseNoteEntry> entries, string title)
         {
             var window = new Window

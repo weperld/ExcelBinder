@@ -75,7 +75,7 @@
                         <StackPanel>
                             <CheckBox Content="앱 시작 시 자동으로 업데이트 확인"
                                       IsChecked="{Binding Settings.CheckForUpdatesOnStartup}" Margin="0,0,0,10"/>
-                            <Button Content="지금 업데이트 확인" Command="{Binding CheckForUpdateCommand}" Width="150" Height="30" HorizontalAlignment="Left"/>
+                            <Button Content="지금 업데이트 확인" Command="{Binding Update.CheckForUpdateCommand}" Width="150" Height="30" HorizontalAlignment="Left"/>
                         </StackPanel>
                     </GroupBox>
 
