@@ -18,7 +18,7 @@ ai-grep outline "file.cs"            # 파일 구조 확인
 엑셀 데이터를 추출하여 JSON/Binary로 변환하고, C# 코드를 자동 생성하는 WPF 데스크톱 애플리케이션
 
 - **기술 스택**: C#, WPF, .NET 10.0, MVVM 패턴
-- **라이브러리**: NPOI 2.7.5 (Excel 처리), Newtonsoft.Json 13.0.4 (JSON 직렬화), Scriban 6.5.2 (템플릿 엔진)
+- **라이브러리**: NPOI 2.7.5 (Excel 처리), Newtonsoft.Json 13.0.4 (JSON 직렬화), Scriban 7.2.5 (템플릿 엔진)
 - **출력 포맷**: Binary (.bytes), JSON (.json)
 - **상세 정보**: PROJECT_SUMMARY.md 참조
 

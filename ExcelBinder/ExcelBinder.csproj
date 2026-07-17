@@ -18,7 +18,7 @@
     <ItemGroup>
       <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
       <PackageReference Include="NPOI" Version="2.7.5" />
-      <PackageReference Include="Scriban" Version="6.5.2" />
+      <PackageReference Include="Scriban" Version="7.2.5" />
     </ItemGroup>
 
     <ItemGroup>
