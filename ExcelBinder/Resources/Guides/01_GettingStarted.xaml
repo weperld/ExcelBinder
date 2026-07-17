@@ -22,8 +22,9 @@
         Feature 정의 파일(.json)이 저장되는 폴더입니다.
     </Paragraph>
     <Paragraph Margin="0,0,0,4">
-        <Bold>2단계.</Bold> Dashboard에서 <Italic>"+"</Italic> 버튼으로 새 Feature를 만듭니다.
+        <Bold>2단계.</Bold> Dashboard 하단의 <Italic>"+ Create New Feature"</Italic> 버튼으로 새 Feature를 만듭니다.
         Feature ID, 카테고리(StaticData / SchemaGen / Logic / Enum / Constants), 엑셀/스키마 경로를 설정합니다.
+        (좌측 사이드바의 <Italic>"+"</Italic> 버튼은 Feature가 아닌 <Bold>그룹</Bold> 생성용입니다.)
     </Paragraph>
     <Paragraph Margin="0,0,0,4">
         <Bold>3단계.</Bold> SchemaGen 카테고리로 스키마를 먼저 생성하거나, 직접 SchemaEditor에서 헤더 → 타입 매핑을 정의합니다.

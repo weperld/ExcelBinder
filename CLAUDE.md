@@ -23,14 +23,14 @@ ai-grep outline "file.cs"            # 파일 구조 확인
 - **상세 정보**: PROJECT_SUMMARY.md 참조
 
 ### 아키텍처
-- **Models/**: 데이터 모델 (BinderData, ColumnInfo, RowData)
-- **ViewModels/**: MVVM ViewModel (MainViewModel)
-- **Views/**: XAML UI (MainWindow)
-- **Services/**: 비즈니스 로직 (ExcelLoaderService, ExportService, CodeGenService)
-- **Services/Processors/**: Feature별 데이터 처리기
+- **Models/**: 데이터 모델 (FeatureDefinition, SchemaDefinition, AppSettings, ProjectConstants)
+- **ViewModels/**: MVVM ViewModel (MainViewModel, ExecutionViewModelBase + 카테고리별 실행 VM)
+- **Views/**: XAML UI (MainWindow, DashboardView 등)
+- **Services/**: 비즈니스 로직 (ExcelService, ExportService, CodeGeneratorService)
+- **Services/Processors/**: Feature별 데이터 처리기 (IFeatureProcessor 구현 5종)
 
 ### 핵심 흐름
-Excel Load → ExcelLoaderService.Parse() → ColumnFilter/RowFilter → Processor.Process() → ExportService.Export() (JSON/Binary/Code)
+Excel Load → ExcelService.ReadExcel()/ReadMultipleSheets() → ExcelService.GetFilteredData() (`#` 필터) → Processor.ExecuteExportAsync()/ExecuteGenerateAsync() → ExportService (JSON/Binary) / CodeGeneratorService (C# 코드)
 
 ### 엑셀 필터링 규칙 (`#` 접두어)
 - **열 무시**: 헤더 행에서 `#`이 붙은 열은 스키마 생성에서 제외 (바이너리/JSON 출력도 제외)
@@ -39,10 +39,11 @@ Excel Load → ExcelLoaderService.Parse() → ColumnFilter/RowFilter → Process
 - **헤더 행**: 1행, **데이터 시작 행**: 2행
 
 ### 도메인 용어
-- **Feature**: 기능 카테고리 - StaticData, Logic, SchemaGen, Enum, Constants (`Models/FeatureType.cs`)
+- **Feature**: 기능 카테고리 - StaticData, Logic, SchemaGen, Enum, Constants (`ProjectConstants.Categories`)
 - **Processor**: Feature별 데이터 처리기 (`Services/Processors/`)
-- **BinderData**: 엑셀에서 추출된 데이터 구조 (`Models/BinderData.cs`)
-- **CodeGen**: Scriban 템플릿 기반 C# 코드 자동 생성 (`Services/CodeGenService.cs`)
+- **FeatureDefinition**: Feature 정의 JSON의 데이터 모델 (`Models/FeatureDefinition.cs`)
+- **SchemaDefinition**: 엑셀 헤더 → C# 타입 매핑 정의 (`Models/SchemaDefinition.cs`)
+- **CodeGen**: Scriban 템플릿 기반 C# 코드 자동 생성 (`Services/CodeGeneratorService.cs`)
 
 ### Feature 그룹화 (Dashboard)
 - Dashboard 좌측 사이드바에 그룹 리스트 표시: "전체" (가상, 항상 첫 번째, 이름변경/삭제 불가) + 사용자 정의 그룹

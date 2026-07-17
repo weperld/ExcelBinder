@@ -7,10 +7,6 @@
         Schema는 엑셀 헤더가 어떤 C# 타입으로 매핑되는지 정의합니다. SchemaEditor에서 시트별로 필드 포함 여부, 타입, 참조, Enum 타입을 지정합니다.
     </Paragraph>
 
-    <Paragraph FontStyle="Italic" Foreground="Gray" Margin="0,0,0,16">
-        ※ 상세 콘텐츠는 준비 중입니다. 화면 내 ❓ 버튼의 툴팁에서 각 항목 설명을 확인할 수 있습니다.
-    </Paragraph>
-
     <Paragraph FontSize="20" FontWeight="SemiBold" Margin="0,8,0,4">화면 구성</Paragraph>
     <List MarkerStyle="Disc" Margin="20,0,0,12">
         <ListItem><Paragraph><Bold>좌측 탭</Bold> — 엑셀 시트 단위로 분리. 각 시트가 하나의 Schema 파일이 됩니다.</Paragraph></ListItem>
@@ -26,6 +22,35 @@
         <ListItem><Paragraph>List 컬럼은 <Bold>List&lt;type&gt;</Bold> 형식 자동 인식</Paragraph></ListItem>
         <ListItem><Paragraph>Reference Type은 다른 테이블의 키를 참조할 때 사용 (선택 사항)</Paragraph></ListItem>
     </List>
+
+    <Paragraph FontSize="20" FontWeight="SemiBold" Margin="0,12,0,4">지원 타입</Paragraph>
+    <Paragraph Margin="0,0,0,4">
+        Data Type 드롭다운에서 선택 가능한 타입:
+        <Bold>int, float, string, bool, long, double, uint, ulong, short, byte, enum</Bold>
+    </Paragraph>
+    <List MarkerStyle="Disc" Margin="20,0,0,12">
+        <ListItem><Paragraph><Bold>enum</Bold> 선택 시 Enum Type 입력란에 실제 enum 타입명을 지정합니다 (예: <Italic>ElementType</Italic>)</Paragraph></ListItem>
+        <ListItem><Paragraph>리스트는 <Bold>List&lt;int&gt;</Bold>처럼 List로 감싼 형식을 사용합니다 (enum 리스트: <Italic>List&lt;enum:MyEnumType&gt;</Italic>)</Paragraph></ListItem>
+    </List>
+
+    <Paragraph FontSize="20" FontWeight="SemiBold" Margin="0,12,0,4">List 컬럼 작성법</Paragraph>
+    <Paragraph Margin="0,0,0,8">
+        엑셀에서 <Bold>같은 헤더 이름을 여러 열에 반복</Bold>하면 하나의 List 필드로 묶입니다.
+        예: <Italic>Item | Item | Item</Italic> 3개 열 → <Italic>List&lt;int&gt; Item</Italic> 필드 하나로 추출됩니다.
+    </Paragraph>
+
+    <Paragraph FontSize="20" FontWeight="SemiBold" Margin="0,12,0,4">스키마 파일명 규칙</Paragraph>
+    <Paragraph Margin="0,0,0,4">
+        실행 화면에서 시트별 스키마 파일을 아래 순서로 탐색합니다 (Schema Path 기준):
+    </Paragraph>
+    <List MarkerStyle="Decimal" Margin="20,0,0,12">
+        <ListItem><Paragraph><Bold>[엑셀파일명]_[시트명]_Schema.json</Bold> — 가장 구체적, 우선 적용</Paragraph></ListItem>
+        <ListItem><Paragraph><Bold>[엑셀파일명]_Schema.json</Bold></Paragraph></ListItem>
+        <ListItem><Paragraph><Bold>[시트명].json</Bold></Paragraph></ListItem>
+    </List>
+    <Paragraph Margin="0,0,0,8">
+        셋 다 없으면 1번 이름으로 새 스키마가 생성됩니다.
+    </Paragraph>
 
     <Paragraph FontSize="20" FontWeight="SemiBold" Margin="0,12,0,4">엑셀 헤더 규칙</Paragraph>
     <Paragraph Margin="0,0,0,8">
