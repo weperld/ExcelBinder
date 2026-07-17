@@ -42,17 +42,7 @@ namespace ExcelBinder.Services
             if (string.IsNullOrEmpty(_featuresDirectory) || !File.Exists(GroupsFilePath))
                 return new List<FeatureGroup>();
 
-            try
-            {
-                var json = File.ReadAllText(GroupsFilePath);
-                var collection = JsonConvert.DeserializeObject<FeatureGroupCollection>(json);
-                return collection?.Groups ?? new List<FeatureGroup>();
-            }
-            catch (Exception ex)
-            {
-                LogService.Instance.Warning($"Failed to load groups from {GroupsFilePath}: {ex.Message}");
-                return new List<FeatureGroup>();
-            }
+            return SafeFile.LoadJsonOrDefault<FeatureGroupCollection>(GroupsFilePath).Groups ?? new List<FeatureGroup>();
         }
 
         public void SaveGroups(IEnumerable<FeatureGroup> groups)
@@ -67,7 +57,7 @@ namespace ExcelBinder.Services
                 var persisted = groups.Where(g => !g.IsAllGroup).ToList();
                 var collection = new FeatureGroupCollection { Groups = persisted };
                 var json = JsonConvert.SerializeObject(collection, Formatting.Indented);
-                File.WriteAllText(GroupsFilePath, json);
+                SafeFile.AtomicWriteText(GroupsFilePath, json);
             }
             catch (Exception ex)
             {

@@ -28,25 +28,29 @@ namespace ExcelBinder.Services
 
             var validRows = _excelService.GetFilteredData(dataList);
 
-            using var stream = new FileStream(outputPath, FileMode.Create);
-            using var writer = new BinaryWriter(stream);
-
-            writer.Write(validRows.Count);
-
-            foreach (var item in validRows)
+            // 임시 파일에 쓴 뒤 원자적 교체: 중간 실패 시 기존 산출물을 보존한다.
+            SafeFile.AtomicWrite(outputPath, tmpPath =>
             {
-                foreach (var field in schema.Fields.Where(f => !schema.ExcludedFields.Contains(f.Key)))
+                using var stream = new FileStream(tmpPath, FileMode.Create);
+                using var writer = new BinaryWriter(stream);
+
+                writer.Write(validRows.Count);
+
+                foreach (var item in validRows)
                 {
-                    try
+                    foreach (var field in schema.Fields.Where(f => !schema.ExcludedFields.Contains(f.Key)))
                     {
-                        WriteField(writer, field.Value, item.Data, header, headerMap, field.Key, feature);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception($"[Row {item.OriginalIndex}] Column '{field.Key}' error: {ex.Message}");
+                        try
+                        {
+                            WriteField(writer, field.Value, item.Data, header, headerMap, field.Key, feature);
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new Exception($"[Row {item.OriginalIndex}] Column '{field.Key}' error: {ex.Message}");
+                        }
                     }
                 }
-            }
+            });
         }
 
         private Dictionary<string, int> CreateHeaderMap(string[] header)
@@ -72,13 +76,11 @@ namespace ExcelBinder.Services
             var info = TypeParser.ParseType(type, fieldName);
             if (info.IsList)
             {
-                var indices = Enumerable.Range(0, header.Length)
-                    .Where(i => string.Equals(header[i]?.Trim(), info.ColumnName, StringComparison.OrdinalIgnoreCase))
-                    .ToList();
-                writer.Write(indices.Count);
-                foreach (var idx in indices)
+                var values = GetListValues(header, row, info);
+                writer.Write(values.Count);
+                foreach (var value in values)
                 {
-                    WritePrimitiveOrEnum(writer, info, row[idx]);
+                    WritePrimitiveOrEnum(writer, info, value);
                 }
             }
             else
@@ -87,6 +89,25 @@ namespace ExcelBinder.Services
                 string value = idx < row.Length ? row[idx] : "";
                 WritePrimitiveOrEnum(writer, info, value);
             }
+        }
+
+        /// <summary>
+        /// List 컬럼: 헤더에서 같은 이름의 열을 전부 수집합니다. NPOI는 후행 빈 셀을 저장하지
+        /// 않아 행 배열 길이가 제각각이므로, 범위 밖이거나 비어 있는 셀은 가변 길이 리스트로
+        /// 간주하고 건너뜁니다.
+        /// </summary>
+        private List<string> GetListValues(string[] header, string[] row, TypeInfo info)
+        {
+            var indices = Enumerable.Range(0, header.Length)
+                .Where(i => string.Equals(header[i]?.Trim(), info.ColumnName, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            if (indices.Count == 0)
+                LogService.Instance.Warning($"List column '{info.ColumnName}' not found in excel header. Exported as empty list. Please check your schema or excel file.");
+
+            return indices.Select(i => i < row.Length ? row[i] : "")
+                          .Where(v => !string.IsNullOrEmpty(v))
+                          .ToList();
         }
 
         private void WritePrimitiveOrEnum(BinaryWriter writer, TypeInfo info, string value)
@@ -147,7 +168,7 @@ namespace ExcelBinder.Services
                 result.Add(rowDict);
             }
 
-            File.WriteAllText(outputPath, JsonConvert.SerializeObject(result, Formatting.Indented));
+            SafeFile.AtomicWriteText(outputPath, JsonConvert.SerializeObject(result, Formatting.Indented));
         }
 
         private object ParseField(string type, string[] row, string[] header, Dictionary<string, int> headerMap, string fieldName, FeatureDefinition feature)
@@ -155,13 +176,10 @@ namespace ExcelBinder.Services
             var info = TypeParser.ParseType(type, fieldName);
             if (info.IsList)
             {
-                var indices = Enumerable.Range(0, header.Length)
-                    .Where(i => string.Equals(header[i]?.Trim(), info.ColumnName, StringComparison.OrdinalIgnoreCase))
-                    .ToList();
                 var list = new List<object>();
-                foreach (var idx in indices)
+                foreach (var value in GetListValues(header, row, info))
                 {
-                    list.Add(ParsePrimitiveOrEnum(info, row[idx]));
+                    list.Add(ParsePrimitiveOrEnum(info, value));
                 }
                 return list;
             }

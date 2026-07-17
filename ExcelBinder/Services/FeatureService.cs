@@ -22,12 +22,7 @@ namespace ExcelBinder.Services
         /// </summary>
         public AppSettings LoadSettings()
         {
-            if (File.Exists(SettingsFile))
-            {
-                var json = File.ReadAllText(SettingsFile);
-                return JsonConvert.DeserializeObject<AppSettings>(json) ?? new AppSettings();
-            }
-            return new AppSettings();
+            return SafeFile.LoadJsonOrDefault<AppSettings>(SettingsFile);
         }
 
         /// <summary>
@@ -36,7 +31,7 @@ namespace ExcelBinder.Services
         public void SaveSettings(AppSettings settings)
         {
             var json = JsonConvert.SerializeObject(settings, Formatting.Indented);
-            File.WriteAllText(SettingsFile, json);
+            SafeFile.AtomicWriteText(SettingsFile, json);
         }
 
         /// <summary>

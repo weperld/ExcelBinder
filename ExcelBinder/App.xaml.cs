@@ -21,8 +21,16 @@ public partial class App : Application
         if (e.Args.Length > 0)
         {
             IsCliMode = true;
-            RunCli(e.Args);
-            Shutdown();
+            try
+            {
+                RunCli(e.Args);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                Environment.ExitCode = 1;
+            }
+            Shutdown(Environment.ExitCode);
             return;
         }
 
@@ -46,14 +54,14 @@ public partial class App : Application
             switch (args[i])
             {
                 case ProjectConstants.CLI.Feature:
-                    if (i + 1 >= args.Length) { Console.WriteLine("Error: --feature requires a value."); return; }
+                    if (i + 1 >= args.Length) { Console.WriteLine("Error: --feature requires a value."); Environment.ExitCode = 1; return; }
                     featureId = args[++i];
                     break;
                 case ProjectConstants.CLI.All:
                     selectAll = true;
                     break;
                 case ProjectConstants.CLI.Bind:
-                    if (i + 1 >= args.Length) { Console.WriteLine("Error: --bind requires a value."); return; }
+                    if (i + 1 >= args.Length) { Console.WriteLine("Error: --bind requires a value."); Environment.ExitCode = 1; return; }
                     vm.Settings.BoundFeatures.Add(args[++i]);
                     featureService.SaveSettings(vm.Settings);
                     break;
@@ -118,12 +126,31 @@ public partial class App : Application
                         if (executeExport) await processor.ExecuteExportAsync(execVm);
                         if (executeCodeGen) await processor.ExecuteGenerateAsync(execVm);
                     }).GetAwaiter().GetResult();
+
+                    // Processor는 시트 단위 실패를 Error 로그로 남기고 계속 진행하므로,
+                    // CI가 실패를 감지할 수 있게 에러 로그 발생 여부를 exit code에 반영한다.
+                    if (LogService.Instance.ErrorCount > 0)
+                    {
+                        Console.WriteLine($"Finished with {LogService.Instance.ErrorCount} error(s).");
+                        Environment.ExitCode = 1;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"Error: Unknown category '{feature.Category}' for feature '{featureId}'.");
+                    Environment.ExitCode = 1;
                 }
             }
             else
             {
                 Console.WriteLine($"Feature '{featureId}' not found.");
+                Environment.ExitCode = 1;
             }
+        }
+        else if (executeExport || executeCodeGen || selectAll)
+        {
+            Console.WriteLine("Error: --export/--codegen/--all requires --feature <id>.");
+            Environment.ExitCode = 1;
         }
     }
 }
