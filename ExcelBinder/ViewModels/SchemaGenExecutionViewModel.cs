@@ -19,24 +19,8 @@ namespace ExcelBinder.ViewModels
 
         protected override bool IsSheetSelectable(bool isSchemaFound) => true;
 
-        private async void ExecuteGenerateCode()
-        {
-            if (IsBusy) return;
-            try
-            {
-                IsBusy = true;
-                await NavigateToSchemaEditorAsync();
-                ShowLogs();
-            }
-            catch (Exception ex)
-            {
-                ReportFatal("스키마 생성", ex);
-            }
-            finally
-            {
-                IsBusy = false;
-            }
-        }
+        private async void ExecuteGenerateCode() =>
+            await RunProcessorAsync("스키마 생성", _ => NavigateToSchemaEditorAsync());
 
         // SchemaGen은 SchemaEditor 화면 네비게이션이 필요한 GUI 전용 흐름이라 Processor가 아닌 VM에서 직접 처리한다.
         private System.Threading.Tasks.Task NavigateToSchemaEditorAsync()

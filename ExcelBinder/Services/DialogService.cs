@@ -49,9 +49,10 @@ namespace ExcelBinder.Services
             return dialog.ShowDialog() == true ? dialog.FileName : null;
         }
 
-        public string? BrowseSaveFile(string filter, string defaultFileName, string title = "")
+        public string? BrowseSaveFile(string filter, string defaultFileName, string title = "", string? initialDirectory = null)
         {
             var dialog = new SaveFileDialog { Filter = filter, FileName = defaultFileName, Title = title };
+            if (!string.IsNullOrEmpty(initialDirectory)) dialog.InitialDirectory = initialDirectory;
             return dialog.ShowDialog() == true ? dialog.FileName : null;
         }
 

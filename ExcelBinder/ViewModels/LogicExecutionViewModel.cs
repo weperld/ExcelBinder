@@ -17,24 +17,7 @@ namespace ExcelBinder.ViewModels
 
         protected override bool IsSheetSelectable(bool isSchemaFound) => true;
 
-        private async void ExecuteGenerateCode()
-        {
-            if (IsBusy) return;
-            try
-            {
-                IsBusy = true;
-                var processor = FeatureProcessorFactory.GetProcessor(_feature.Category);
-                await processor.ExecuteGenerateAsync(BuildRequest());
-                ShowLogs();
-            }
-            catch (Exception ex)
-            {
-                ReportFatal("코드 생성", ex);
-            }
-            finally
-            {
-                IsBusy = false;
-            }
-        }
+        private async void ExecuteGenerateCode() =>
+            await RunProcessorAsync("코드 생성", p => p.ExecuteGenerateAsync(BuildRequest()));
     }
 }

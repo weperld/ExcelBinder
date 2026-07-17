@@ -154,6 +154,29 @@ namespace ExcelBinder.ViewModels
             };
         }
 
+        /// <summary>
+        /// 공통 실행 골격: IsBusy 가드 → 실행 → 완료 시 로그 창, 치명 실패 시 오류 대화상자.
+        /// </summary>
+        protected async System.Threading.Tasks.Task RunProcessorAsync(
+            string operationName, Func<IFeatureProcessor, System.Threading.Tasks.Task> action)
+        {
+            if (IsBusy) return;
+            try
+            {
+                IsBusy = true;
+                await action(_processor);
+                ShowLogs();
+            }
+            catch (Exception ex)
+            {
+                ReportFatal(operationName, ex);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
         /// <summary>치명적 실패를 에러 로그 + 오류 대화상자 + 로그 창으로 사용자에게 알립니다.</summary>
         protected void ReportFatal(string operation, Exception ex)
         {

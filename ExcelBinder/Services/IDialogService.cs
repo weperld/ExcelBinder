@@ -12,7 +12,7 @@ namespace ExcelBinder.Services
         void ShowSettingsDialog(object viewModel);
         string? BrowseFolder(string title = "");
         string? BrowseOpenFile(string filter, string title = "");
-        string? BrowseSaveFile(string filter, string defaultFileName, string title = "");
+        string? BrowseSaveFile(string filter, string defaultFileName, string title = "", string? initialDirectory = null);
         bool ShowUpdateInfoDialog(string message, List<ReleaseNoteEntry> entries, string title);
         string? ShowInput(string title, string prompt, string? defaultValue = null, Func<string, string?>? validator = null);
         IReadOnlyList<string>? ShowFeatureSelectionDialog(string title, string prompt, IEnumerable<FeatureDefinition> allFeatures, IEnumerable<string> selectedFeatureIds);
