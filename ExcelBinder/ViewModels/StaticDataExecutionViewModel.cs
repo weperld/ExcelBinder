@@ -44,7 +44,7 @@ namespace ExcelBinder.ViewModels
             {
                 IsBusy = true;
                 var processor = FeatureProcessorFactory.GetProcessor(_feature.Category);
-                await processor.ExecuteExportAsync(this);
+                await processor.ExecuteExportAsync(BuildRequest());
                 ShowLogs();
             }
             catch (Exception ex)
@@ -64,7 +64,7 @@ namespace ExcelBinder.ViewModels
             {
                 IsBusy = true;
                 var processor = FeatureProcessorFactory.GetProcessor(_feature.Category);
-                await processor.ExecuteGenerateAsync(this);
+                await processor.ExecuteGenerateAsync(BuildRequest());
                 ShowLogs();
             }
             catch (Exception ex)

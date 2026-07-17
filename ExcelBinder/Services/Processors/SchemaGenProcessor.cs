@@ -1,8 +1,4 @@
-using System;
-using System.IO;
-using System.Linq;
 using ExcelBinder.Models;
-using ExcelBinder.ViewModels;
 
 namespace ExcelBinder.Services.Processors
 {
@@ -18,37 +14,17 @@ namespace ExcelBinder.Services.Processors
         public bool IsTemplatesVisible => false;
         public bool IsOutputOptionsVisible => false;
 
-        public System.Threading.Tasks.Task ExecuteExportAsync(IExecutionViewModel vm)
+        public System.Threading.Tasks.Task ExecuteExportAsync(ExecutionRequest request)
         {
             // SchemaGen doesn't support export
             return System.Threading.Tasks.Task.CompletedTask;
         }
 
-        public System.Threading.Tasks.Task ExecuteGenerateAsync(IExecutionViewModel vm)
+        public System.Threading.Tasks.Task ExecuteGenerateAsync(ExecutionRequest request)
         {
-            if (vm.SelectedFeature == null) return System.Threading.Tasks.Task.CompletedTask;
-            var selectedSheets = vm.ExcelFiles.SelectMany(f => f.Sheets.Where(s => s.IsSelected).Select(s => new { File = f, Sheet = s })).ToList();
-            if (selectedSheets.Count == 0)
-            {
-                LogService.Instance.Warning("Please select at least one sheet for schema generation.");
-                return System.Threading.Tasks.Task.CompletedTask;
-            }
-
-            if (!Directory.Exists(vm.SelectedFeature.SchemaPath)) Directory.CreateDirectory(vm.SelectedFeature.SchemaPath);
-
-            var targets = selectedSheets.Select(item => ((string)item.File.FullPath, (string)item.Sheet.SheetName));
-            var editorVm = new SchemaEditorViewModel(targets, vm.SelectedFeature?.SchemaPath ?? "");
-            editorVm.OnComplete += (success) =>
-            {
-                if (success)
-                {
-                    LogService.Instance.Info("Schema Generation Session Finished.");
-                    vm.RefreshFiles();
-                }
-                AppServices.Navigation.NavigateToExecution();
-            };
-            AppServices.Navigation.NavigateToSchemaEditor(editorVm);
-            
+            // SchemaGen은 SchemaEditor 화면 네비게이션이 필요한 GUI 전용 흐름이다.
+            // 실제 진입점은 SchemaGenExecutionViewModel의 커맨드 핸들러이며, CLI 등 헤드리스 호출은 여기서 안내만 하고 종료한다.
+            LogService.Instance.Warning("SchemaGen은 GUI 전용입니다. GUI에서 스키마 생성 화면을 이용해주세요.");
             return System.Threading.Tasks.Task.CompletedTask;
         }
 

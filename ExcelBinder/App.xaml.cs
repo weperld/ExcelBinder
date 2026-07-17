@@ -105,7 +105,7 @@ public partial class App : Application
             {
                 vm.SelectedFeature = feature;
 
-                IExecutionViewModel? execVm = ExecutionViewModelFactory.Create(feature, vm.Settings);
+                ExecutionViewModelBase? execVm = ExecutionViewModelFactory.Create(feature, vm.Settings);
 
                 if (execVm != null)
                 {
@@ -122,10 +122,11 @@ public partial class App : Application
                     }
 
                     var processor = FeatureProcessorFactory.GetProcessor(feature.Category);
+                    var request = execVm.BuildRequest();
                     Task.Run(async () =>
                     {
-                        if (executeExport) await processor.ExecuteExportAsync(execVm);
-                        if (executeCodeGen) await processor.ExecuteGenerateAsync(execVm);
+                        if (executeExport) await processor.ExecuteExportAsync(request);
+                        if (executeCodeGen) await processor.ExecuteGenerateAsync(request);
                     }).GetAwaiter().GetResult();
 
                     // Processor는 시트 단위 실패를 Error 로그로 남기고 계속 진행하므로,

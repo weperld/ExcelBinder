@@ -1,19 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
 using ExcelBinder.Models;
 using ExcelBinder.Services;
-using ExcelBinder.Services.Processors;
 
 namespace ExcelBinder.ViewModels
 {
-    public abstract class ExecutionViewModelBase : ViewModelBase, IExecutionViewModel
+    public abstract class ExecutionViewModelBase : ViewModelBase
     {
         protected readonly ExcelService _excelService = new();
-        protected readonly CodeGeneratorService _codeGenService = new();
         protected readonly FeatureDefinition _feature;
         private readonly IFeatureProcessor _processor;
         private string _namespace;
@@ -136,47 +133,25 @@ namespace ExcelBinder.ViewModels
         }
 
         public string GetSchemaPath(string excelFullPath, string sheetName)
+            => SchemaLocator.Resolve(_feature.SchemaPath, excelFullPath, sheetName);
+
+        /// <summary>현재 선택 상태를 Processor에 전달할 불변 DTO로 변환합니다.</summary>
+        public ExecutionRequest BuildRequest()
         {
-            string excelName = Path.GetFileNameWithoutExtension(excelFullPath);
+            var selectedSheets = ExcelFiles
+                .SelectMany(f => f.Sheets.Where(s => s.IsSelected).Select(s => new SheetTarget(f.FullPath, s.SheetName)))
+                .ToList();
+            var selectedFiles = ExcelFiles.Where(f => f.IsSelected).Select(f => f.FullPath).ToList();
 
-            // Try [ExcelName]_[SheetName]_Schema.json
-            string path1 = Path.Combine(_feature.SchemaPath, $"{excelName}_{sheetName}_Schema{ProjectConstants.Extensions.Json}");
-            if (File.Exists(path1)) return path1;
-
-            // Try [ExcelName]_Schema.json
-            string path2 = Path.Combine(_feature.SchemaPath, $"{excelName}_Schema{ProjectConstants.Extensions.Json}");
-            if (File.Exists(path2)) return path2;
-
-            // Fallback to sheetName.json
-            string path3 = Path.Combine(_feature.SchemaPath, sheetName + ProjectConstants.Extensions.Json);
-            if (File.Exists(path3)) return path3;
-
-            return path1; // Default to the most specific one
-        }
-
-        public void ProcessSchema(string schemaFile, List<SchemaDefinition> schemas)
-        {
-            try
+            return new ExecutionRequest
             {
-                var schema = Newtonsoft.Json.JsonConvert.DeserializeObject<SchemaDefinition>(File.ReadAllText(schemaFile));
-                if (schema == null)
-                {
-                    LogService.Instance.Error($"Failed to deserialize schema: {schemaFile}");
-                    return;
-                }
-                schemas.Add(schema);
-
-                string? code = _codeGenService.GenerateDataCode(schema, SelectedFeature, Namespace);
-                if (!string.IsNullOrEmpty(code))
-                {
-                    SafeFile.AtomicWriteText(Path.Combine(SelectedFeature.ScriptsPath, schema.ClassName + ProjectConstants.Extensions.CSharp), code);
-                    LogService.Instance.Info($"Generated Code: {schema.ClassName}");
-                }
-            }
-            catch (Exception ex)
-            {
-                LogService.Instance.Error($"Error processing schema {Path.GetFileName(schemaFile)}: {ex.Message}");
-            }
+                Feature = _feature,
+                SelectedSheets = selectedSheets,
+                SelectedFiles = selectedFiles,
+                Namespace = Namespace,
+                ExportBinary = IsBinaryChecked,
+                ExportJson = IsJsonChecked
+            };
         }
 
         /// <summary>치명적 실패를 에러 로그 + 오류 대화상자 + 로그 창으로 사용자에게 알립니다.</summary>

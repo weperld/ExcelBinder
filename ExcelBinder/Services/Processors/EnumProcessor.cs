@@ -1,11 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ExcelBinder.Models;
-using ExcelBinder.ViewModels;
 
 namespace ExcelBinder.Services.Processors
 {
@@ -23,7 +22,7 @@ namespace ExcelBinder.Services.Processors
         public bool IsTemplatesVisible => false;
         public bool IsOutputOptionsVisible => false;
 
-        public Task ExecuteExportAsync(IExecutionViewModel vm) => Task.CompletedTask;
+        public Task ExecuteExportAsync(ExecutionRequest request) => Task.CompletedTask;
 
         public async Task CreateTemplateAsync(string filePath)
         {
@@ -42,40 +41,36 @@ namespace ExcelBinder.Services.Processors
             });
         }
 
-        public async Task ExecuteGenerateAsync(IExecutionViewModel vm)
+        public async Task ExecuteGenerateAsync(ExecutionRequest request)
         {
-            if (vm.SelectedFeature == null) return;
-
             LogService.Instance.Clear();
             LogService.Instance.Info("Starting Enum Code Generation...");
 
-            var selectedFiles = vm.ExcelFiles.Where(f => f.IsSelected).ToList();
-
-            if (selectedFiles.Count == 0)
+            if (request.SelectedFiles.Count == 0)
             {
                 LogService.Instance.Warning("Please select at least one excel file.");
                 return;
             }
 
-            if (!Directory.Exists(vm.SelectedFeature.ScriptsPath))
-                Directory.CreateDirectory(vm.SelectedFeature.ScriptsPath);
+            if (!Directory.Exists(request.Feature.ScriptsPath))
+                Directory.CreateDirectory(request.Feature.ScriptsPath);
 
-            foreach (var file in selectedFiles)
+            foreach (var filePath in request.SelectedFiles)
             {
                 try
                 {
-                    await ProcessFile(file.FullPath, vm);
+                    await ProcessFile(filePath, request);
                 }
                 catch (Exception ex)
                 {
-                    LogService.Instance.Error($"Error processing file {file.FileName}: {ex.Message}");
+                    LogService.Instance.Error($"Error processing file {Path.GetFileName(filePath)}: {ex.Message}");
                 }
             }
 
             LogService.Instance.Info("Enum Code Generation Finished.");
         }
 
-        private async Task ProcessFile(string filePath, IExecutionViewModel vm)
+        private async Task ProcessFile(string filePath, ExecutionRequest request)
         {
             var sheetNames = _excelService.GetSheetNames(filePath);
 
@@ -112,7 +107,7 @@ namespace ExcelBinder.Services.Processors
             {
                 var row = rawData[i];
                 if (row.Length <= nameIdx || string.IsNullOrWhiteSpace(row[nameIdx])) continue;
-                
+
                 // Prefix # rule
                 if (row[nameIdx].TrimStart().StartsWith(ProjectConstants.Excel.CommentPrefix)) continue;
 
@@ -120,14 +115,12 @@ namespace ExcelBinder.Services.Processors
                 string underlyingType = typeIdx != -1 && row.Length > typeIdx ? row[typeIdx].Trim() : "";
                 bool isFlag = flagIdx != -1 && row.Length > flagIdx && row[flagIdx].Trim().Equals("true", StringComparison.OrdinalIgnoreCase);
 
-                await GenerateEnum(enumName, underlyingType, isFlag, vm, filePath, allSheetData);
+                await GenerateEnum(enumName, underlyingType, isFlag, request, filePath, allSheetData);
             }
         }
 
-        private async Task GenerateEnum(string enumName, string underlyingType, bool isFlag, IExecutionViewModel vm, string filePath, Dictionary<string, List<string[]>> sheetData)
+        private async Task GenerateEnum(string enumName, string underlyingType, bool isFlag, ExecutionRequest request, string filePath, Dictionary<string, List<string[]>> sheetData)
         {
-            if (vm.SelectedFeature == null) return;
-
             if (!sheetData.TryGetValue(enumName, out var rawData))
             {
                 LogService.Instance.Warning($"Sheet '{enumName}' not found in {Path.GetFileName(filePath)}. Skipping Enum generation.");
@@ -153,7 +146,7 @@ namespace ExcelBinder.Services.Processors
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("using System;");
             sb.AppendLine();
-            sb.AppendLine($"namespace {vm.Namespace}");
+            sb.AppendLine($"namespace {request.Namespace}");
             sb.AppendLine("{");
 
             if (isFlag)
@@ -170,7 +163,7 @@ namespace ExcelBinder.Services.Processors
             {
                 var row = rawData[i];
                 if (row.Length <= nameIdx || string.IsNullOrWhiteSpace(row[nameIdx])) continue;
-                
+
                 // Prefix # rule
                 if (row[nameIdx].TrimStart().StartsWith(ProjectConstants.Excel.CommentPrefix)) continue;
 
@@ -205,7 +198,7 @@ namespace ExcelBinder.Services.Processors
 
             if (generatedEntries > 0)
             {
-                string outputPath = Path.Combine(vm.SelectedFeature.ScriptsPath, enumName + ProjectConstants.Extensions.CSharp);
+                string outputPath = Path.Combine(request.Feature.ScriptsPath, enumName + ProjectConstants.Extensions.CSharp);
                 await Task.Run(() => SafeFile.AtomicWriteText(outputPath, sb.ToString()));
                 LogService.Instance.Info($"Successfully generated Enum: {enumName} ({generatedEntries} members)");
             }

@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ExcelBinder.Models;
-using ExcelBinder.ViewModels;
 
 namespace ExcelBinder.Services.Processors
 {
@@ -23,46 +21,40 @@ namespace ExcelBinder.Services.Processors
         public bool IsTemplatesVisible => false;
         public bool IsOutputOptionsVisible => false;
 
-        public Task ExecuteExportAsync(IExecutionViewModel vm) => Task.CompletedTask;
+        public Task ExecuteExportAsync(ExecutionRequest request) => Task.CompletedTask;
 
-        public async Task ExecuteGenerateAsync(IExecutionViewModel vm)
+        public async Task ExecuteGenerateAsync(ExecutionRequest request)
         {
-            if (vm.SelectedFeature == null) return;
-
             LogService.Instance.Clear();
             LogService.Instance.Info("Starting Constants Code Generation...");
 
-            var selectedSheets = vm.ExcelFiles.SelectMany(f => f.Sheets.Where(s => s.IsSelected).Select(s => new { File = f, Sheet = s })).ToList();
-
-            if (selectedSheets.Count == 0)
+            if (request.SelectedSheets.Count == 0)
             {
                 LogService.Instance.Warning("Please select at least one sheet.");
                 return;
             }
 
-            if (!Directory.Exists(vm.SelectedFeature.ScriptsPath))
-                Directory.CreateDirectory(vm.SelectedFeature.ScriptsPath);
+            if (!Directory.Exists(request.Feature.ScriptsPath))
+                Directory.CreateDirectory(request.Feature.ScriptsPath);
 
-            foreach (var item in selectedSheets)
+            foreach (var sheet in request.SelectedSheets)
             {
                 try
                 {
-                    await ProcessSheet(item.File.FullPath, item.Sheet.SheetName, vm, _excelService);
+                    await ProcessSheet(sheet.FilePath, sheet.SheetName, request);
                 }
                 catch (Exception ex)
                 {
-                    LogService.Instance.Error($"Error processing sheet '{item.Sheet.SheetName}' in {item.File.FileName}: {ex.Message}");
+                    LogService.Instance.Error($"Error processing sheet '{sheet.SheetName}' in {Path.GetFileName(sheet.FilePath)}: {ex.Message}");
                 }
             }
 
             LogService.Instance.Info("Constants Code Generation Finished.");
         }
 
-        private async Task ProcessSheet(string filePath, string sheetName, IExecutionViewModel vm, ExcelService excelService)
+        private async Task ProcessSheet(string filePath, string sheetName, ExecutionRequest request)
         {
-            if (vm.SelectedFeature == null) return;
-
-            var rawData = excelService.ReadExcel(filePath, sheetName).ToList();
+            var rawData = _excelService.ReadExcel(filePath, sheetName).ToList();
             if (rawData.Count < 1)
             {
                 LogService.Instance.Warning($"Sheet '{sheetName}' in {Path.GetFileName(filePath)} is empty.");
@@ -83,7 +75,7 @@ namespace ExcelBinder.Services.Processors
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("using System;");
             sb.AppendLine();
-            sb.AppendLine($"namespace {vm.Namespace}");
+            sb.AppendLine($"namespace {request.Namespace}");
             sb.AppendLine("{");
             sb.AppendLine($"    public static partial class {sheetName}");
             sb.AppendLine("    {");
@@ -124,7 +116,7 @@ namespace ExcelBinder.Services.Processors
 
             if (generatedEntries > 0)
             {
-                string outputPath = Path.Combine(vm.SelectedFeature.ScriptsPath, sheetName + ProjectConstants.Extensions.CSharp);
+                string outputPath = Path.Combine(request.Feature.ScriptsPath, sheetName + ProjectConstants.Extensions.CSharp);
                 await Task.Run(() => SafeFile.AtomicWriteText(outputPath, sb.ToString()));
                 LogService.Instance.Info($"Successfully generated Constants: {sheetName} ({generatedEntries} constants)");
             }

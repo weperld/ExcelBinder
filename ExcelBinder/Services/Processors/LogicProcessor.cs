@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Linq;
 using ExcelBinder.Models;
-using ExcelBinder.ViewModels;
 
 namespace ExcelBinder.Services.Processors
 {
@@ -22,57 +21,54 @@ namespace ExcelBinder.Services.Processors
         public bool IsTemplatesVisible => true;
         public bool IsOutputOptionsVisible => false;
 
-        public System.Threading.Tasks.Task ExecuteExportAsync(IExecutionViewModel vm)
+        public System.Threading.Tasks.Task ExecuteExportAsync(ExecutionRequest request)
         {
             // Logic doesn't support export
             return System.Threading.Tasks.Task.CompletedTask;
         }
 
-        public async System.Threading.Tasks.Task ExecuteGenerateAsync(IExecutionViewModel vm)
+        public async System.Threading.Tasks.Task ExecuteGenerateAsync(ExecutionRequest request)
         {
-            if (vm.SelectedFeature == null) return;
-            
-            if (string.IsNullOrEmpty(vm.SelectedFeature.Templates.DataClass) || !File.Exists(vm.SelectedFeature.Templates.DataClass))
+            if (string.IsNullOrEmpty(request.Feature.Templates.DataClass) || !File.Exists(request.Feature.Templates.DataClass))
             {
                 LogService.Instance.Clear();
-                LogService.Instance.Warning($"Template file not found: {vm.SelectedFeature.Templates.DataClass}. Code generation cancelled.");
+                LogService.Instance.Warning($"Template file not found: {request.Feature.Templates.DataClass}. Code generation cancelled.");
                 return;
             }
 
-            if (!Directory.Exists(vm.SelectedFeature.ScriptsPath)) Directory.CreateDirectory(vm.SelectedFeature.ScriptsPath);
+            if (!Directory.Exists(request.Feature.ScriptsPath)) Directory.CreateDirectory(request.Feature.ScriptsPath);
 
-            var selectedSheets = vm.ExcelFiles.SelectMany(f => f.Sheets.Where(s => s.IsSelected).Select(s => new { File = f, Sheet = s })).ToList();
-            if (selectedSheets.Count == 0)
+            if (request.SelectedSheets.Count == 0)
             {
                 LogService.Instance.Warning("Please select at least one sheet for logic generation.");
                 return;
             }
 
             LogService.Instance.Clear();
-            LogService.Instance.Info($"Starting Logic Generation for {selectedSheets.Count} sheets...");
+            LogService.Instance.Info($"Starting Logic Generation for {request.SelectedSheets.Count} sheets...");
 
-            foreach (var item in selectedSheets)
+            foreach (var sheet in request.SelectedSheets)
             {
                 try
                 {
-                    var data = await System.Threading.Tasks.Task.Run(() => _excelService.ReadExcel(item.File.FullPath, item.Sheet.SheetName).ToList());
+                    var data = await System.Threading.Tasks.Task.Run(() => _excelService.ReadExcel(sheet.FilePath, sheet.SheetName).ToList());
                     if (data.Count < 1) continue; // 최소 1행 필요 (첫 행 헤더)
 
-                    string className = item.Sheet.SheetName;
-                    var context = await System.Threading.Tasks.Task.Run(() => _logicParserService.PrepareLogicContext(data, vm.SelectedFeature, vm.Namespace, className));
-                    string? code = await System.Threading.Tasks.Task.Run(() => _codeGenService.GenerateLogicCode(context, vm.SelectedFeature));
+                    string className = sheet.SheetName;
+                    var context = await System.Threading.Tasks.Task.Run(() => _logicParserService.PrepareLogicContext(data, request.Feature, request.Namespace, className));
+                    string? code = await System.Threading.Tasks.Task.Run(() => _codeGenService.GenerateLogicCode(context, request.Feature));
                     if (!string.IsNullOrEmpty(code))
                     {
-                        await System.Threading.Tasks.Task.Run(() => SafeFile.AtomicWriteText(Path.Combine(vm.SelectedFeature.ScriptsPath, className + ProjectConstants.Extensions.CSharp), code));
+                        await System.Threading.Tasks.Task.Run(() => SafeFile.AtomicWriteText(Path.Combine(request.Feature.ScriptsPath, className + ProjectConstants.Extensions.CSharp), code));
                         LogService.Instance.Info($"Generated Logic: {className}");
                     }
                 }
                 catch (Exception ex)
                 {
-                    LogService.Instance.Error($"Error generating logic for {item.Sheet.SheetName}: {ex.Message}");
+                    LogService.Instance.Error($"Error generating logic for {sheet.SheetName}: {ex.Message}");
                 }
             }
-            
+
             LogService.Instance.Info("Logic Generation Finished.");
         }
 
