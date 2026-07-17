@@ -127,6 +127,28 @@ Phase 5. Q1 오버레이 (3ca3728) / Q2+Q3+B4 (a1e67a3)       — 완료
 Phase 6. D4+S1 (b2a36fa) / D3+S2+D5+D6 (f4c7318)          — 완료
 ```
 
+## 2차 구조 리팩터 (2026-07-17, "구조적으로 더 없을까?" 후속)
+
+재분석 결과 추진 4건 / 보류 5건. 전부 완료:
+
+```
+P4. 헤더 탐색 helper(FindColumn) 통합 + 생성 .cs 원자적 쓰기 4곳   — 완료 (4ec0fae)
+P1. IFeatureProcessor VM 의존 제거 — ExecutionRequest DTO 도입,
+    SchemaLocator 분리, IExecutionViewModel 삭제,
+    SchemaGen CLI 크래시(Navigation 미초기화) 해소                — 완료 (f114adf)
+P2. 실행 VM 골격 7벌 → RunProcessorAsync 통합, Enum/Constants
+    공통 로직 TemplateCodeGenExecutionViewModel로 (순삭감 117줄)   — 완료 (2ac6d19)
+P3. CLI의 MainViewModel 의존 제거 — FeatureService.LoadAllFeatures
+    추출. 보류였던 B11(LastFeatureId 오염)·B12(CLI HTTP)·B14(중복
+    호출)가 부수 해소됨                                          — 완료 (40ff3e5)
+P5. ProcessorTests 4종 추가 (총 58개 테스트)                      — 완료
+```
+
+**보류 판정 (근거)**: 전면 DI/AppServices 제거(settable static이라 테스트 주입 이미 가능, 42개 사용처 churn),
+GroupViewModel 추출(로직은 이미 서비스에 있음, XAML 바인딩 전면 변경 리스크만 큼),
+ExecutionViewModelBase 추가 분해(P1 후 적정 규모), DialogService의 C# UI 조립 XAML화(이득 0),
+코드젠 StringBuilder 골격 공통화(enum/class 구조 상이 — 투기적 추상화).
+
 ### 수정 중 확정된 동작 변경 (주의)
 - **List 빈 셀 의미**: List 컬럼의 빈 셀(중간/후행)은 이제 건너뛴 가변 길이
   리스트로 처리 (기존: 후행 빈 셀은 크래시, 중간 빈 셀은 int면 크래시)
