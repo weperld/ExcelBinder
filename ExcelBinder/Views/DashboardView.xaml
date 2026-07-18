@@ -25,13 +25,13 @@
                     </Grid.RowDefinitions>
                     
                     <DockPanel>
-                        <Border Background="{StaticResource LightBackgroundBrush}" CornerRadius="4" Padding="6,2" DockPanel.Dock="Right">
+                        <Border Background="{DynamicResource LightBackgroundBrush}" CornerRadius="4" Padding="6,2" DockPanel.Dock="Right">
                             <TextBlock Text="{Binding Category}" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TagTextBrush}"/>
                         </Border>
                         <TextBlock Text="{Binding Name}" FontSize="18" FontWeight="Bold" TextTrimming="CharacterEllipsis"/>
                     </DockPanel>
 
-                    <TextBlock Grid.Row="1" Text="{Binding Description}" FontSize="13" Foreground="{StaticResource MutedTextBrush}" 
+                    <TextBlock Grid.Row="1" Text="{Binding Description}" FontSize="13" Foreground="{DynamicResource MutedTextBrush}" 
                                TextWrapping="Wrap" Margin="0,10,0,0" LineHeight="18"/>
 
                     <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
@@ -80,8 +80,8 @@
         </Grid.RowDefinitions>
 
         <StackPanel Margin="0,5,0,30">
-            <TextBlock Text="Excel Binder" FontSize="32" FontWeight="Bold" Padding="0,5,0,0" Foreground="{StaticResource PrimaryBrush}"/>
-            <TextBlock Text="데이터 추출 및 코드 생성 Feature를 관리하세요" FontSize="14" Foreground="{StaticResource MutedTextBrush}"/>
+            <TextBlock Text="Excel Binder" FontSize="32" FontWeight="Bold" Padding="0,5,0,0" Foreground="{DynamicResource PrimaryBrush}"/>
+            <TextBlock Text="데이터 추출 및 코드 생성 Feature를 관리하세요" FontSize="14" Foreground="{DynamicResource MutedTextBrush}"/>
 
         </StackPanel>
 
@@ -92,7 +92,7 @@
             </Grid.ColumnDefinitions>
 
             <Border Grid.Column="0" Margin="0,0,15,0" Padding="0,0,15,0"
-                    BorderThickness="0,0,1,0" BorderBrush="{StaticResource BorderBrush}">
+                    BorderThickness="0,0,1,0" BorderBrush="{DynamicResource BorderBrush}">
                 <DockPanel>
                     <Button DockPanel.Dock="Top" Content="+ 새 그룹"
                             Command="{Binding AddGroupCommand}"
@@ -142,7 +142,7 @@
                         Visibility="{Binding IsCustomGroupSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <Grid>
                         <TextBlock Text="{Binding SelectedGroupName}" FontSize="18" FontWeight="SemiBold"
-                                   Foreground="{StaticResource PrimaryBrush}" VerticalAlignment="Center"/>
+                                   Foreground="{DynamicResource PrimaryBrush}" VerticalAlignment="Center"/>
                         <Button Content="Feature 관리" HorizontalAlignment="Right"
                                 Command="{Binding ManageGroupMembersCommand}"
                                 Style="{StaticResource SecondaryButton}" Width="140" Height="32"/>
@@ -173,7 +173,7 @@
             </DockPanel>
         </Grid>
 
-        <Border Grid.Row="2" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,1,0,0" Padding="0,20,0,0">
+        <Border Grid.Row="2" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,1,0,0" Padding="0,20,0,0">
             <Grid>
                 <StackPanel Orientation="Horizontal">
                     <Button Content="설정" Command="{Binding NavigateToSettingsCommand}" Width="100" Height="36" Margin="0,0,10,0"/>

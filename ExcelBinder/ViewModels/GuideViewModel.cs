@@ -102,8 +102,8 @@ namespace ExcelBinder.ViewModels
         /// </summary>
         private static void ApplySectionAlternation(FlowDocument doc)
         {
-            var bgA = new SolidColorBrush(Color.FromRgb(0xF8, 0xFA, 0xFC));
-            var bgB = new SolidColorBrush(Color.FromRgb(0xEE, 0xF2, 0xF8));
+            var bgA = ResolveThemeBrush("SectionAltBackgroundBrushA", 0xF8, 0xFA, 0xFC);
+            var bgB = ResolveThemeBrush("SectionAltBackgroundBrushB", 0xEE, 0xF2, 0xF8);
 
             var blocks = doc.Blocks.ToList();
             var preamble = new List<Block>();
@@ -167,8 +167,20 @@ namespace ExcelBinder.ViewModels
             doc.IsOptimalParagraphEnabled = true;
             doc.IsHyphenationEnabled = false;
             doc.TextAlignment = TextAlignment.Left;
-            doc.Foreground = new System.Windows.Media.SolidColorBrush(
-                System.Windows.Media.Color.FromRgb(0x1F, 0x1F, 0x1F));
+            doc.Foreground = ResolveThemeBrush("GuideBodyTextBrush", 0x1F, 0x1F, 0x1F);
+        }
+
+        /// <summary>
+        /// 테마 리소스에서 브러시를 조회하고, Application.Current가 null이거나 키가 없으면
+        /// 기존 하드코딩 값으로 폴백합니다 (테스트 환경 대비).
+        /// </summary>
+        private static SolidColorBrush ResolveThemeBrush(string resourceKey, byte r, byte g, byte b)
+        {
+            if (Application.Current?.Resources[resourceKey] is SolidColorBrush brush)
+            {
+                return brush;
+            }
+            return new SolidColorBrush(Color.FromRgb(r, g, b));
         }
 
         private static FlowDocument BuildFallbackDocument(string title)

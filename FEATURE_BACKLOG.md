@@ -42,6 +42,9 @@
 ### 신규 기능 후보
 - [ ] **기능 5 잔여** — 인앱 업데이트: 방식 A(zip 다운로드+진행률)는 구현 완료.
   방식 B(자동 교체+재시작) / 방식 C(Velopack 등 프레임워크)는 미채택 상태 (하단 상세 참조)
+- [ ] **다크 모드** — 준비 리팩터 완료(테마 리소스 분리 + DynamicResource 전환, 2026-07-19).
+  남은 일: 다크 팔레트 설계(DarkTheme.xaml), AppSettings.Theme 영속화, 설정 토글 UI,
+  MergedDictionaries 스왑 로직, 가이드 FlowDocument 색상 보정(GuideViewModel에서 일괄)
 
 ---
 

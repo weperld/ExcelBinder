@@ -1,0 +1,45 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Base Colors -->
+    <Color x:Key="PrimaryColor">#007ACC</Color>
+    <Color x:Key="SecondaryColor">#28A745</Color>
+    <Color x:Key="WarningColor">#FFC107</Color>
+    <Color x:Key="DangerColor">#DC3545</Color>
+    <Color x:Key="BorderColor">#DEE2E6</Color>
+    <Color x:Key="LightBackgroundColor">#F8F9FA</Color>
+    <Color x:Key="DarkTextColor">#212529</Color>
+    <Color x:Key="MutedTextColor">#6C757D</Color>
+    <Color x:Key="ShadowColor">#000000</Color>
+
+    <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource PrimaryColor}"/>
+    <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource SecondaryColor}"/>
+    <SolidColorBrush x:Key="WarningBrush" Color="{StaticResource WarningColor}"/>
+    <SolidColorBrush x:Key="DangerBrush" Color="{StaticResource DangerColor}"/>
+    <SolidColorBrush x:Key="BorderBrush" Color="{StaticResource BorderColor}"/>
+    <SolidColorBrush x:Key="LightBackgroundBrush" Color="{StaticResource LightBackgroundColor}"/>
+    <SolidColorBrush x:Key="DarkTextBrush" Color="{StaticResource DarkTextColor}"/>
+    <SolidColorBrush x:Key="MutedTextBrush" Color="{StaticResource MutedTextColor}"/>
+    <SolidColorBrush x:Key="TagTextBrush" Color="#444444"/>
+
+    <!-- ToolTip -->
+    <SolidColorBrush x:Key="TooltipBackgroundBrush" Color="#333333"/>
+
+    <!-- MainWindow: 업데이트 토스트 릴리즈 노트 교대 행 -->
+    <SolidColorBrush x:Key="AltRowBackgroundBrush" Color="#E8E8E8"/>
+
+    <!-- MainWindow: 로딩 오버레이 스크림 -->
+    <SolidColorBrush x:Key="OverlayBackgroundBrush" Color="#55000000"/>
+
+    <!-- GuideWindow: 사이드바 TreeView 톤다운 하이라이트 -->
+    <SolidColorBrush x:Key="GuideTreeTextBrush" Color="#222222"/>
+    <SolidColorBrush x:Key="GuideTreeHoverBrush" Color="#EEF2FA"/>
+    <SolidColorBrush x:Key="GuideTreeHighlightBrush" Color="#DDE5F5"/>
+    <SolidColorBrush x:Key="GuideTreeHighlightInactiveBrush" Color="#E5EAF3"/>
+
+    <!-- GuideViewModel: 본문 섹션 교대 배경 + 기본 텍스트색 (코드비하인드 Application.Current.Resources 조회) -->
+    <SolidColorBrush x:Key="SectionAltBackgroundBrushA" Color="#F8FAFC"/>
+    <SolidColorBrush x:Key="SectionAltBackgroundBrushB" Color="#EEF2F8"/>
+    <SolidColorBrush x:Key="GuideBodyTextBrush" Color="#1F1F1F"/>
+
+</ResourceDictionary>

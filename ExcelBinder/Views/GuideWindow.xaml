@@ -17,7 +17,7 @@
             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="Padding" Value="0"/>
-            <Setter Property="Foreground" Value="#222"/>
+            <Setter Property="Foreground" Value="{DynamicResource GuideTreeTextBrush}"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type TreeViewItem}">
@@ -48,17 +48,17 @@
                                 <Setter TargetName="ItemsHost" Property="Visibility" Value="Visible"/>
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True" SourceName="HeaderBorder">
-                                <Setter TargetName="HeaderBorder" Property="Background" Value="#EEF2FA"/>
+                                <Setter TargetName="HeaderBorder" Property="Background" Value="{DynamicResource GuideTreeHoverBrush}"/>
                             </Trigger>
                             <Trigger Property="IsSelected" Value="True">
-                                <Setter TargetName="HeaderBorder" Property="Background" Value="#DDE5F5"/>
+                                <Setter TargetName="HeaderBorder" Property="Background" Value="{DynamicResource GuideTreeHighlightBrush}"/>
                             </Trigger>
                             <MultiTrigger>
                                 <MultiTrigger.Conditions>
                                     <Condition Property="IsSelected" Value="True"/>
                                     <Condition Property="IsSelectionActive" Value="False"/>
                                 </MultiTrigger.Conditions>
-                                <Setter TargetName="HeaderBorder" Property="Background" Value="#E5EAF3"/>
+                                <Setter TargetName="HeaderBorder" Property="Background" Value="{DynamicResource GuideTreeHighlightInactiveBrush}"/>
                             </MultiTrigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -78,8 +78,8 @@
 
         <!-- 사이드바 트리 -->
         <Border Grid.Row="0" Grid.Column="0"
-                Background="{StaticResource LightBackgroundBrush}"
-                BorderBrush="{StaticResource BorderBrush}"
+                Background="{DynamicResource LightBackgroundBrush}"
+                BorderBrush="{DynamicResource BorderBrush}"
                 BorderThickness="0,0,1,0">
             <TreeView x:Name="TopicTree"
                       ItemsSource="{Binding Categories}"
@@ -91,7 +91,7 @@
                 <TreeView.ItemTemplate>
                     <HierarchicalDataTemplate ItemsSource="{Binding Topics}">
                         <TextBlock Text="{Binding Title}" FontWeight="Bold" FontSize="14"
-                                   Foreground="{StaticResource PrimaryBrush}"/>
+                                   Foreground="{DynamicResource PrimaryBrush}"/>
                         <HierarchicalDataTemplate.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Title}" FontSize="13"/>
@@ -114,7 +114,7 @@
 
         <!-- 하단 바 -->
         <Border Grid.Row="1" Grid.ColumnSpan="2"
-                BorderBrush="{StaticResource BorderBrush}"
+                BorderBrush="{DynamicResource BorderBrush}"
                 BorderThickness="0,1,0,0"
                 Background="White"
                 Padding="16,10">

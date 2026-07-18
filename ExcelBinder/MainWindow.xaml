@@ -1,4 +1,4 @@
-﻿<Window x:Class="ExcelBinder.MainWindow"
+<Window x:Class="ExcelBinder.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -24,17 +24,17 @@
             <Button.Template>
                 <ControlTemplate TargetType="Button">
                     <Border x:Name="HelpBorder" Background="White" CornerRadius="18"
-                            BorderBrush="{StaticResource PrimaryBrush}" BorderThickness="2">
+                            BorderBrush="{DynamicResource PrimaryBrush}" BorderThickness="2">
                         <Border.Effect>
-                            <DropShadowEffect BlurRadius="8" ShadowDepth="2" Opacity="0.2" Color="#000000"/>
+                            <DropShadowEffect BlurRadius="8" ShadowDepth="2" Opacity="0.2" Color="{DynamicResource ShadowColor}"/>
                         </Border.Effect>
                         <TextBlock Text="?" FontSize="18" FontWeight="Bold"
-                                   Foreground="{StaticResource PrimaryBrush}"
+                                   Foreground="{DynamicResource PrimaryBrush}"
                                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="HelpBorder" Property="Background" Value="{StaticResource LightBackgroundBrush}"/>
+                            <Setter TargetName="HelpBorder" Property="Background" Value="{DynamicResource LightBackgroundBrush}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -49,21 +49,21 @@
             <Button.Template>
                 <ControlTemplate TargetType="Button">
                     <Border x:Name="IndicatorBorder" Background="White" CornerRadius="18"
-                            BorderBrush="{StaticResource SecondaryBrush}" BorderThickness="2">
+                            BorderBrush="{DynamicResource SecondaryBrush}" BorderThickness="2">
                         <Border.Effect>
-                            <DropShadowEffect BlurRadius="8" ShadowDepth="2" Opacity="0.2" Color="#000000"/>
+                            <DropShadowEffect BlurRadius="8" ShadowDepth="2" Opacity="0.2" Color="{DynamicResource ShadowColor}"/>
                         </Border.Effect>
                         <Grid>
                             <TextBlock Text="🔔" FontSize="15"
                                        HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             <!-- Red dot indicator -->
-                            <Ellipse Width="10" Height="10" Fill="{StaticResource DangerBrush}"
+                            <Ellipse Width="10" Height="10" Fill="{DynamicResource DangerBrush}"
                                      HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-2,-2,0"/>
                         </Grid>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="IndicatorBorder" Property="Background" Value="{StaticResource LightBackgroundBrush}"/>
+                            <Setter TargetName="IndicatorBorder" Property="Background" Value="{DynamicResource LightBackgroundBrush}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -73,10 +73,10 @@
         <!-- Update Toast Notification -->
         <Border HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,15,20,0"
                 Visibility="{Binding Update.IsUpdateBannerVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
-                Background="White" BorderBrush="{StaticResource SecondaryBrush}" BorderThickness="1"
+                Background="White" BorderBrush="{DynamicResource SecondaryBrush}" BorderThickness="1"
                 CornerRadius="8" Padding="24,18" Width="450">
             <Border.Effect>
-                <DropShadowEffect BlurRadius="15" ShadowDepth="3" Opacity="0.25" Color="#000000"/>
+                <DropShadowEffect BlurRadius="15" ShadowDepth="3" Opacity="0.25" Color="{DynamicResource ShadowColor}"/>
             </Border.Effect>
             <StackPanel>
                 <DockPanel Margin="0,0,0,8">
@@ -93,15 +93,15 @@
                                     <StackPanel>
                                         <TextBlock Text="{Binding VersionTag, StringFormat={}{0}}"
                                                    FontSize="19" FontWeight="Bold"
-                                                   Foreground="{StaticResource SecondaryBrush}" Margin="0,0,0,2"/>
+                                                   Foreground="{DynamicResource SecondaryBrush}" Margin="0,0,0,2"/>
                                         <TextBlock Text="{Binding Body}" FontSize="16"
-                                                   Foreground="{StaticResource MutedTextBrush}"
+                                                   Foreground="{DynamicResource MutedTextBrush}"
                                                    TextWrapping="Wrap" LineHeight="24"/>
                                     </StackPanel>
                                 </Border>
                                 <DataTemplate.Triggers>
                                     <DataTrigger Binding="{Binding IsAlternate}" Value="True">
-                                        <Setter TargetName="EntryBorder" Property="Background" Value="#E8E8E8"/>
+                                        <Setter TargetName="EntryBorder" Property="Background" Value="{DynamicResource AltRowBackgroundBrush}"/>
                                     </DataTrigger>
                                 </DataTemplate.Triggers>
                             </DataTemplate>
@@ -109,7 +109,7 @@
                     </ItemsControl>
                 </ScrollViewer>
                 <TextBlock Text="다운로드 버튼을 누르면 zip 파일을 직접 받습니다."
-                           FontSize="14" Foreground="{StaticResource MutedTextBrush}" Margin="0,0,0,8"/>
+                           FontSize="14" Foreground="{DynamicResource MutedTextBrush}" Margin="0,0,0,8"/>
                 <ProgressBar Height="6" Maximum="100"
                              Value="{Binding Update.DownloadProgress}"
                              Visibility="{Binding Update.IsDownloadingUpdate, Converter={StaticResource BooleanToVisibilityConverter}}"
@@ -132,7 +132,7 @@
         </Border>
 
         <!-- Loading Overlay (UpdateViewModel 작업: 업데이트 확인 등) -->
-        <Grid Background="#55000000" Visibility="{Binding Update.IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}">
+        <Grid Background="{DynamicResource OverlayBackgroundBrush}" Visibility="{Binding Update.IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}">
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                 <ProgressBar IsIndeterminate="True" Width="200" Height="20" Margin="0,0,0,10"/>
                 <TextBlock Text="처리 중입니다... 잠시만 기다려 주세요." Foreground="White" FontWeight="Bold" HorizontalAlignment="Center"/>
@@ -140,7 +140,7 @@
         </Grid>
 
         <!-- Loading Overlay (실행 화면 작업: Export / CodeGen) -->
-        <Grid Background="#55000000"
+        <Grid Background="{DynamicResource OverlayBackgroundBrush}"
               Visibility="{Binding CurrentExecutionViewModel.IsBusy, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                 <ProgressBar IsIndeterminate="True" Width="200" Height="20" Margin="0,0,0,10"/>
