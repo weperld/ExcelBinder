@@ -1,8 +1,47 @@
 # Feature Backlog - ExcelBinder
 
-> 작성일: 2026-02-18
-> 현재 버전: 1.2.3
-> 상태: 기획 단계 (구현 가능성 분석 완료)
+> **이 파일이 남은 작업의 단일 기준 문서입니다.** 작업 목록 확인 시 여기부터 봅니다.
+> 최종 갱신: 2026-07-18 (현재 버전: 2.9.0)
+> 항목 ID(Q/B/D/E/S)의 상세 내역(심각도·파일:라인·시나리오)은 `reports/CODE_REVIEW_2026-07-17.md` 참조
+
+---
+
+## 📋 남은 작업 목록
+
+### 사용자 개선 (Minor)
+- [ ] **Q6** — 성공 시에도 매번 모달 로그 창이 뜸 → 성공은 상태바/토스트, 실패만 로그 창
+- [ ] **Q7** — Feature 삭제 기능이 UI에 없음 (현재는 JSON 파일 직접 삭제)
+- [ ] **Q8** — 빈 상태 안내 부재 (Feature 0개 Dashboard, 소스 파일 0개, 경로 없음 시 무음 빈 화면)
+- [ ] **Q9** — 창 크기·위치 미기억 / FeatureBuilder 취소 시 미저장 변경 확인 없음
+- [ ] **Q10** — 버튼 라벨 ↔ 문서 용어 미세 불일치 잔여 확인
+
+### 버그 (Minor~Major, 보류분)
+- [ ] **B8** (Major) — LogicParser Name/Formula 컬럼 경계 검사 누락 + 빈 행 skip 없음
+- [ ] **B9** (Major) — SchemaEditor 저장 실패를 성공으로 통지 (`OnComplete(true)`)
+- [ ] **B10** — `ParseInt` float 근사 검사가 `int.MaxValue` 부근 정당한 값 오탐
+- [ ] **B13** — CLI `--bind`가 인자마다 설정 재저장 (루프 후 1회로 축약 가능)
+- [ ] **B15** — `EnumType` 없는 `enum` 토큰이 무음 string 격하
+- [ ] **B16** — 코드 생성 시 시트/컬럼명의 C# 식별자 검증 부재 (Constants 상수명·Enum 멤버명은 조치됨, 시트명→클래스명은 미조치)
+- [ ] **B17** — TemplateEngine 캐시 키 해시 충돌 이론적 위험
+- [ ] **B18** — FeatureService static 캐시의 삭제된 파일 엔트리 잔존
+- [ ] **B19** — 존재하지 않는 시트명 지정 시 무음 빈 결과
+- ~~B11·B12·B14~~ → 2차 리팩터 P3(CLI의 MainViewModel 의존 제거)로 자연 해소됨
+
+### 문서
+- [ ] **D7** — PROJECT_SUMMARY.md의 `ExportService # 데이터 추출` 설명 오류, 미존재 `WORKFLOW_GUIDE.md` 참조
+- [ ] **D8** — `.guides/`의 COMMIT_RULES/BUILD_GUIDE/CODE_STYLE/TEST_GUIDE 예시가 가공의 `CSVProcessor` 기반
+- [ ] **E3** — CHANGELOG가 2.0.0에서 멈춤 (2.1~2.9 내역 누락)
+- [ ] **E4** — 커밋된 잡파일 `WORK_HISTORY.json` 제거 검토
+
+### 구조 (의도적 보류 — 필요해질 때만)
+- **S-보류** — 전면 DI/AppServices 제거, GroupViewModel 추출, ExecutionViewModelBase 추가 분해,
+  DialogService UI 조립 XAML화, 코드젠 StringBuilder 골격 공통화
+  (사내 도구 규모에서 비용 대비 실익 없음 — 근거는 리뷰 보고서 참조)
+- **E5** (참고) — `#` 시트 무시 규칙이 Enum 외 카테고리에선 코어 레벨 미강제 (UI 선택 목록에 의존)
+
+### 신규 기능 후보
+- [ ] **기능 5 잔여** — 인앱 업데이트: 방식 A(zip 다운로드+진행률)는 구현 완료.
+  방식 B(자동 교체+재시작) / 방식 C(Velopack 등 프레임워크)는 미채택 상태 (하단 상세 참조)
 
 ---
 

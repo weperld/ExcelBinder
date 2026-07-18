@@ -74,6 +74,10 @@ Excel Load → ExcelService.ReadExcel()/ReadMultipleSheets() → ExcelService.Ge
 - 빈 셀 또는 잘못된 enum 이름은 런타임 예외 발생 (조기 발견 정책)
 - Underlying type은 enum 정의 측에서 결정 (SchemaEditor에서 검증하지 않음)
 
+## 작업 목록 (단일 기준 문서)
+
+남은 작업/백로그는 **`FEATURE_BACKLOG.md`가 단일 기준 문서**다. 사용자가 "할 작업 목록"을 물으면 이 파일을 가장 먼저 확인해 리스트업한다. 항목의 상세 발견 내역(심각도·파일:라인)은 `reports/CODE_REVIEW_*.md` 참조. 새 작업이 생기거나 완료되면 이 파일을 갱신한다.
+
 ## 절대 규칙
 - **타입 안전성**: 무조건 캐스팅 (Type)cast 남용 금지, dynamic 사용 최소화
 - **빈 catch 블록 금지**: catch(e) {} 사용 금지
